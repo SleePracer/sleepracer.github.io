@@ -1,0 +1,24 @@
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: home
+---
+<script defer src="./assets/js/script.js"></script>
+
+<h1>Credits</h1>
+<div id="outputCredits"></div>
+<button id="incrementButton" onClick="incrementButton()">increment</button>
+<button id="decrementButton" onClick="decrementButton()">decrement</button>
+<h1>Garage</h1>
+<table>
+    <thead>
+        <td>Name</td>
+        <td>PI</td>
+        <td>Delete</td>
+    </thead>
+    <tbody id="tableGarage">
+        <td><input id="input1G" type="text" onkeypress=inputGarage()></td>
+        <td><input id="input2G" type="text" onkeypress=inputGarage()></td>
+    </tbody>
+</table>
