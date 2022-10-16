@@ -2,16 +2,18 @@
 // HTML elements
 // -----------------------------------------------------------------------
 
-var eNameOutput = document.getElementById("nameOutput");
-var eCreditsOutput = document.getElementById("creditsOutput");
-var eNCarsOutput = document.getElementById("nCarsOutput");
+var eStateName = document.getElementById("stateName");
+var eStateCar = document.getElementById("stateCar");
+var eStateCredits = document.getElementById("stateCredits");
+var eStateDriverRating = document.getElementById("stateDriverRating");
+var eStateDriverRatingProgress = document.getElementById("stateDriverRatingProgress");
+var eBasicRacePosition = document.getElementById("basicRacePosition");
+var eBasicRaceDamage = document.getElementById("basicRaceDamage");
+var eBasicRaceTotal = document.getElementById("basicRaceTotal");
 var eGarageTH = document.getElementById("garageTableHead");
 var eGarageTB = document.getElementById("garageTableBody");
 var eGarageName = document.getElementById("garageName");
 var eGarageValue = document.getElementById("garageValue");
-var eBasicRacePosition = document.getElementById("basicRacePosition");
-var eBasicRaceDamage = document.getElementById("basicRaceDamage");
-var eBasicRaceTotal = document.getElementById("basicRaceTotal");
 
 // -----------------------------------------------------------------------
 // Constants
@@ -32,9 +34,15 @@ const basicRacePrize = [0, 9000, 6000, 4000, 3000, 2000, 1000, 0, 0, 0, 0, 0, 0]
 
 function updateState() {
     // Update state outputs
-    eNameOutput.innerText = "Name: " + state.name;
-    eCreditsOutput.innerText = "Credits: €" + state.credits.toLocaleString('fr');
-    eNCarsOutput.innerText = "Cars in garage: " + state.cars.length;
+    eStateName.innerText = state.name;
+    if (state.cars.length > 0) {
+        eStateCar.innerText = state.cars[0][0];
+    } else {
+        eStateCar.innerText = "No cars!";
+    }
+    eStateCredits.innerText = "€" + state.credits.toLocaleString('fr');
+    eStateDriverRating.innerHTML = "Driver Rating:";
+    eStateDriverRatingProgress.style.width = state.driverRating + "%";
 
     // Update localStorage one variable at a time
     // This should enable adding more elements without breaking saves
@@ -99,33 +107,6 @@ function getStateFromLocalStorage() {
 // HTML element functions
 // -----------------------------------------------------------------------
 
-function deleteButton() {
-    // Index of car should be equal to index of row - 1
-    let iCar = event.target.parentElement.parentElement.rowIndex - 1;
-
-    // Delete car from table and state
-    eGarageTB.deleteRow(iCar);
-    state.cars.splice(iCar, 1);
-
-    updateState();
-}
-
-function garageInput() {
-    // Actually enter input with Enter
-    if (event.key !== "Enter") {
-        return;
-    }
-
-    // Save to state and reset input
-    state.cars.push([eGarageName.value, parseInt(eGarageValue.value)]);
-    eGarageName.value = "";
-    eGarageValue.value = "";
-
-    // Update table and state
-    garageTableNewRow(state.cars.length - 1);
-    updateState();
-}
-
 function basicRaceInput() {
     // Get values
     var position = parseInt(eBasicRacePosition.value);
@@ -154,6 +135,33 @@ function basicRaceInput() {
     updateState();
 }
 
+function deleteButton() {
+    // Index of car should be equal to index of row - 1
+    let iCar = event.target.parentElement.parentElement.rowIndex - 1;
+
+    // Delete car from table and state
+    eGarageTB.deleteRow(iCar);
+    state.cars.splice(iCar, 1);
+
+    updateState();
+}
+
+function garageInput() {
+    // Actually enter input with Enter
+    if (event.key !== "Enter") {
+        return;
+    }
+
+    // Save to state and reset input
+    state.cars.push([eGarageName.value, parseInt(eGarageValue.value)]);
+    eGarageName.value = "";
+    eGarageValue.value = "";
+
+    // Update table and state
+    garageTableNewRow(state.cars.length - 1);
+    updateState();
+}
+
 function resetButton() {
     // Set state to default
     state = JSON.parse(JSON.stringify(defaultState));
@@ -172,4 +180,3 @@ function resetButton() {
 // This means new variables not yet in localStorage will get default value
 var state = JSON.parse(JSON.stringify(defaultState));
 getStateFromLocalStorage();
-
