@@ -6,19 +6,24 @@ layout: home
 ---
 <script defer src="./assets/js/script.js"></script>
 
+<h1>Name</h1>
+<div id="nameOutput"></div>
 <h1>Credits</h1>
-<div id="outputCredits"></div>
+<div id="creditsOutput"></div>
 <button id="incrementButton" onClick="incrementButton()">increment</button>
 <button id="decrementButton" onClick="decrementButton()">decrement</button>
 <h1>Garage</h1>
+<div id="nCarsOutput"></div>
 <table>
-    <thead>
+    <thead id="garageTableHead">
         <td>Name</td>
-        <td>PI</td>
+        <td>Base Value</td>
         <td>Delete</td>
     </thead>
-    <tbody id="tableGarage">
-        <td><input id="input1G" type="text" onkeypress=inputGarage()></td>
-        <td><input id="input2G" type="text" onkeypress=inputGarage()></td>
+    <tbody id="garageTableBody">
+        <td><input id="garageInput1" type="text" onkeypress=garageInput()></td>
+        <td><input id="garageInput2" type="text" onkeypress=garageInput()></td>
     </tbody>
 </table>
+<h1>Reset game</h1>
+<button id="resetButton" onClick="resetButton()">reset</button>
