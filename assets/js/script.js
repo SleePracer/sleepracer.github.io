@@ -7,8 +7,11 @@ var eCreditsOutput = document.getElementById("creditsOutput");
 var eNCarsOutput = document.getElementById("nCarsOutput");
 var eGarageTH = document.getElementById("garageTableHead");
 var eGarageTB = document.getElementById("garageTableBody");
-var eGarageIn1 = document.getElementById("garageInput1");
-var eGarageIn2 = document.getElementById("garageInput2");
+var eGarageName = document.getElementById("garageName");
+var eGarageValue = document.getElementById("garageValue");
+var eBasicRacePosition = document.getElementById("basicRacePosition");
+var eBasicRaceDamage = document.getElementById("basicRaceDamage");
+var eBasicRaceTotal = document.getElementById("basicRaceTotal");
 
 // -----------------------------------------------------------------------
 // Constants
@@ -20,6 +23,8 @@ const defaultState = {
     credits: 25000,
     cars: []
 }
+
+const basicRacePrize = [0, 9000, 6000, 4000, 3000, 2000, 1000, 0, 0, 0, 0, 0, 0];
 
 // -----------------------------------------------------------------------
 // Helper functions
@@ -46,7 +51,7 @@ function garageTableNewRow(iCar) {
         newRow.insertCell();
     }
     newRow.cells[0].innerHTML = state.cars[iCar][0];
-    newRow.cells[1].innerHTML = state.cars[iCar][1];
+    newRow.cells[1].innerHTML = state.cars[iCar][1].toLocaleString('fr');
 
     // Make a delete button
     var button = document.createElement("button");
@@ -94,16 +99,6 @@ function getStateFromLocalStorage() {
 // HTML element functions
 // -----------------------------------------------------------------------
 
-function incrementButton() {
-    state.credits++;
-    updateState();
-}
-
-function decrementButton() {
-    state.credits--;
-    updateState();
-}
-
 function deleteButton() {
     // Index of car should be equal to index of row - 1
     let iCar = event.target.parentElement.parentElement.rowIndex - 1;
@@ -122,12 +117,40 @@ function garageInput() {
     }
 
     // Save to state and reset input
-    state.cars.push([eGarageIn1.value, eGarageIn2.value]);
-    eGarageIn1.value = "";
-    eGarageIn2.value = "";
+    state.cars.push([eGarageName.value, parseInt(eGarageValue.value)]);
+    eGarageName.value = "";
+    eGarageValue.value = "";
 
     // Update table and state
     garageTableNewRow(state.cars.length - 1);
+    updateState();
+}
+
+function basicRaceInput() {
+    // Get values
+    var position = parseInt(eBasicRacePosition.value);
+    var damage = parseInt(eBasicRaceDamage.value);
+
+    // Set total based on position and damage
+    // Position can only be OK values since it's a select
+    total = basicRacePrize[position];
+    if (parseInt(damage) > 0) {
+        total -= damage;
+    }
+    eBasicRaceTotal.innerText = total;
+
+    // Actually enter the data with enter
+    if (event.key !== "Enter") {
+        return;
+    }
+
+    // Clear the fields
+    eBasicRacePosition.value = "0";
+    eBasicRaceDamage.value = "";
+    eBasicRaceTotal.innerText = "";
+
+    // Update credits
+    state.credits += total;
     updateState();
 }
 

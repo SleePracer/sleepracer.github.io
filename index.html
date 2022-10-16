@@ -10,8 +10,6 @@ layout: home
 <div id="nameOutput"></div>
 <h1>Credits</h1>
 <div id="creditsOutput"></div>
-<button id="incrementButton" onClick="incrementButton()">increment</button>
-<button id="decrementButton" onClick="decrementButton()">decrement</button>
 <h1>Garage</h1>
 <div id="nCarsOutput"></div>
 <table>
@@ -21,8 +19,35 @@ layout: home
         <td>Delete</td>
     </thead>
     <tbody id="garageTableBody">
-        <td><input id="garageInput1" type="text" onkeypress=garageInput()></td>
-        <td><input id="garageInput2" type="text" onkeypress=garageInput()></td>
+        <td><input id="garageName" type="text" onkeypress=garageInput()></td>
+        <td><input id="garageValue" type="number" onkeypress=garageInput()></td>
+    </tbody>
+</table>
+<h1>Basic race</h1>
+<table>
+    <thead id="basicRaceTableHead">
+        <td>Position</td>
+        <td>Damage</td>
+        <td>Total</td>
+    </thead>
+    <tbody id="basicRaceTableBody">
+        <td><select id="basicRacePosition" onchange=basicRaceInput()>
+            <option value="1">1st</option>
+            <option value="2">2nd</option>
+            <option value="3">3rd</option>
+            <option value="4">4th</option>
+            <option value="5">5th</option>
+            <option value="6">6th</option>
+            <option value="7">7th</option>
+            <option value="8">8th</option>
+            <option value="9">9th</option>
+            <option value="10">10th</option>
+            <option value="11">11th</option>
+            <option value="12">12th</option>
+            <option value="0" selected="selected">DNF</option>
+        </td>
+        <td><input id="basicRaceDamage" type="number" onkeyup=basicRaceInput()></td>
+        <td id="basicRaceTotal"></td>
     </tbody>
 </table>
 <h1>Reset game</h1>
