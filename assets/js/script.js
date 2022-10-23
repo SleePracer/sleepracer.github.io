@@ -10,6 +10,9 @@ let eStateDRProgress = document.getElementById("stateDRProgress");
 let eBasicRacePosition = document.getElementById("basicRacePosition");
 let eBasicRaceDamage = document.getElementById("basicRaceDamage");
 let eBasicRaceTotal = document.getElementById("basicRaceTotal");
+let eCustomRacePrize = document.getElementById("customRacePrize");
+let eCustomRaceDamage = document.getElementById("customRaceDamage");
+let eCustomRaceTotal = document.getElementById("customRaceTotal");
 let eGarageTH = document.getElementById("garageTableHead");
 let eToggleOptions = document.getElementById("toggleOptionsButton");
 let eGarageTB = document.getElementById("garageTableBody");
@@ -180,34 +183,93 @@ function getStateFromLocalStorage() {
 // HTML element functions
 // -----------------------------------------------------------------------
 
-// Basic race
+// Races
 
-function basicRaceInput() {
+function basicRaceGetTotal() {
     // Get values from input
     let position = parseInt(eBasicRacePosition.value);
     let damage = parseInt(eBasicRaceDamage.value);
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
-    total = basicRacePrize[position];
-    if (parseInt(damage) > 0) {
+    let total = basicRacePrize[position];
+    if (damage > 0) {
         total -= damage;
     }
-    eBasicRaceTotal.innerText = total;
 
-    // Actually enter the data with enter
-    if (event.key !== "Enter") {
-        return;
-    }
+    return total;
+}
+
+function basicRaceAddTotal() {
+    let total = basicRaceGetTotal();
 
     // Clear the fields
     eBasicRacePosition.value = "0";
     eBasicRaceDamage.value = "";
-    eBasicRaceTotal.innerText = "";
+    eBasicRaceTotal.innerText = "Add";
 
     // Add total to credits
     state.credits += total;
     updateState();
+}
+
+function basicRaceInput() {
+    let total = basicRaceGetTotal();
+
+    // Update button text
+    if (total > 0 || total < 0) {
+        eBasicRaceTotal.innerText = "Add: " + intToCredits(total);
+    } else {
+        eBasicRaceTotal.innerText = "Add";
+    }
+
+    // Actually enter the data with enter
+    if (event.key === "Enter") {
+        basicRaceAddTotal();
+    }
+}
+
+function customRaceGetTotal() {
+    // Get values from input
+    let prize = parseInt(eCustomRacePrize.value);
+    let damage = parseInt(eCustomRaceDamage.value);
+
+    // Set total based on prize and damage
+    let total = prize;
+    if (damage > 0) {
+        total -= damage;
+    }
+
+    return total;
+}
+
+function customRaceAddTotal() {
+    let total = customRaceGetTotal();
+
+    // Clear the fields
+    eCustomRacePrize.value = "";
+    eCustomRaceDamage.value = "";
+    eCustomRaceTotal.innerText = "Add";
+
+    // Add total to credits
+    state.credits += total;
+    updateState();
+}
+
+function customRaceInput() {
+    let total = customRaceGetTotal();
+
+    // Update button text
+    if (total > 0 || total < 0) {
+        eCustomRaceTotal.innerText = "Add: " + intToCredits(total);
+    } else {
+        eCustomRaceTotal.innerText = "Add";
+    }
+
+    // Actually enter the data with enter
+    if (event.key === "Enter") {
+        customRaceAddTotal();
+    }
 }
 
 // Garage

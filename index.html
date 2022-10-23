@@ -7,6 +7,7 @@ layout: home
 <script defer src="./assets/js/script.js"></script>
 <link rel="stylesheet" href="./assets/css/style.css"></link>
 
+<!-- Header -->
 <table class="sticky">
     <thead id="stateTableHead">
         <td id="stateName">Name</td>
@@ -20,35 +21,47 @@ layout: home
         </td>
     </thead>
 </table>
-<h1>Basic race</h1>
-<table>
-    <thead id="basicRaceTableHead">
+
+<h1>Races</h1>
+<table class="races">
+    <thead id="racesTableHead">
+        <td>Name</td>
         <td>Position</td>
         <td>Damage</td>
         <td>Total</td>
     </thead>
-    <tbody id="basicRaceTableBody">
-        <td><select id="basicRacePosition" onchange=basicRaceInput()>
-            <option value="1">1st</option>
-            <option value="2">2nd</option>
-            <option value="3">3rd</option>
-            <option value="4">4th</option>
-            <option value="5">5th</option>
-            <option value="6">6th</option>
-            <option value="7">7th</option>
-            <option value="8">8th</option>
-            <option value="9">9th</option>
-            <option value="10">10th</option>
-            <option value="11">11th</option>
-            <option value="12">12th</option>
-            <option value="0" selected="selected">DNF</option>
-        </td>
-        <td><input id="basicRaceDamage" type="number" onkeyup=basicRaceInput()></td>
-        <td id="basicRaceTotal"></td>
+    <tbody id="racesTableBody">
+        <tr>
+            <td>Basic race</td>
+            <td><select id="basicRacePosition" onchange=basicRaceInput()>
+                <option value="1">1st</option>
+                <option value="2">2nd</option>
+                <option value="3">3rd</option>
+                <option value="4">4th</option>
+                <option value="5">5th</option>
+                <option value="6">6th</option>
+                <option value="7">7th</option>
+                <option value="8">8th</option>
+                <option value="9">9th</option>
+                <option value="10">10th</option>
+                <option value="11">11th</option>
+                <option value="12">12th</option>
+                <option value="0" selected="selected">DNF</option>
+            </td>
+            <td><input id="basicRaceDamage" type="number" placeholder="Repair cost" style="width: 100%" onkeyup=basicRaceInput()></td>
+            <td><button id="basicRaceTotal" onclick="basicRaceAddTotal()">Add</button></td>
+        </tr>
+        <tr>
+            <td>Custom race</td>
+            <td><input id="customRacePrize" type="number" placeholder="Race winnings" style="width: 100%" onkeyup=customRaceInput()></td>
+            <td><input id="customRaceDamage" type="number" placeholder="Repair cost" style="width: 100%" onkeyup=customRaceInput()></td>
+            <td><button id="customRaceTotal" onclick="customRaceAddTotal()">Add</button></td>
+        </tr>
     </tbody>
 </table>
+
 <h1>Garage</h1>
-<table class="fixed">
+<table class="garage">
     <thead id="garageTableHead">
         <td>Name</td>
         <td>PI</td>
@@ -58,14 +71,15 @@ layout: home
         </td>
     </thead>
     <tbody id="garageTableBody">
-        <tr id="newCarRow" style="display:none">
-            <td><input id="newCarName" type="text" placeholder="Name" style="width:100%" onkeyup=newCarInput()></td>
-            <td><input id="newCarPI" type="number" placeholder="PI" style="width:100%" onkeyup=newCarInput()></td>
-            <td><input id="newCarValue" type="number" placeholder="Cost" style="width:100%" onkeyup=newCarInput()></td>
+        <tr id="newCarRow" style="display: none">
+            <td><input id="newCarName" type="text" placeholder="Name" style="width: 100%" onkeyup=newCarInput()></td>
+            <td><input id="newCarPI" type="number" placeholder="PI" style="width: 100%" onkeyup=newCarInput()></td>
+            <td><input id="newCarValue" type="number" placeholder="Cost" style="width: 100%" onkeyup=newCarInput()></td>
             <td><button id="newCarAdd" onClick="addCar()">Add car</td>
         </tr>
     </tbody>
 </table>
+
 <h1>Settings</h1>
 <button id="changeNameButton" onClick="changeNameButton()">Change name</button>
 <button id="resetButton" onClick="resetButton()">Reset game</button>

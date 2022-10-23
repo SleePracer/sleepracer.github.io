@@ -15,10 +15,16 @@ table.sticky {
     background-color: blue;
 }
 
-table.fixed {table-layout: fixed;}
-table.fixed td:nth-of-type(1) {width: 39%;}
-table.fixed td:nth-of-type(2) {width: 15%;}
-table.fixed td:nth-of-type(3) {width: 20%;}
-table.fixed td:nth-of-type(4) {width: 26%;}
+table.races {table-layout: fixed;}
+table.races td:nth-of-type(1) {width: 42%;}
+table.races td:nth-of-type(2) {width: 20%;}
+table.races td:nth-of-type(3) {width: 20%;}
+table.races td:nth-of-type(4) {width: 18%;}
+
+table.garage {table-layout: fixed;}
+table.garage td:nth-of-type(1) {width: 42%;}
+table.garage td:nth-of-type(2) {width: 12%;}
+table.garage td:nth-of-type(3) {width: 18%;}
+table.garage td:nth-of-type(4) {width: 28%;}
 
 button.margin {margin: 0px 5px;}
