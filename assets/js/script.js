@@ -25,15 +25,59 @@ let eNewCarValue = document.getElementById("newCarValue");
 // Constants
 // -----------------------------------------------------------------------
 
+// At 1, player will reach DR X after ~ 300 races.
+const gameSpeed = 5;
+
 const defaultState = {
     name: "",
-    dr: 10,
+    dr: 100,
+    wins: 0,
     credits: 25000,
     currentCar: -1,
     cars: []
 }
 
-const basicRacePrize = [
+const classPI = [
+    100,
+    500,
+    600,
+    700,
+    800,
+    900,
+    998,
+    999];
+
+const classDR = [
+    Math.pow(10, 0),
+    Math.pow(10, 3),
+    Math.pow(10, 4),
+    Math.pow(10, 5),
+    Math.pow(10, 6),
+    Math.pow(10, 7),
+    Math.pow(10, 8),
+    Math.pow(10, 8)];
+
+const classLetter = [
+    "Invalid!",
+    "D",
+    "C",
+    "B",
+    "A",
+    "S",
+    "H",
+    "X"];
+
+const classColor = [
+    "black",
+    "#00a4ff",
+    "#ffaf00",
+    "#ff6d12",
+    "#ea4e14",
+    "#9d56ff",
+    "#3460fc",
+    "#67b648"];
+
+const basicPrize = [
     0,
     9000,
     6000,
@@ -42,6 +86,21 @@ const basicRacePrize = [
     2000,
     1000,
     0, 0, 0, 0, 0, 0];
+
+const basicDR = [
+    -1,
+    4,
+    3,
+    3,
+    2,
+    2,
+    1,
+    1,
+    0,
+    0,
+    -1,
+    -1,
+    -1];
 
 // -----------------------------------------------------------------------
 // Classes
@@ -59,30 +118,77 @@ class Car {
 // Helper functions
 // -----------------------------------------------------------------------
 
-function addClassToPI(PI) {
-    if (PI >= 100 && PI <= 500) {
-        return "D" + PI;
-    } else if (PI > 500 && PI <= 600) {
-        return "C" + PI;
-    } else if (PI > 600 && PI <= 700) {
-        return "B" + PI;
-    } else if (PI > 700 && PI <= 800) {
-        return "A" + PI;
-    } else if (PI > 800 && PI <= 900) {
-        return "S" + PI;
-    } else if (PI > 900 && PI < 1000) {
-        return "X" + PI;
+function iClassFromPI(pi) {
+    if (pi < classPI[0] || pi > classPI[7]) {
+        return 0;
+    } else if (pi <= classPI[1]) {
+        return 1;
+    } else if (pi <= classPI[2]) {
+        return 2;
+    } else if (pi <= classPI[3]) {
+        return 3;
+    } else if (pi <= classPI[4]) {
+        return 4;
+    } else if (pi <= classPI[5]) {
+        return 5;
+    } else if (pi <= classPI[6]) {
+        return 6;
     } else {
-        return "Invalid PI!";
+        return 7;
     }
 }
 
-function intToCredits(int) {
-    if (int >= 0) {
-        return "€" + int.toLocaleString('fr');
+function addClassToPI(pi) {
+    if (pi < classPI[0] || pi > classPI[7]) {
+        return classLetter[0];
+    }
+    return classLetter[iClassFromPI(pi)] + pi;
+}
+
+function iClassFromDR(dr) {
+    if (dr < classDR[0]) {
+        return 0;
+    } else if (dr < classDR[1]) {
+        return 1;
+    } else if (dr < classDR[2]) {
+        return 2;
+    } else if (dr < classDR[3]) {
+        return 3;
+    } else if (dr < classDR[4]) {
+        return 4;
+    } else if (dr < classDR[5]) {
+        return 5;
+    } else if (dr < classDR[6]) {
+        return 6;
     } else {
-        int *= -1;
-        return "-€" + int.toLocaleString('fr');
+        return 7;
+    }
+}
+
+function drToClass(dr) {
+    if (dr < classDR[0]) {
+        return classLetter[0];
+    }
+    return classLetter[iClassFromDR(dr)];
+}
+
+function drToPercent(dr) {
+    if (dr < classDR[0]) {
+        return 0 + "%";
+    }
+    return Math.floor(100 * dr / classDR[iClassFromDR(dr)]) + "%";
+}
+
+function drToColor(dr) {
+    return classColor[iClassFromDR(dr)];
+}
+
+function formatCredits(credits) {
+    if (credits >= 0) {
+        return "€" + credits.toLocaleString('fr');
+    } else {
+        credits *= -1;
+        return "-€" + credits.toLocaleString('fr');
     }
 }
 
@@ -107,14 +213,16 @@ function updateState() {
         eStateCar.innerText = "No cars!";
     }
 
-    eStateCredits.innerText = intToCredits(state.credits);
-    eStateDR.innerHTML = "Driver Rating: ";
-    eStateDRProgress.style.width = state.dr + "%";
+    eStateCredits.innerText = formatCredits(state.credits);
+    eStateDR.innerHTML = drToClass(state.dr);
+    eStateDRProgress.style.width = drToPercent(state.dr);
+    eStateDRProgress.style.backgroundColor = drToColor(state.dr);
 
     // Update localStorage one variable at a time
     // This should enable adding more elements without breaking saves
     localStorage.setItem("sName", JSON.stringify(state.name));
     localStorage.setItem("sDR", JSON.stringify(state.dr));
+    localStorage.setItem("sWins", JSON.stringify(state.wins));
     localStorage.setItem("sCredits", JSON.stringify(state.credits));
     localStorage.setItem("sCurrentCar", JSON.stringify(state.currentCar));
     localStorage.setItem("sCars", JSON.stringify(state.cars));
@@ -128,7 +236,7 @@ function garageTableAddNewCar(iCar, buttonDisplay) {
     }
     newCarRow.cells[0].innerHTML = state.cars[iCar].name;
     newCarRow.cells[1].innerHTML = addClassToPI(state.cars[iCar].pi);
-    newCarRow.cells[2].innerHTML = intToCredits(state.cars[iCar].value);
+    newCarRow.cells[2].innerHTML = formatCredits(state.cars[iCar].value);
 
     // Make all the buttons and add to the last cell
 
@@ -161,6 +269,9 @@ function getStateFromLocalStorage() {
     if (localStorage.getItem("sDR") !== null) {
         state.dr = JSON.parse(localStorage.getItem("sDR"));
     }
+    if (localStorage.getItem("sWins") !== null) {
+        state.wins = JSON.parse(localStorage.getItem("sWins"));
+    }
     if (localStorage.getItem("sCredits") !== null) {
         state.credits = JSON.parse(localStorage.getItem("sCredits"));
     }
@@ -185,6 +296,54 @@ function getStateFromLocalStorage() {
 
 // Races
 
+function deltaDR(position) {
+    let currentPI = state.cars[state.currentCar].pi;
+    let iClass = iClassFromPI(currentPI);
+    if (iClass === 0) {
+        // Return 0 for invalid class
+        return 0;
+    }
+
+    // subClass will be [1, 10] depending on how far in the class pi is
+    let subClass = Math.ceil((((currentPI - 1) % 100) + 1) / 10);
+    if (iClass === 1) {
+        // Always max out subClass for D
+        subClass = 10;
+    } else if (iClass === 7) {
+        // Always min out subClass for X
+        subClass = 1;
+    }
+
+    // Check for win streak in past 3 races and modify baseDR
+    let baseDR = basicDR[position];
+    if (Math.floor(state.wins / 100) === 1) {
+        // Previous race win
+        if (position === 1 || position === 2 || position === 3) {
+            // This race podium
+            baseDR--;
+        }
+    }
+    if (position === 1) {
+        // This race win
+        if (Math.floor((state.wins % 100) / 10) === 1) {
+            // Second previous race win
+            baseDR--;
+        }
+        if ((state.wins % 10) === 1) {
+            // Third previous race win
+            baseDR--;
+        }
+    }
+
+    // Update win streak history
+    state.wins = Math.floor(state.wins / 10);
+    if (position === 1) {
+        state.wins += 100;
+    }
+
+    return gameSpeed * baseDR * subClass * Math.pow(10, iClass - 1);
+}
+
 function basicRaceGetTotal() {
     // Get values from input
     let position = parseInt(eBasicRacePosition.value);
@@ -192,7 +351,7 @@ function basicRaceGetTotal() {
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
-    let total = basicRacePrize[position];
+    let total = basicPrize[position];
     if (damage > 0) {
         total -= damage;
     }
@@ -201,7 +360,14 @@ function basicRaceGetTotal() {
 }
 
 function basicRaceAddTotal() {
+    let position = parseInt(eBasicRacePosition.value);
     let total = basicRaceGetTotal();
+
+    // Update DR
+    state.dr += deltaDR(position);
+    if (state.dr < classDR[0]) {
+        state.dr = classDR[0];
+    }
 
     // Clear the fields
     eBasicRacePosition.value = "0";
@@ -218,7 +384,7 @@ function basicRaceInput() {
 
     // Update button text
     if (total > 0 || total < 0) {
-        eBasicRaceTotal.innerText = "Add: " + intToCredits(total);
+        eBasicRaceTotal.innerText = "Add: " + formatCredits(total);
     } else {
         eBasicRaceTotal.innerText = "Add";
     }
@@ -261,7 +427,7 @@ function customRaceInput() {
 
     // Update button text
     if (total > 0 || total < 0) {
-        eCustomRaceTotal.innerText = "Add: " + intToCredits(total);
+        eCustomRaceTotal.innerText = "Add: " + formatCredits(total);
     } else {
         eCustomRaceTotal.innerText = "Add";
     }
@@ -342,9 +508,19 @@ function upgradeCar() {
         return;
     }
 
-    // Update state variables
+    // Ask for confirmation if car PI is too high after upgrade
     let iCar = thisRow.rowIndex - 1;
-    state.cars[iCar].pi = parseInt(piInput.value);
+    let newPI = parseInt(piInput.value);
+    if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
+        if (!window.confirm("Class of car after upgrade (" + addClassToPI(newPI) + ") will be too high to drive, are you sure you want to upgrade?")) {
+            return;
+        } else if (state.currentCar === iCar) {
+            state.currentCar = -1;
+        }
+    }
+
+    // Update state variables
+    state.cars[iCar].pi = newPI;
     state.cars[iCar].value += parseInt(costInput.value);
     state.credits -= parseInt(costInput.value);
 
@@ -354,7 +530,7 @@ function upgradeCar() {
 
     // Re-add the state information
     thisRow.cells[1].innerHTML = addClassToPI(state.cars[iCar].pi);
-    thisRow.cells[2].innerHTML = intToCredits(state.cars[iCar].value);
+    thisRow.cells[2].innerHTML = formatCredits(state.cars[iCar].value);
 
     // Show all other buttons and rows again
     eToggleOptions.style.display = "block";
@@ -383,7 +559,11 @@ function upgradeInput() {
 function getInCar() {
     // Index of car should be equal to index of row - 1
     let iCar = event.target.parentElement.parentElement.rowIndex - 1;
-    state.currentCar = iCar;
+
+    // Only allow getting into car if PI is equal to or lower than DR
+    if (iClassFromPI(state.cars[iCar].pi) <= iClassFromDR(state.dr)) {
+        state.currentCar = iCar;
+    }
 
     updateState();
 }
@@ -395,8 +575,8 @@ function sellCar() {
     // Set sale price to half of value
     let price = Math.floor(state.cars[iCar].value / 2);
 
-    // Ask for confirmation!
-    if (!window.confirm("Sale price is half of car value: " + intToCredits(price) + ", are you sure?")) {
+    // Ask for confirmation before selling
+    if (!window.confirm("Sale price is half of car value: " + formatCredits(price) + ", are you sure you want to sell?")) {
         return;
     }
 
@@ -425,12 +605,24 @@ function addCar() {
         return;
     }
 
+    // Ask for confirmation if new car PI is too high
+    let newPI = parseInt(eNewCarPI.value);
+    if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
+        if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
+            return;
+        }
+    }
+
     // Save input to state
     state.cars.push(new Car(eNewCarName.value,
-                            parseInt(eNewCarPI.value),
+                            newPI,
                             parseInt(eNewCarValue.value)));
     state.credits -= parseInt(eNewCarValue.value);
-    state.currentCar = state.cars.length - 1;
+
+    // Set to current car if possible
+    if (iClassFromPI(newPI) <= iClassFromDR(state.dr)) {
+        state.currentCar = state.cars.length - 1;
+    }
 
     // Clear input fields
     eNewCarName.value = "";
@@ -474,4 +666,3 @@ function resetButton() {
 // This means new variables not yet in localStorage will get default value
 let state = JSON.parse(JSON.stringify(defaultState));
 getStateFromLocalStorage();
-
