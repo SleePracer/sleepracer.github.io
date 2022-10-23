@@ -247,7 +247,7 @@ function showUpgrade() {
     // Make a new PI input field
     let piInput = document.createElement("input");
     piInput.type = "number";
-    piInput.size = "4";
+    piInput.style.width = "100%";
     piInput.placeholder = "New PI";
     piInput.onkeyup = upgradeInput;
     thisRow.cells[1].appendChild(piInput);
@@ -255,7 +255,7 @@ function showUpgrade() {
     // Make an upgrade cost input field
     let costInput = document.createElement("input");
     costInput.type = "number";
-    costInput.size = "8";
+    costInput.style.width = "100%";
     costInput.placeholder = "Upgrade cost";
     costInput.onkeyup = upgradeInput;
     thisRow.cells[2].appendChild(costInput);
