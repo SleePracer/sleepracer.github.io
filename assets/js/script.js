@@ -7,6 +7,16 @@ let eStateCar = document.getElementById("stateCar");
 let eStateCredits = document.getElementById("stateCredits");
 let eStateDR = document.getElementById("stateDR");
 let eStateDRProgress = document.getElementById("stateDRProgress");
+let eChamp = document.getElementById("championshipDiv");
+let eChampTH = document.getElementById("championshipTableHead");
+let eChampTB = document.getElementById("championshipTableBody");
+let eChampTR = document.getElementById("championshipTableRow");
+let eChampRace = document.getElementById("championshipRace");
+let eChampPosition = document.getElementById("championshipPosition");
+let eChampDamage = document.getElementById("championshipDamage");
+let eChampTotal = document.getElementById("championshipTotal");
+let eRaces = document.getElementById("racesDiv");
+let eChampStart = document.getElementById("championshipStart");
 let eBasicRacePosition = document.getElementById("basicRacePosition");
 let eBasicRaceDamage = document.getElementById("basicRaceDamage");
 let eBasicRaceTotal = document.getElementById("basicRaceTotal");
@@ -102,6 +112,21 @@ const basicDR = [
     -1,
     -1];
 
+const positionName = [
+    "DNF",
+    "1st",
+    "2nd",
+    "3rd",
+    "4th",
+    "5th",
+    "6th",
+    "7th",
+    "8th",
+    "9th",
+    "10th",
+    "11th",
+    "12th"];
+
 // -----------------------------------------------------------------------
 // Classes
 // -----------------------------------------------------------------------
@@ -117,6 +142,17 @@ class Car {
 // -----------------------------------------------------------------------
 // Helper functions
 // -----------------------------------------------------------------------
+
+function toInt(string) {
+    if (Number.isInteger(string)) {
+        return string;
+    }
+    let int = parseInt(string);
+    if (Number.isNaN(int)) {
+        return 0;
+    }
+    return int;
+}
 
 function iClassFromPI(pi) {
     if (pi < classPI[0] || pi > classPI[7]) {
@@ -228,6 +264,54 @@ function updateState() {
     localStorage.setItem("sCars", JSON.stringify(state.cars));
 }
 
+function getDeltaDR(position) {
+    let currentPI = state.cars[state.currentCar].pi;
+    let iClass = iClassFromPI(currentPI);
+    if (iClass === 0) {
+        // Return 0 for invalid class
+        return 0;
+    }
+
+    // subClass will be [1, 10] depending on how far in the class pi is
+    let subClass = Math.ceil((((currentPI - 1) % 100) + 1) / 10);
+    if (iClass === 1) {
+        // Always max out subClass for D
+        subClass = 10;
+    } else if (iClass === 7) {
+        // Always min out subClass for X
+        subClass = 1;
+    }
+
+    // Check for win streak in past 3 races and modify baseDR
+    let baseDR = basicDR[position];
+    if (Math.floor(state.wins / 100) === 1) {
+        // Previous race win
+        if (position === 1 || position === 2 || position === 3) {
+            // This race podium
+            baseDR--;
+        }
+    }
+    if (position === 1) {
+        // This race win
+        if (Math.floor((state.wins % 100) / 10) === 1) {
+            // Second previous race win
+            baseDR--;
+        }
+        if ((state.wins % 10) === 1) {
+            // Third previous race win
+            baseDR--;
+        }
+    }
+
+    // Update win streak history
+    state.wins = Math.floor(state.wins / 10);
+    if (position === 1) {
+        state.wins += 100;
+    }
+
+    return gameSpeed * baseDR * subClass * Math.pow(10, iClass - 1);
+}
+
 function garageTableAddNewCar(iCar, buttonDisplay) {
     // Add and populate new row
     let newCarRow = eGarageTB.insertRow(iCar);
@@ -294,60 +378,151 @@ function getStateFromLocalStorage() {
 // HTML element functions
 // -----------------------------------------------------------------------
 
+// Championship
+
+function championshipAddBonus() {
+    // Get this somehow
+    let position = 1;
+
+    // Update DR
+    state.dr += getDeltaDR(position);
+    if (state.dr < classDR[0]) {
+        state.dr = classDR[0];
+    }
+
+    // Reset championship table
+    eChampRace.innerText = "Race name";
+    eChampTR.style.display = "table-row";
+    for (let iRow = 0; iRow < 4; iRow++) {
+        eChampTB.deleteRow(0);
+    }
+
+    // Hide championship and show races again
+    eChamp.style.display = "none";
+    eRaces.style.display = "block";
+
+    // Add bonus to credits
+    state.credits += basicPrize[position];
+    updateState();
+}
+
+function championshipGetTotal() {
+    // Get values from input
+    let position = toInt(eChampPosition.value);
+    let damage = toInt(eChampDamage.value);
+
+    // Set total based on position and damage
+    // position can only be OK values since it's a select
+    let total = basicPrize[position];
+    if (damage > 0) {
+        total -= damage;
+    }
+
+    return total;
+}
+
+function championshipAddTotal() {
+    let position = toInt(eChampPosition.value);
+    let damage = toInt(eChampDamage.value);
+    let total = championshipGetTotal();
+
+    // Update DR
+    state.dr += getDeltaDR(position);
+    if (state.dr < classDR[0]) {
+        state.dr = classDR[0];
+    }
+
+    // Document championship results
+    if (eChampRace.innerText === "1: Race") {
+        // Make a new row with race results
+        let raceRow = eChampTB.insertRow(0);
+        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
+            raceRow.insertCell();
+        }
+        raceRow.cells[0].innerText = eChampRace.innerText;
+        raceRow.cells[1].innerText = positionName[position];
+        raceRow.cells[2].innerText = formatCredits(damage);
+        raceRow.cells[3].innerText = formatCredits(total);
+
+        // Change input row to next race
+        eChampRace.innerText = "2: Race";
+    } else if (eChampRace.innerText === "2: Race") {
+        let raceRow = eChampTB.insertRow(1);
+        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
+            raceRow.insertCell();
+        }
+        raceRow.cells[0].innerText = eChampRace.innerText;
+        raceRow.cells[1].innerText = positionName[position];
+        raceRow.cells[2].innerText = formatCredits(damage);
+        raceRow.cells[3].innerText = formatCredits(total);
+
+        eChampRace.innerText = "3: Race";
+    } else if (eChampRace.innerText === "3: Race") {
+        let raceRow = eChampTB.insertRow(2);
+        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
+            raceRow.insertCell();
+        }
+        raceRow.cells[0].innerText = eChampRace.innerText;
+        raceRow.cells[1].innerText = positionName[position];
+        raceRow.cells[2].innerText = formatCredits(damage);
+        raceRow.cells[3].innerText = formatCredits(total);
+
+        // Add championship results row with bonus button
+        let bonusRow = eChampTB.insertRow(3);
+        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
+            bonusRow.insertCell();
+        }
+        bonusRow.cells[0].innerText = "Championship";
+        bonusRow.cells[1].innerText = positionName[1];
+        bonusRow.cells[2].innerText = "";
+
+        let getBonusButton = document.createElement("button");
+        getBonusButton.innerText = "Bonus: " + formatCredits(basicPrize[1]);
+        getBonusButton.onclick = championshipAddBonus;
+        bonusRow.cells[3].appendChild(getBonusButton);
+
+        // Hide race input row
+        eChampTR.style.display = "none";
+    }
+
+    // Clear the fields
+    eChampPosition.value = "0";
+    eChampDamage.value = "";
+    eChampTotal.innerText = "Add";
+
+    // Add total to credits
+    state.credits += total;
+    updateState();
+}
+
+function championshipInput() {
+    let total = championshipGetTotal();
+
+    // Update button text
+    if (total > 0 || total < 0) {
+        eChampTotal.innerText = "Add: " + formatCredits(total);
+    } else {
+        eChampTotal.innerText = "Add";
+    }
+
+    // Actually enter the data with enter
+    if (event.key === "Enter") {
+        championshipAddTotal();
+    }
+}
+
 // Races
 
-function deltaDR(position) {
-    let currentPI = state.cars[state.currentCar].pi;
-    let iClass = iClassFromPI(currentPI);
-    if (iClass === 0) {
-        // Return 0 for invalid class
-        return 0;
-    }
-
-    // subClass will be [1, 10] depending on how far in the class pi is
-    let subClass = Math.ceil((((currentPI - 1) % 100) + 1) / 10);
-    if (iClass === 1) {
-        // Always max out subClass for D
-        subClass = 10;
-    } else if (iClass === 7) {
-        // Always min out subClass for X
-        subClass = 1;
-    }
-
-    // Check for win streak in past 3 races and modify baseDR
-    let baseDR = basicDR[position];
-    if (Math.floor(state.wins / 100) === 1) {
-        // Previous race win
-        if (position === 1 || position === 2 || position === 3) {
-            // This race podium
-            baseDR--;
-        }
-    }
-    if (position === 1) {
-        // This race win
-        if (Math.floor((state.wins % 100) / 10) === 1) {
-            // Second previous race win
-            baseDR--;
-        }
-        if ((state.wins % 10) === 1) {
-            // Third previous race win
-            baseDR--;
-        }
-    }
-
-    // Update win streak history
-    state.wins = Math.floor(state.wins / 10);
-    if (position === 1) {
-        state.wins += 100;
-    }
-
-    return gameSpeed * baseDR * subClass * Math.pow(10, iClass - 1);
+function championshipStart() {
+    eChamp.style.display = "block";
+    eRaces.style.display = "none";
+    eChampRace.innerText = "1: Race";
 }
 
 function basicRaceGetTotal() {
     // Get values from input
-    let position = parseInt(eBasicRacePosition.value);
-    let damage = parseInt(eBasicRaceDamage.value);
+    let position = toInt(eBasicRacePosition.value);
+    let damage = toInt(eBasicRaceDamage.value);
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
@@ -360,11 +535,11 @@ function basicRaceGetTotal() {
 }
 
 function basicRaceAddTotal() {
-    let position = parseInt(eBasicRacePosition.value);
+    let position = toInt(eBasicRacePosition.value);
     let total = basicRaceGetTotal();
 
     // Update DR
-    state.dr += deltaDR(position);
+    state.dr += getDeltaDR(position);
     if (state.dr < classDR[0]) {
         state.dr = classDR[0];
     }
@@ -397,8 +572,8 @@ function basicRaceInput() {
 
 function customRaceGetTotal() {
     // Get values from input
-    let prize = parseInt(eCustomRacePrize.value);
-    let damage = parseInt(eCustomRaceDamage.value);
+    let prize = toInt(eCustomRacePrize.value);
+    let damage = toInt(eCustomRaceDamage.value);
 
     // Set total based on prize and damage
     let total = prize;
@@ -510,7 +685,7 @@ function upgradeCar() {
 
     // Ask for confirmation if car PI is too high after upgrade
     let iCar = thisRow.rowIndex - 1;
-    let newPI = parseInt(piInput.value);
+    let newPI = toInt(piInput.value);
     if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
         if (!window.confirm("Class of car after upgrade (" + addClassToPI(newPI) + ") will be too high to drive, are you sure you want to upgrade?")) {
             return;
@@ -521,8 +696,8 @@ function upgradeCar() {
 
     // Update state variables
     state.cars[iCar].pi = newPI;
-    state.cars[iCar].value += parseInt(costInput.value);
-    state.credits -= parseInt(costInput.value);
+    state.cars[iCar].value += toInt(costInput.value);
+    state.credits -= toInt(costInput.value);
 
     // Remove the input fields
     thisRow.cells[1].removeChild(piInput);
@@ -606,7 +781,7 @@ function addCar() {
     }
 
     // Ask for confirmation if new car PI is too high
-    let newPI = parseInt(eNewCarPI.value);
+    let newPI = toInt(eNewCarPI.value);
     if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
         if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
             return;
@@ -616,8 +791,8 @@ function addCar() {
     // Save input to state
     state.cars.push(new Car(eNewCarName.value,
                             newPI,
-                            parseInt(eNewCarValue.value)));
-    state.credits -= parseInt(eNewCarValue.value);
+                            toInt(eNewCarValue.value)));
+    state.credits -= toInt(eNewCarValue.value);
 
     // Set to current car if possible
     if (iClassFromPI(newPI) <= iClassFromDR(state.dr)) {
