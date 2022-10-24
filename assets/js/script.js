@@ -57,6 +57,16 @@ const classPI = [
     998,
     999];
 
+const classPrize = [
+    0,
+    5,
+    10,
+    15,
+    20,
+    30,
+    40,
+    50];
+
 const classDR = [
     Math.pow(10, 0),
     Math.pow(10, 3),
@@ -87,17 +97,17 @@ const classColor = [
     "#3460fc",
     "#67b648"];
 
-const basicPrize = [
+const positionPrize = [
     0,
-    9000,
-    6000,
-    4000,
-    3000,
-    2000,
-    1000,
+    900,
+    600,
+    400,
+    300,
+    200,
+    100,
     0, 0, 0, 0, 0, 0];
 
-const basicDR = [
+const positionDR = [
     -1,
     4,
     3,
@@ -283,7 +293,7 @@ function getDeltaDR(position) {
     }
 
     // Check for win streak in past 3 races and modify baseDR
-    let baseDR = basicDR[position];
+    let baseDR = positionDR[position];
     if (Math.floor(state.wins / 100) === 1) {
         // Previous race win
         if (position === 1 || position === 2 || position === 3) {
@@ -402,7 +412,8 @@ function championshipAddBonus() {
     eRaces.style.display = "block";
 
     // Add bonus to credits
-    state.credits += basicPrize[position];
+    let pi = state.cars[state.currentCar].pi;
+    state.credits += classPrize[iClassFromPI(pi)] * positionPrize[position];
     updateState();
 }
 
@@ -413,7 +424,8 @@ function championshipGetTotal() {
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
-    let total = basicPrize[position];
+    let pi = state.cars[state.currentCar].pi;
+    let total = classPrize[iClassFromPI(pi)] * positionPrize[position];
     if (damage > 0) {
         total -= damage;
     }
@@ -477,7 +489,8 @@ function championshipAddTotal() {
         bonusRow.cells[2].innerText = "";
 
         let getBonusButton = document.createElement("button");
-        getBonusButton.innerText = "Bonus: " + formatCredits(basicPrize[1]);
+        let pi = state.cars[state.currentCar].pi;
+        getBonusButton.innerText = "Bonus: " + formatCredits(classPrize[iClassFromPI(pi)] * positionPrize[1]);
         getBonusButton.onclick = championshipAddBonus;
         bonusRow.cells[3].appendChild(getBonusButton);
 
@@ -526,7 +539,8 @@ function basicRaceGetTotal() {
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
-    let total = basicPrize[position];
+    let pi = state.cars[state.currentCar].pi;
+    let total = classPrize[iClassFromPI(pi)] * positionPrize[position];
     if (damage > 0) {
         total -= damage;
     }
