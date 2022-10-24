@@ -58,7 +58,7 @@ const classPI = [
     999];
 
 const classPrize = [
-    0,
+    1,
     5,
     10,
     15,
@@ -157,11 +157,25 @@ function toInt(string) {
     if (Number.isInteger(string)) {
         return string;
     }
-    let int = parseInt(string);
-    if (Number.isNaN(int)) {
+    let integer = parseInt(string);
+    if (Number.isNaN(integer)) {
         return 0;
     }
-    return int;
+    return integer;
+}
+
+function toPositiveInt(string) {
+    return Math.max(0, toInt(string));
+}
+
+function toIntPI(string) {
+    let integer = toInt(string);
+    if (integer < classPI[0]) {
+        return classPI[0];
+    } else if (integer > classPI[7]) {
+        return classPI[7];
+    }
+    return integer;
 }
 
 function iClassFromPI(pi) {
@@ -274,7 +288,7 @@ function updateState() {
     localStorage.setItem("sCars", JSON.stringify(state.cars));
 }
 
-function getDeltaDR(position) {
+function getDeltaDR(position, damage) {
     let currentPI = state.cars[state.currentCar].pi;
     let iClass = iClassFromPI(currentPI);
     if (iClass === 0) {
@@ -285,8 +299,8 @@ function getDeltaDR(position) {
     // subClass will be [1, 10] depending on how far in the class pi is
     let subClass = Math.ceil((((currentPI - 1) % 100) + 1) / 10);
     if (iClass === 1) {
-        // Always max out subClass for D
-        subClass = 10;
+        // Will be [6, 10] for D class, quicker start
+        subClass = Math.ceil(currentPI / 100) + 5;
     } else if (iClass === 7) {
         // Always min out subClass for X
         subClass = 1;
@@ -319,7 +333,12 @@ function getDeltaDR(position) {
         state.wins += 100;
     }
 
-    return gameSpeed * baseDR * subClass * Math.pow(10, iClass - 1);
+    // Calculate the deltaDR
+    let classFactor = subClass * Math.pow(10, iClass - 1);
+    let prizeFactor = classPrize[iClassFromPI(currentPI)] * (positionPrize[2] + positionPrize[position]);
+    let damageRatio = Math.max(0, Math.min(1, damage / prizeFactor));
+    let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
+    return Math.ceil(gameSpeed * damageFactor * classFactor);
 }
 
 function garageTableAddNewCar(iCar, buttonDisplay) {
@@ -393,9 +412,13 @@ function getStateFromLocalStorage() {
 function championshipAddBonus() {
     // Get this somehow
     let position = 1;
+    let damage = 0;
 
-    // Update DR
-    state.dr += getDeltaDR(position);
+    // Update DR disregarding the state.wins
+    let previousWins = state.wins;
+    state.wins = 0;
+    state.dr += getDeltaDR(position, damage);
+    state.wins = previousWins;
     if (state.dr < classDR[0]) {
         state.dr = classDR[0];
     }
@@ -412,34 +435,29 @@ function championshipAddBonus() {
     eRaces.style.display = "block";
 
     // Add bonus to credits
-    let pi = state.cars[state.currentCar].pi;
-    state.credits += classPrize[iClassFromPI(pi)] * positionPrize[position];
+    let currentPI = state.cars[state.currentCar].pi;
+    state.credits += classPrize[iClassFromPI(currentPI)] * positionPrize[position];
     updateState();
 }
 
 function championshipGetTotal() {
     // Get values from input
     let position = toInt(eChampPosition.value);
-    let damage = toInt(eChampDamage.value);
+    let damage = toPositiveInt(eChampDamage.value);
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
-    let pi = state.cars[state.currentCar].pi;
-    let total = classPrize[iClassFromPI(pi)] * positionPrize[position];
-    if (damage > 0) {
-        total -= damage;
-    }
-
-    return total;
+    let currentPI = state.cars[state.currentCar].pi;
+    return classPrize[iClassFromPI(currentPI)] * positionPrize[position] - damage;
 }
 
 function championshipAddTotal() {
     let position = toInt(eChampPosition.value);
-    let damage = toInt(eChampDamage.value);
+    let damage = toPositiveInt(eChampDamage.value);
     let total = championshipGetTotal();
 
     // Update DR
-    state.dr += getDeltaDR(position);
+    state.dr += getDeltaDR(position, damage);
     if (state.dr < classDR[0]) {
         state.dr = classDR[0];
     }
@@ -489,8 +507,8 @@ function championshipAddTotal() {
         bonusRow.cells[2].innerText = "";
 
         let getBonusButton = document.createElement("button");
-        let pi = state.cars[state.currentCar].pi;
-        getBonusButton.innerText = "Bonus: " + formatCredits(classPrize[iClassFromPI(pi)] * positionPrize[1]);
+        let currentPI = state.cars[state.currentCar].pi;
+        getBonusButton.innerText = "Bonus: " + formatCredits(classPrize[iClassFromPI(currentPI)] * positionPrize[1]);
         getBonusButton.onclick = championshipAddBonus;
         bonusRow.cells[3].appendChild(getBonusButton);
 
@@ -535,25 +553,21 @@ function championshipStart() {
 function basicRaceGetTotal() {
     // Get values from input
     let position = toInt(eBasicRacePosition.value);
-    let damage = toInt(eBasicRaceDamage.value);
+    let damage = toPositiveInt(eBasicRaceDamage.value);
 
     // Set total based on position and damage
     // position can only be OK values since it's a select
-    let pi = state.cars[state.currentCar].pi;
-    let total = classPrize[iClassFromPI(pi)] * positionPrize[position];
-    if (damage > 0) {
-        total -= damage;
-    }
-
-    return total;
+    let currentPI = state.cars[state.currentCar].pi;
+    return classPrize[iClassFromPI(currentPI)] * positionPrize[position] - damage;
 }
 
 function basicRaceAddTotal() {
     let position = toInt(eBasicRacePosition.value);
+    let damage = toPositiveInt(eBasicRaceDamage.value);
     let total = basicRaceGetTotal();
 
     // Update DR
-    state.dr += getDeltaDR(position);
+    state.dr += getDeltaDR(position, damage);
     if (state.dr < classDR[0]) {
         state.dr = classDR[0];
     }
@@ -586,16 +600,11 @@ function basicRaceInput() {
 
 function customRaceGetTotal() {
     // Get values from input
-    let prize = toInt(eCustomRacePrize.value);
-    let damage = toInt(eCustomRaceDamage.value);
+    let prize = toPositiveInt(eCustomRacePrize.value);
+    let damage = toPositiveInt(eCustomRaceDamage.value);
 
     // Set total based on prize and damage
-    let total = prize;
-    if (damage > 0) {
-        total -= damage;
-    }
-
-    return total;
+    return prize - damage;
 }
 
 function customRaceAddTotal() {
@@ -699,7 +708,7 @@ function upgradeCar() {
 
     // Ask for confirmation if car PI is too high after upgrade
     let iCar = thisRow.rowIndex - 1;
-    let newPI = toInt(piInput.value);
+    let newPI = toIntPI(piInput.value);
     if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
         if (!window.confirm("Class of car after upgrade (" + addClassToPI(newPI) + ") will be too high to drive, are you sure you want to upgrade?")) {
             return;
@@ -710,8 +719,8 @@ function upgradeCar() {
 
     // Update state variables
     state.cars[iCar].pi = newPI;
-    state.cars[iCar].value += toInt(costInput.value);
-    state.credits -= toInt(costInput.value);
+    state.cars[iCar].value += toPositiveInt(costInput.value);
+    state.credits -= toPositiveInt(costInput.value);
 
     // Remove the input fields
     thisRow.cells[1].removeChild(piInput);
@@ -795,7 +804,7 @@ function addCar() {
     }
 
     // Ask for confirmation if new car PI is too high
-    let newPI = toInt(eNewCarPI.value);
+    let newPI = toIntPI(eNewCarPI.value);
     if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
         if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
             return;
@@ -805,8 +814,8 @@ function addCar() {
     // Save input to state
     state.cars.push(new Car(eNewCarName.value,
                             newPI,
-                            toInt(eNewCarValue.value)));
-    state.credits -= toInt(eNewCarValue.value);
+                            toPositiveInt(eNewCarValue.value)));
+    state.credits -= toPositiveInt(eNewCarValue.value);
 
     // Set to current car if possible
     if (iClassFromPI(newPI) <= iClassFromDR(state.dr)) {
