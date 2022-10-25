@@ -83,13 +83,13 @@ layout: home
 <div id="racesDiv" style="display: block">
   <h1>Races</h1>
   <table class="races">
-    <thead>
+    <thead id="racesTableHead">
       <td>Name</td>
       <td>Position</td>
       <td>Damage</td>
       <td>Total</td>
     </thead>
-    <tbody>
+    <tbody id="racesTableBody">
       <tr>
         <td>Championship</td>
         <td></td>
@@ -98,42 +98,6 @@ layout: home
           <button id="championshipStart"
                   onclick="championshipStart()">
             Start
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <td>Basic race</td>
-        <td>
-          <select id="basicRacePosition"
-                  onchange=basicRaceInput()>
-            <option value="1">1st</option>
-            <option value="2">2nd</option>
-            <option value="3">3rd</option>
-            <option value="4">4th</option>
-            <option value="5">5th</option>
-            <option value="6">6th</option>
-            <option value="7">7th</option>
-            <option value="8">8th</option>
-            <option value="9">9th</option>
-            <option value="10">10th</option>
-            <option value="11">11th</option>
-            <option value="12">12th</option>
-            <option value="0"
-                    selected="selected">
-              DNF
-            </option>
-        </td>
-        <td>
-          <input id="basicRaceDamage"
-                 type="number"
-                 placeholder="Repair cost"
-                 style="width: 100%"
-                 onkeyup=basicRaceInput()>
-        </td>
-        <td>
-          <button id="basicRaceTotal"
-                  onclick="basicRaceAddTotal()">
-            Add
           </button>
         </td>
       </tr>

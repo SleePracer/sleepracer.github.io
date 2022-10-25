@@ -16,10 +16,9 @@ let eChampPosition = document.getElementById("championshipPosition");
 let eChampDamage = document.getElementById("championshipDamage");
 let eChampTotal = document.getElementById("championshipTotal");
 let eRaces = document.getElementById("racesDiv");
+let eRacesTH = document.getElementById("racesTableHead");
+let eRacesTB = document.getElementById("racesTableBody");
 let eChampStart = document.getElementById("championshipStart");
-let eBasicRacePosition = document.getElementById("basicRacePosition");
-let eBasicRaceDamage = document.getElementById("basicRaceDamage");
-let eBasicRaceTotal = document.getElementById("basicRaceTotal");
 let eCustomRacePrize = document.getElementById("customRacePrize");
 let eCustomRaceDamage = document.getElementById("customRaceDamage");
 let eCustomRaceTotal = document.getElementById("customRaceTotal");
@@ -44,7 +43,8 @@ const defaultState = {
     wins: 0,
     credits: 25000,
     currentCar: -1,
-    cars: []
+    cars: [],
+    races: []
 }
 
 const classPI = [
@@ -58,7 +58,7 @@ const classPI = [
     999];
 
 const classPrize = [
-    1,
+    1, // Will maybe divide by
     5,
     10,
     15,
@@ -146,6 +146,199 @@ class Car {
         this.name = name;
         this.pi = pi;
         this.value = value;
+    }
+}
+
+// This map and these functions are necessary
+// because having Race methods on change/keyup/click
+// will result in keyword this pointing to the select/input/button
+// rather than the Race object
+let raceMap = new Map();
+function positionSelectChange() {
+    raceMap.get(this.id).positionSelectChange(this.value);
+}
+function damageInputKeyup() {
+    raceMap.get(this.id).damageInputKeyup(this.value);
+
+    // Actually enter the data with enter
+    if (event.key === "Enter") {
+        raceMap.get(this.id).finishButtonClick();
+    }
+}
+function finishButtonClick() {
+    raceMap.get(this.id).finishButtonClick();
+}
+
+class Race {
+    constructor(name) {
+        this.name = name;
+        raceMap.set(name, this);
+
+        // insertRow(???), 0 for now
+        // In the future, add all Race objects to a state array and use
+        // it's length to determine iRow
+        this.row = eRacesTB.insertRow(0);
+        for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
+            this.row.insertCell();
+        }
+
+        this.row.cells[0].innerText = name;
+
+        this.positionSelect = document.createElement("select");
+        this.positionSelect.id = name;
+        this.positionSelect.onchange = positionSelectChange;
+        for (let pos = 0; pos < positionName.length; pos++) {
+            let option = document.createElement("option");
+            option.value = pos;
+            option.text = positionName[pos];
+            this.positionSelect.appendChild(option);
+        }
+        this.row.cells[1].appendChild(this.positionSelect);
+
+        this.damageInput = document.createElement("input");
+        this.damageInput.id = name;
+        this.damageInput.type = "number";
+        this.damageInput.style.width = "100%";
+        this.damageInput.placeholder = "Repair cost";
+        this.damageInput.onkeyup = damageInputKeyup;
+        this.row.cells[2].appendChild(this.damageInput);
+
+        this.finishButton = document.createElement("button");
+        this.finishButton.id = name;
+        this.finishButton.onclick = finishButtonClick;
+        this.row.cells[3].appendChild(this.finishButton);
+
+        // Needs to be after this.row is finished
+        // since it resets those fields too
+        this.reset();
+    }
+
+    reset() {
+        this.position = "0";
+        this.positionSelect.value = "0";
+        this.damage = 0;
+        this.damageInput.value = "";
+
+        this.setDeltaCredits(state.cars[state.currentCar].pi);
+        this.setDeltaDR(state.cars[state.currentCar].pi);
+    }
+
+    positionSelectChange(value) {
+        this.position = toInt(value);
+
+        this.setDeltaCredits(state.cars[state.currentCar].pi);
+        this.setDeltaDR(state.cars[state.currentCar].pi);
+    }
+
+    damageInputKeyup(value) {
+        this.damage = toPositiveInt(value);
+
+        this.setDeltaCredits(state.cars[state.currentCar].pi);
+        this.setDeltaDR(state.cars[state.currentCar].pi);
+    }
+
+    finishButtonClick() {
+        // Update DR
+        state.dr += this.deltaDR;
+
+        // This check should probably be done in a setter
+        // Later, when state is a class?
+        if (state.dr < classDR[0]) {
+            state.dr = classDR[0];
+        }
+
+        // Update win streak history
+        // This should probably also be state.updateWins(position);
+        state.wins = Math.floor(state.wins / 10);
+        if (this.position === 1) {
+            state.wins += 100;
+        }
+
+        // Update credits
+        state.credits += this.deltaCredits;
+
+        updateState();
+
+        this.reset();
+    }
+
+    setDeltaCredits(pi) {
+        this.deltaCredits = classPrize[iClassFromPI(pi)]
+                          * positionPrize[this.position]
+                          - this.damage;
+
+        if (this.deltaCredits > 0) {
+            this.finishButton.innerText = "Finish! "
+                                        + formatCredits(this.deltaCredits);
+        } else if (this.deltaCredits < 0) {
+            this.finishButton.innerText = "Finish! "
+                                        + formatCredits(this.deltaCredits);
+        } else {
+            this.finishButton.innerText = "Finish!";
+        }
+    }
+
+    getBaseDR() {
+        // Check for win streak in past 3 races and modify baseDR
+        let baseDR = positionDR[this.position];
+        if (Math.floor(state.wins / 100) === 1) {
+            // Previous race win
+            if (this.position === 1
+             || this.position === 2
+             || this.position === 3) {
+                // This race podium
+                baseDR--;
+            }
+        }
+        if (this.position === 1) {
+            // This race win
+            if (Math.floor((state.wins % 100) / 10) === 1) {
+                // Second previous race win
+                baseDR--;
+            }
+            if ((state.wins % 10) === 1) {
+                // Third previous race win
+                baseDR--;
+            }
+        }
+        return baseDR;
+    }
+
+    getSubClass(pi) {
+        // Should this be a normal function?
+        // Does not use any members, might be useful elsewhere
+
+        let iClass = iClassFromPI(pi);
+
+        // subClass will be [1, 10] depending on how far in the class pi is
+        let subClass = Math.ceil((((pi - 1) % 100) + 1) / 10);
+        if (iClass === 1) {
+            // Will be [6, 10] for D class, quicker start
+            subClass = Math.ceil(pi / 100) + 5;
+        } else if (iClass === 7) {
+            // Always min out subClass for X
+            subClass = 1;
+        }
+        return subClass;
+    }
+
+    setDeltaDR(pi) {
+        let iClass = iClassFromPI(pi);
+        if (iClass === 0) {
+            // Set to 0 for invalid class
+            this.deltaDR = 0;
+            return;
+        }
+
+        // Calculate the deltaDR
+        let subClass = this.getSubClass(pi);
+        let baseDR = this.getBaseDR();
+        let classFactor = subClass * Math.pow(10, iClass - 1);
+        let prizeFactor = classPrize[iClass]
+                        * (positionPrize[2] + positionPrize[this.position]);
+        let damageRatio = Math.max(0, Math.min(1, this.damage / prizeFactor));
+        let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
+        this.deltaDR = Math.ceil(gameSpeed * damageFactor * classFactor);
     }
 }
 
@@ -550,54 +743,6 @@ function championshipStart() {
     eChampRace.innerText = "1: Race";
 }
 
-function basicRaceGetTotal() {
-    // Get values from input
-    let position = toInt(eBasicRacePosition.value);
-    let damage = toPositiveInt(eBasicRaceDamage.value);
-
-    // Set total based on position and damage
-    // position can only be OK values since it's a select
-    let currentPI = state.cars[state.currentCar].pi;
-    return classPrize[iClassFromPI(currentPI)] * positionPrize[position] - damage;
-}
-
-function basicRaceAddTotal() {
-    let position = toInt(eBasicRacePosition.value);
-    let damage = toPositiveInt(eBasicRaceDamage.value);
-    let total = basicRaceGetTotal();
-
-    // Update DR
-    state.dr += getDeltaDR(position, damage);
-    if (state.dr < classDR[0]) {
-        state.dr = classDR[0];
-    }
-
-    // Clear the fields
-    eBasicRacePosition.value = "0";
-    eBasicRaceDamage.value = "";
-    eBasicRaceTotal.innerText = "Add";
-
-    // Add total to credits
-    state.credits += total;
-    updateState();
-}
-
-function basicRaceInput() {
-    let total = basicRaceGetTotal();
-
-    // Update button text
-    if (total > 0 || total < 0) {
-        eBasicRaceTotal.innerText = "Add: " + formatCredits(total);
-    } else {
-        eBasicRaceTotal.innerText = "Add";
-    }
-
-    // Actually enter the data with enter
-    if (event.key === "Enter") {
-        basicRaceAddTotal();
-    }
-}
-
 function customRaceGetTotal() {
     // Get values from input
     let prize = toPositiveInt(eCustomRacePrize.value);
@@ -864,3 +1009,6 @@ function resetButton() {
 // This means new variables not yet in localStorage will get default value
 let state = JSON.parse(JSON.stringify(defaultState));
 getStateFromLocalStorage();
+
+let basicRace = new Race("Basic Race");
+let coolRace = new Race("Cool Race");
