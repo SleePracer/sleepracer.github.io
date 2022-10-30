@@ -193,6 +193,9 @@ function finishButtonClick() {
 }
 
 // Event
+function infoButtonClick() {
+    eventMap.get(this.id).showInfo();
+}
 function enterEventButtonClick() {
     eventMap.get(this.id).enter();
 }
@@ -634,7 +637,7 @@ class Race {
 // -----------------------------------------------------------------------
 
 class Event {
-    constructor(name, iRace, raceNames, resultFactor = 1) {
+    constructor(name, iRace, info, raceNames, resultFactor = 1) {
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here
         eventMap.set(name, this);
@@ -643,14 +646,15 @@ class Event {
         // Event state variables
         this.name = name;
         this.iRace = iRace;
-        this.resultFactor = resultFactor;
+        this.infoString = info;
         this.raceNames = raceNames;
+        this.resultFactor = resultFactor;
         this.cRace = -1;
         this.races = [];
         this.levelUp = false;
 
         // Add and populate new row in event table
-        this.row = eEventsTB.insertRow(iRace);
+        this.row = eEventsTB.insertRow(this.iRace);
         for (let cell = 0; cell < eEventsTH.rows[0].cells.length; cell++) {
             this.row.insertCell();
         }
@@ -663,12 +667,44 @@ class Event {
         this.enterButton.innerText = "Enter";
         this.row.cells[1].appendChild(this.enterButton);
 
+        // Create and add the info button
+        this.infoButton = document.createElement("button");
+        this.infoButton.id = this.name;
+        this.infoButton.onclick = infoButtonClick;
+        this.infoButton.innerText = "Info";
+        this.infoButton.className = "margin";
+        this.row.cells[1].appendChild(this.infoButton);
+
         // Create the return from event button
         // It will be added to the races table later
         this.returnButton = document.createElement("button");
         this.returnButton.id = this.name;
         this.returnButton.onclick = returnEventButtonClick;
         this.returnButton.innerText = "Retire";
+    }
+
+    showInfo() {
+        if (this.infoButton.innerText === "Info") {
+            // Replace name with info
+            this.row.cells[0].innerText = this.name + ": " + this.infoString;
+
+            // Repurpose info button to close info
+            this.infoButton.innerText = "Hide info";
+            this.infoButton.className = "";
+
+            // Hide enter button
+            this.enterButton.style.display = "none";
+        } else {
+            // Switch back to name
+            this.row.cells[0].innerText = this.name;
+
+            // Return info button back to it's original state
+            this.infoButton.innerText = "Info";
+            this.infoButton.className = "margin";
+
+            // Show enter button again
+            this.enterButton.style.display = "inline";
+        }
     }
 
     enter() {
@@ -1078,18 +1114,23 @@ function resetButton() {
 
 // Create all events
 events = [];
+info = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet nisi magna. Sed magna nibh, fermentum in semper sit amet, commodo quis dolor. Sed tempus dolor leo, at pharetra massa interdum non. Pellentesque eu urna eget diam lobortis egestas. Nam malesuada maximus odio, et tempus est egestas id. Pellentesque sit amet risus id eros fringilla rutrum. Nullam volutpat mi et laoreet pulvinar. In vel ante felis. Nam auctor vestibulum tempor. Ut eu elit egestas, sollicitudin metus et, pulvinar nibh. Phasellus purus ante, commodo a neque vitae, auctor viverra neque. Pellentesque sit amet tortor enim. Vestibulum et eleifend felis. Vivamus vel quam ultricies, lacinia lacus et, faucibus dui.";
 events.push(new Event("Basic Race",
                       events.length,
+                      info,
                       ["Race"]));
 events.push(new Event("Basic Endurance",
                       events.length,
+                      info,
                       ["Endurance"],
                       4));
 events.push(new Event("Basic Championship",
                       events.length,
+                      info,
                       ["1: Race", "2: Race", "3: Race"]));
 events.push(new Event("Class Level Up Championship",
                       events.length,
+                      info,
                       ["1: Race", "2: Race", "3: Race"]));
 
 // This will make finishing the championship increase iDR
