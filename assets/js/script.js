@@ -205,7 +205,7 @@ function returnEventButtonClick() {
 // -----------------------------------------------------------------------
 
 class Car {
-    constructor(name, pi, value, buttonDisplay) {
+    constructor(name, pi, cost, value = 0, buttonDisplay = "inline") {
         // Add car to map
         carMap.set(name, this);
 
@@ -213,7 +213,11 @@ class Car {
         this.iCar = state.cars.length;
         this.name = name;
         this.pi = pi;
+        this.cost = cost;
         this.value = value;
+        if (value === 0) {
+            this.value = Math.floor(0.9 * cost);
+        }
 
         // Car upgrade variables
         this.upgradePI = toIntPI(0);
@@ -288,6 +292,7 @@ class Car {
         return {
             name: this.name,
             pi: this.pi,
+            cost: this.cost,
             value: this.value
         }
     }
@@ -301,6 +306,24 @@ class Car {
     toggleUpgradeButtons(buttonDisplay) {
         this.doUpgradeButton.style.display = buttonDisplay;
         this.abortUpgradeButton.style.display = buttonDisplay;
+    }
+
+    depreciate(value) {
+        // Max depreciation at 10% of value
+        // When damage is mean of value and cost,
+        // will depreciate half of max
+        // So when value has fallen a lot,
+        // it will still require some damage to reach high depreciation
+        let max = 0.1 * this.value;
+        let halfway = (this.value + this.cost) / 2;
+        this.value -= Math.floor(max
+                               * value / (value + halfway));
+
+        // Also depreciate 0.5% for mileage
+        this.value -= Math.floor(0.005 * this.value);
+
+        // Update table
+        this.row.cells[2].innerHTML = formatCredits(this.value);
     }
 
     getIn() {
@@ -328,16 +351,13 @@ class Car {
     }
 
     sell() {
-        // Set sale price to half of value
-        let price = Math.floor(this.value / 2);
-
         // Ask for confirmation before selling
-        if (!window.confirm("Sale price is half of car value: " + formatCredits(price) + ", are you sure you want to sell?")) {
+        if (!window.confirm("Sale price is: " + formatCredits(this.value) + ", are you sure you want to sell?")) {
             return;
         }
 
         // Add back sale price to credits
-        state.credits += price;
+        state.credits += this.value;
 
         // Change current car index if necessary
         if (this.iCar === state.cCar) {
@@ -401,7 +421,7 @@ class Car {
 
         // Update state variables
         this.pi = this.upgradePI;
-        this.value += this.upgradeCost;
+        this.value += Math.floor(0.5 * this.upgradeCost);
         state.credits -= this.upgradeCost;
 
         this.exitUpgrade();
@@ -599,6 +619,9 @@ class Race {
 
         // Update credits
         state.credits += this.deltaCredits;
+
+        // Depreciate value of car
+        state.cars[state.cCar].depreciate(this.damage);
 
         updateState();
 
@@ -954,6 +977,7 @@ function getStateFromLocalStorage() {
             state.cars.push(new Car(
                 carArgs[iCar].name,
                 carArgs[iCar].pi,
+                carArgs[iCar].cost,
                 carArgs[iCar].value,
                 "none"));
         }
@@ -1009,8 +1033,7 @@ function addCar() {
     // Save input to state
     state.cars.push(new Car(newName,
                             newPI,
-                            newCost,
-                            "inline"));
+                            newCost));
     state.credits -= newCost;
 
     // Set to current car if possible
