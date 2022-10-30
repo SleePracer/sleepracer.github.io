@@ -418,13 +418,14 @@ class Car {
 // -----------------------------------------------------------------------
 
 class Race {
-    constructor(name, iRace) {
+    constructor(name, iRace, resultFactor = 1) {
         // Add race to map
         raceMap.set(name, this);
 
         // Race state variables
         this.name = name;
         this.iRace = iRace;
+        this.resultFactor = resultFactor;
 
         // Add and populate new row
         this.row = eRacesTB.insertRow(this.iRace);
@@ -486,6 +487,7 @@ class Race {
         // Prize depends on class, position and damage
         this.deltaCredits = classPrize[iClassFromPI(pi)]
                           * positionPrize[this.position]
+                          * this.resultFactor
                           - this.damage;
 
         // Set button text depending on prize
@@ -608,7 +610,7 @@ class Race {
 // -----------------------------------------------------------------------
 
 class Event {
-    constructor(name, iRace, raceNames) {
+    constructor(name, iRace, raceNames, resultFactor = 1) {
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here
         eventMap.set(name, this);
@@ -617,6 +619,7 @@ class Event {
         // Event state variables
         this.name = name;
         this.iRace = iRace;
+        this.resultFactor = resultFactor;
         this.raceNames = raceNames;
         this.cRace = -1;
         this.races = [];
@@ -652,7 +655,9 @@ class Event {
 
         // Create all event races
         for (let iRace = 0; iRace < this.raceNames.length; iRace++) {
-            this.races.push(new Race(this.raceNames[iRace], iRace));
+            this.races.push(new Race(this.raceNames[iRace],
+                                     iRace,
+                                     this.resultFactor));
             this.races[iRace].row.style.display = "none";
             this.races[iRace].positionSelect.id = this.name;
             this.races[iRace].damageInput.id = this.name;
@@ -1038,4 +1043,5 @@ getStateFromLocalStorage();
 
 events = [];
 events.push(new Event("Basic Race", 0, ["Race"]));
-events.push(new Event("Basic Championship", 1, ["1: Race", "2: Race", "3: Race"]));
+events.push(new Event("Basic Endurance", 1, ["Endurance"], 4));
+events.push(new Event("Basic Championship", 2, ["1: Race", "2: Race", "3: Race"]));
