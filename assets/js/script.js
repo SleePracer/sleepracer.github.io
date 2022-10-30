@@ -701,11 +701,20 @@ function updateState() {
         if (state.currentCar !== -1) {
             eStateCar.innerText = state.cars[state.currentCar].name + " "
                                 + addClassToPI(state.cars[state.currentCar].pi);
+            if (eChamp.style.display === "none") {
+                eRaces.style.display = "block";
+            }
         } else {
             eStateCar.innerText = "Not in a car!";
+            if (eChamp.style.display === "none") {
+                eRaces.style.display = "none";
+            }
         }
     } else {
         eStateCar.innerText = "No cars!";
+        if (eChamp.style.display === "none") {
+            eRaces.style.display = "none";
+        }
     }
 
     eStateCredits.innerText = formatCredits(state.credits);
