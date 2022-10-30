@@ -28,7 +28,7 @@ let eGarageTB = document.getElementById("garageTableBody");
 let eNewCarRow = document.getElementById("newCarRow");
 let eNewCarName = document.getElementById("newCarName");
 let eNewCarPI = document.getElementById("newCarPI");
-let eNewCarValue = document.getElementById("newCarValue");
+let eNewCarCost = document.getElementById("newCarCost");
 
 // -----------------------------------------------------------------------
 // Constants
@@ -141,32 +141,269 @@ const positionName = [
 // Classes
 // -----------------------------------------------------------------------
 
-class Car {
-    constructor(name, pi, value) {
-        this.name = name;
-        this.pi = pi;
-        this.value = value;
+// These maps and functions are necessary
+// because having class methods on change/keyup/click
+// will result in keyword "this" pointing to the select/input/button
+// rather than the class object
+
+let carMap = new Map();
+let raceMap = new Map();
+
+function getInButtonClick() {
+    carMap.get(this.id).getIn();
+}
+function showUpgradeButtonClick() {
+    carMap.get(this.id).showUpgrade();
+}
+function sellButtonClick() {
+    carMap.get(this.id).sell();
+}
+function piInputKeyup() {
+    carMap.get(this.id).setUpgradePI(this.value);
+
+    if (event.key === "Enter") {
+        carMap.get(this.id).doUpgrade();
+    } else if (event.key === "Escape") {
+        carMap.get(this.id).abortUpgrade();
     }
 }
+function costInputKeyup() {
+    carMap.get(this.id).setUpgradeCost(this.value);
 
-// This map and these functions are necessary
-// because having Race methods on change/keyup/click
-// will result in keyword this pointing to the select/input/button
-// rather than the Race object
-let raceMap = new Map();
+    if (event.key === "Enter") {
+        carMap.get(this.id).doUpgrade();
+    } else if (event.key === "Escape") {
+        carMap.get(this.id).abortUpgrade();
+    }
+}
+function doUpgradeButtonClick() {
+    carMap.get(this.id).doUpgrade();
+}
+function abortUpgradeButtonClick() {
+    carMap.get(this.id).abortUpgrade();
+}
+
 function positionSelectChange() {
-    raceMap.get(this.id).positionSelectChange(this.value);
+    raceMap.get(this.id).setPosition(this.value);
 }
 function damageInputKeyup() {
-    raceMap.get(this.id).damageInputKeyup(this.value);
+    raceMap.get(this.id).setDamage(this.value);
 
-    // Actually enter the data with enter
     if (event.key === "Enter") {
-        raceMap.get(this.id).finishButtonClick();
+        raceMap.get(this.id).finish();
     }
 }
 function finishButtonClick() {
-    raceMap.get(this.id).finishButtonClick();
+    raceMap.get(this.id).finish();
+}
+
+class Car {
+    constructor(name, pi, value, buttonDisplay) {
+        carMap.set(name, this);
+
+        // Car state variables
+        this.iCar = state.cars.length;
+        this.name = name;
+        this.pi = pi;
+        this.value = value;
+
+        // Car upgrade variables
+        this.upgradePI = toIntPI(0);
+        this.upgradeCost = 0;
+
+        // Add and populate new row
+        this.row = eGarageTB.insertRow(this.iCar);
+        for (let cell = 0; cell < eGarageTH.rows[0].cells.length; cell++) {
+            this.row.insertCell();
+        }
+        this.row.cells[0].innerHTML = this.name;
+        this.row.cells[1].innerHTML = addClassToPI(this.pi);
+        this.row.cells[2].innerHTML = formatCredits(this.value);
+
+        // Create and add the options buttons
+
+        this.getInButton = document.createElement("button");
+        this.getInButton.id = this.name;
+        this.getInButton.innerText = "Get in";
+        this.getInButton.onclick = getInButtonClick;
+        this.getInButton.style.display = buttonDisplay;
+        this.row.cells[3].appendChild(this.getInButton);
+
+        this.showUpgradeButton = document.createElement("button");
+        this.showUpgradeButton.id = this.name;
+        this.showUpgradeButton.innerText = "Upgrade";
+        this.showUpgradeButton.onclick = showUpgradeButtonClick;
+        this.showUpgradeButton.style.display = buttonDisplay;
+        this.showUpgradeButton.className = "margin";
+        this.row.cells[3].appendChild(this.showUpgradeButton);
+
+        this.sellButton = document.createElement("button");
+        this.sellButton.id = this.name;
+        this.sellButton.innerText = "Sell";
+        this.sellButton.onclick = sellButtonClick;
+        this.sellButton.style.display = buttonDisplay;
+        this.row.cells[3].appendChild(this.sellButton);
+
+        // Create the upgrade fields and buttons
+
+        this.piInput = document.createElement("input");
+        this.piInput.id = this.name;
+        this.piInput.type = "number";
+        this.piInput.style.width = "100%";
+        this.piInput.placeholder = "New PI";
+        this.piInput.onkeyup = piInputKeyup;
+
+        this.costInput = document.createElement("input");
+        this.costInput.id = this.name;
+        this.costInput.type = "number";
+        this.costInput.style.width = "100%";
+        this.costInput.placeholder = "Upgrade cost";
+        this.costInput.onkeyup = costInputKeyup;
+
+        this.doUpgradeButton = document.createElement("button");
+        this.doUpgradeButton.id = this.name;
+        this.doUpgradeButton.innerText = "Upgrade";
+        this.doUpgradeButton.onclick = doUpgradeButtonClick;
+        this.doUpgradeButton.style.display = "none";
+        this.row.cells[3].appendChild(this.doUpgradeButton);
+
+        this.abortUpgradeButton = document.createElement("button");
+        this.abortUpgradeButton.id = this.name;
+        this.abortUpgradeButton.innerText = "Abort";
+        this.abortUpgradeButton.onclick = abortUpgradeButtonClick;
+        this.abortUpgradeButton.style.display = "none";
+        this.abortUpgradeButton.className = "margin";
+        this.row.cells[3].appendChild(this.abortUpgradeButton);
+    }
+
+    getArgs() {
+        return {
+            name: this.name,
+            pi: this.pi,
+            value: this.value
+        }
+    }
+
+    toggleOptionsButtons(buttonDisplay) {
+        this.getInButton.style.display = buttonDisplay;
+        this.showUpgradeButton.style.display = buttonDisplay;
+        this.sellButton.style.display = buttonDisplay;
+    }
+
+    toggleUpgradeButtons(buttonDisplay) {
+        this.doUpgradeButton.style.display = buttonDisplay;
+        this.abortUpgradeButton.style.display = buttonDisplay;
+    }
+
+    getIn() {
+        // Only allow getting into car if PI is equal to or lower than DR
+        if (iClassFromPI(this.pi) <= iClassFromDR(state.dr)) {
+            state.currentCar = this.iCar;
+        }
+
+        updateState();
+    }
+
+    showUpgrade() {
+        // Hide the car state and show upgrade inputs
+        this.row.cells[1].innerHTML = "";
+        this.row.cells[1].appendChild(this.piInput);
+        this.row.cells[2].innerHTML = "";
+        this.row.cells[2].appendChild(this.costInput);
+
+        // Hide all buttons
+        toggleOptions();
+        eToggleOptions.style.display = "none";
+
+        // Show the upgrade buttons
+        this.toggleUpgradeButtons("inline");
+    }
+
+    sell() {
+        // Set sale price to half of value
+        let price = Math.floor(this.value / 2);
+
+        // Ask for confirmation before selling
+        if (!window.confirm("Sale price is half of car value: " + formatCredits(price) + ", are you sure you want to sell?")) {
+            return;
+        }
+
+        // Add back sale price to credits
+        state.credits += price;
+
+        // Change current car index if necessary
+        if (this.iCar === state.currentCar) {
+            state.currentCar = -1;
+        } else if (this.iCar < state.currentCar) {
+            state.currentCar--;
+        }
+
+        // Update iCar of all other cars
+        for (let jCar = (this.iCar + 1); jCar < state.cars.length; jCar++) {
+            state.cars[jCar].iCar--;
+        }
+
+        // Delete car from table and state
+        eGarageTB.deleteRow(this.iCar);
+        state.cars.splice(this.iCar, 1);
+
+        updateState();
+    }
+
+    setUpgradePI(value) {
+        this.upgradePI = toIntPI(value);
+    }
+
+    setUpgradeCost(value) {
+        this.upgradeCost = toPositiveInt(value);
+    }
+
+    exitUpgrade() {
+        // Reset the upgrade variables
+        this.upgradePI = toIntPI(0);
+        this.upgradeCost = 0;
+
+        // Remove and reset the input fields
+        this.row.cells[1].removeChild(this.piInput);
+        this.row.cells[2].removeChild(this.costInput);
+        this.piInput.value = "";
+        this.costInput.value = "";
+
+        // Re-add the state information to the table
+        this.row.cells[1].innerHTML = addClassToPI(this.pi);
+        this.row.cells[2].innerHTML = formatCredits(this.value);
+
+        // Hide the upgrade buttons
+        this.toggleUpgradeButtons("none");
+
+        // Show all other buttons and rows again
+        eToggleOptions.style.display = "block";
+        toggleOptions();
+    }
+
+    doUpgrade() {
+        // Ask for confirmation if car PI is too high after upgrade
+        if (iClassFromPI(this.upgradePI) > iClassFromDR(state.dr)) {
+            if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, are you sure you want to upgrade?")) {
+                return;
+            } else if (state.currentCar === this.iCar) {
+                state.currentCar = -1;
+            }
+        }
+
+        // Update state variables
+        this.pi = this.upgradePI;
+        this.value += this.upgradeCost;
+        state.credits -= this.upgradeCost;
+
+        this.exitUpgrade();
+
+        updateState();
+    }
+
+    abortUpgrade() {
+        this.exitUpgrade();
+    }
 }
 
 class Race {
@@ -214,52 +451,18 @@ class Race {
     }
 
     reset() {
-        this.position = "0";
+        this.position = 0;
         this.positionSelect.value = "0";
         this.damage = 0;
         this.damageInput.value = "";
 
-        this.setDeltaCredits(state.cars[state.currentCar].pi);
-        this.setDeltaDR(state.cars[state.currentCar].pi);
-    }
-
-    positionSelectChange(value) {
-        this.position = toInt(value);
-
-        this.setDeltaCredits(state.cars[state.currentCar].pi);
-        this.setDeltaDR(state.cars[state.currentCar].pi);
-    }
-
-    damageInputKeyup(value) {
-        this.damage = toPositiveInt(value);
-
-        this.setDeltaCredits(state.cars[state.currentCar].pi);
-        this.setDeltaDR(state.cars[state.currentCar].pi);
-    }
-
-    finishButtonClick() {
-        // Update DR
-        state.dr += this.deltaDR;
-
-        // This check should probably be done in a setter
-        // Later, when state is a class?
-        if (state.dr < classDR[0]) {
-            state.dr = classDR[0];
+        if (state.currentCar !== -1) {
+            this.setDeltaCredits(state.cars[state.currentCar].pi);
+            this.setDeltaDR(state.cars[state.currentCar].pi);
+        } else {
+            this.setDeltaCredits(classPI[0]);
+            this.setDeltaDR(classPI[0]);
         }
-
-        // Update win streak history
-        // This should probably also be state.updateWins(position);
-        state.wins = Math.floor(state.wins / 10);
-        if (this.position === 1) {
-            state.wins += 100;
-        }
-
-        // Update credits
-        state.credits += this.deltaCredits;
-
-        updateState();
-
-        this.reset();
     }
 
     setDeltaCredits(pi) {
@@ -339,6 +542,45 @@ class Race {
         let damageRatio = Math.max(0, Math.min(1, this.damage / prizeFactor));
         let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
         this.deltaDR = Math.ceil(gameSpeed * damageFactor * classFactor);
+    }
+
+    setPosition(value) {
+        this.position = toInt(value);
+
+        this.setDeltaCredits(state.cars[state.currentCar].pi);
+        this.setDeltaDR(state.cars[state.currentCar].pi);
+    }
+
+    setDamage(value) {
+        this.damage = toPositiveInt(value);
+
+        this.setDeltaCredits(state.cars[state.currentCar].pi);
+        this.setDeltaDR(state.cars[state.currentCar].pi);
+    }
+
+    finish() {
+        // Update DR
+        state.dr += this.deltaDR;
+
+        // This check should probably be done in a setter
+        // Later, when state is a class?
+        if (state.dr < classDR[0]) {
+            state.dr = classDR[0];
+        }
+
+        // Update win streak history
+        // This should probably also be state.updateWins(position);
+        state.wins = Math.floor(state.wins / 10);
+        if (this.position === 1) {
+            state.wins += 100;
+        }
+
+        // Update credits
+        state.credits += this.deltaCredits;
+
+        updateState();
+
+        this.reset();
     }
 }
 
@@ -478,7 +720,13 @@ function updateState() {
     localStorage.setItem("sWins", JSON.stringify(state.wins));
     localStorage.setItem("sCredits", JSON.stringify(state.credits));
     localStorage.setItem("sCurrentCar", JSON.stringify(state.currentCar));
-    localStorage.setItem("sCars", JSON.stringify(state.cars));
+
+    // Store cars as constructor argument objects
+    let carArgs = [];
+    for (let iCar = 0; iCar < state.cars.length; iCar++) {
+        carArgs.push(state.cars[iCar].getArgs());
+    }
+    localStorage.setItem("sCars", JSON.stringify(carArgs));
 }
 
 function getDeltaDR(position, damage) {
@@ -534,39 +782,9 @@ function getDeltaDR(position, damage) {
     return Math.ceil(gameSpeed * damageFactor * classFactor);
 }
 
-function garageTableAddNewCar(iCar, buttonDisplay) {
-    // Add and populate new row
-    let newCarRow = eGarageTB.insertRow(iCar);
-    for (let c = 0; c < eGarageTH.rows[0].cells.length; c++) {
-        newCarRow.insertCell();
-    }
-    newCarRow.cells[0].innerHTML = state.cars[iCar].name;
-    newCarRow.cells[1].innerHTML = addClassToPI(state.cars[iCar].pi);
-    newCarRow.cells[2].innerHTML = formatCredits(state.cars[iCar].value);
-
-    // Make all the buttons and add to the last cell
-
-    let getInButton = document.createElement("button");
-    getInButton.innerText = "Get in";
-    getInButton.onclick = getInCar;
-    getInButton.style.display = buttonDisplay;
-    newCarRow.cells[3].appendChild(getInButton);
-
-    let upgradeButton = document.createElement("button");
-    upgradeButton.innerText = "Upgrade";
-    upgradeButton.onclick = showUpgrade;
-    upgradeButton.style.display = buttonDisplay;
-    upgradeButton.className = "margin";
-    newCarRow.cells[3].appendChild(upgradeButton);
-
-    let sellButton = document.createElement("button");
-    sellButton.innerText = "Sell";
-    sellButton.onclick = sellCar;
-    sellButton.style.display = buttonDisplay;
-    newCarRow.cells[3].appendChild(sellButton);
-}
-
 function getStateFromLocalStorage() {
+    // Assume !!! that state is currently default
+
     // Get the state variables one at a time
     // This should enable adding more elements without breaking saves
     if (localStorage.getItem("sName") !== null) {
@@ -584,13 +802,18 @@ function getStateFromLocalStorage() {
     if (localStorage.getItem("sCurrentCar") !== null) {
         state.currentCar = JSON.parse(localStorage.getItem("sCurrentCar"));
     }
-    if (localStorage.getItem("sCars") !== null) {
-        state.cars = JSON.parse(localStorage.getItem("sCars"));
-    }
 
-    // Populate garage table with cars from state
-    for (let iCar = 0; iCar < state.cars.length; iCar++) {
-        garageTableAddNewCar(iCar, "none");
+    // Cars stored as constructor argument objects
+    if (localStorage.getItem("sCars") !== null) {
+        let carArgs = JSON.parse(localStorage.getItem("sCars"));
+        // Populate garage table with cars from state
+        for (let iCar = 0; iCar < carArgs.length; iCar++) {
+            state.cars.push(new Car(
+                carArgs[iCar].name,
+                carArgs[iCar].pi,
+                carArgs[iCar].value,
+                "none"));
+        }
     }
 
     updateState();
@@ -796,160 +1019,25 @@ function toggleOptions() {
     }
 
     // Change display for all buttons for all cars
-    for (let iRow = 0; iRow < state.cars.length; iRow++) {
-        let row = eGarageTB.children[iRow];
-
-        // The buttons are always in the last cell
-        let lastCell = row.children[row.children.length - 1];
-        for (let iButton = 0; iButton < lastCell.children.length; iButton++) {
-            lastCell.children[iButton].style.display = newDisplay;
-        }
+    for (let iCar = 0; iCar < state.cars.length; iCar++) {
+        state.cars[iCar].toggleOptionsButtons(newDisplay);
     }
-}
-
-function showUpgrade() {
-    // Handy handle to the row that was clicked
-    let thisRow = event.target.parentElement.parentElement;
-
-    // Remove state information
-    thisRow.cells[1].innerHTML = "";
-    thisRow.cells[2].innerHTML = "";
-
-    // Make a new PI input field
-    let piInput = document.createElement("input");
-    piInput.type = "number";
-    piInput.style.width = "100%";
-    piInput.placeholder = "New PI";
-    piInput.onkeyup = upgradeInput;
-    thisRow.cells[1].appendChild(piInput);
-
-    // Make an upgrade cost input field
-    let costInput = document.createElement("input");
-    costInput.type = "number";
-    costInput.style.width = "100%";
-    costInput.placeholder = "Upgrade cost";
-    costInput.onkeyup = upgradeInput;
-    thisRow.cells[2].appendChild(costInput);
-
-    // Hide all the other buttons and the new car row
-    toggleOptions();
-    eToggleOptions.style.display = "none";
-
-    // Keep the upgrade button, modify it to act as enter
-    event.target.style.display = "inline";
-    event.target.innerText = "Enter upgrade";
-    event.target.onclick = upgradeCar;
-}
-
-function upgradeCar() {
-    // Find the input fields and check if they're filled out
-    let thisRow = event.target.parentElement.parentElement;
-    let piInput = thisRow.cells[1].children[0];
-    let costInput = thisRow.cells[2].children[0];
-    if (piInput.value === ""
-     || costInput.value === "") {
-        return;
-    }
-
-    // Ask for confirmation if car PI is too high after upgrade
-    let iCar = thisRow.rowIndex - 1;
-    let newPI = toIntPI(piInput.value);
-    if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
-        if (!window.confirm("Class of car after upgrade (" + addClassToPI(newPI) + ") will be too high to drive, are you sure you want to upgrade?")) {
-            return;
-        } else if (state.currentCar === iCar) {
-            state.currentCar = -1;
-        }
-    }
-
-    // Update state variables
-    state.cars[iCar].pi = newPI;
-    state.cars[iCar].value += toPositiveInt(costInput.value);
-    state.credits -= toPositiveInt(costInput.value);
-
-    // Remove the input fields
-    thisRow.cells[1].removeChild(piInput);
-    thisRow.cells[2].removeChild(costInput);
-
-    // Re-add the state information
-    thisRow.cells[1].innerHTML = addClassToPI(state.cars[iCar].pi);
-    thisRow.cells[2].innerHTML = formatCredits(state.cars[iCar].value);
-
-    // Show all other buttons and rows again
-    eToggleOptions.style.display = "block";
-    toggleOptions();
-
-    // Reset upgrade button
-    let lastCell = thisRow.children[thisRow.children.length - 1];
-    for (let iButton = 0; iButton < lastCell.children.length; iButton++) {
-        let button = lastCell.children[iButton];
-        if (button.innerText === "Enter upgrade") {
-            button.innerText = "Upgrade";
-            button.onclick = showUpgrade;
-        }
-    }
-
-    updateState();
-}
-
-function upgradeInput() {
-    // Actually enter input with Enter
-    if (event.key === "Enter") {
-        upgradeCar();
-    }
-}
-
-function getInCar() {
-    // Index of car should be equal to index of row - 1
-    let iCar = event.target.parentElement.parentElement.rowIndex - 1;
-
-    // Only allow getting into car if PI is equal to or lower than DR
-    if (iClassFromPI(state.cars[iCar].pi) <= iClassFromDR(state.dr)) {
-        state.currentCar = iCar;
-    }
-
-    updateState();
-}
-
-function sellCar() {
-    // Index of car should be equal to index of row - 1
-    let iCar = event.target.parentElement.parentElement.rowIndex - 1;
-
-    // Set sale price to half of value
-    let price = Math.floor(state.cars[iCar].value / 2);
-
-    // Ask for confirmation before selling
-    if (!window.confirm("Sale price is half of car value: " + formatCredits(price) + ", are you sure you want to sell?")) {
-        return;
-    }
-
-    // Add back sale price to credits
-    state.credits += price;
-
-    // Change current car index if necessary
-    if (iCar === state.currentCar) {
-        state.currentCar = -1;
-    } else if (iCar < state.currentCar) {
-        state.currentCar--;
-    }
-
-    // Delete car from table and state
-    eGarageTB.deleteRow(iCar);
-    state.cars.splice(iCar, 1);
-
-    updateState();
 }
 
 function addCar() {
     // Check if the input fields are filled out
     if (eNewCarName.value === ""
      || eNewCarPI.value === ""
-     || eNewCarValue.value === "") {
+     || eNewCarCost.value === "") {
         return;
     }
 
-    // Ask for confirmation if new car PI is too high
+    // Save input values
+    let newName = eNewCarName.value;
     let newPI = toIntPI(eNewCarPI.value);
+    let newCost = toPositiveInt(eNewCarCost.value);
+
+    // Ask for confirmation if new car PI is too high
     if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
         if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
             return;
@@ -957,10 +1045,11 @@ function addCar() {
     }
 
     // Save input to state
-    state.cars.push(new Car(eNewCarName.value,
+    state.cars.push(new Car(newName,
                             newPI,
-                            toPositiveInt(eNewCarValue.value)));
-    state.credits -= toPositiveInt(eNewCarValue.value);
+                            newCost,
+                            "inline"));
+    state.credits -= newCost;
 
     // Set to current car if possible
     if (iClassFromPI(newPI) <= iClassFromDR(state.dr)) {
@@ -970,10 +1059,7 @@ function addCar() {
     // Clear input fields
     eNewCarName.value = "";
     eNewCarPI.value = "";
-    eNewCarValue.value = "";
-
-    // Add the new car to the table
-    garageTableAddNewCar(state.cars.length - 1, "inline");
+    eNewCarCost.value = "";
 
     updateState();
 }
