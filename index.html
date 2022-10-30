@@ -10,14 +10,14 @@ layout: home
 
 <!-- Header -->
 <table class="state">
-  <thead id="stateTableHead">
+  <thead>
     <td id="stateName">Name</td>
     <td id="stateCar">Car</td>
     <td id="stateCredits"
         align="right">
       Credits
     </td>
-    <td id="stateDRTD">
+    <td>
       <div id="stateDRDiv">
         <div id="stateDR">DR: </div>
         <div id="stateDRBar"
@@ -29,59 +29,8 @@ layout: home
   </thead>
 </table>
 
-<div id="championshipDiv"
-     style="display: none">
-  <h1>Championship</h1>
-  <table class="races">
-    <thead id="championshipTableHead">
-      <td>Race</td>
-      <td>Position</td>
-      <td>Damage</td>
-      <td>Total</td>
-    </thead>
-    <tbody id="championshipTableBody">
-      <tr id="championshipTableRow">
-        <td id="championshipRace">Race name</td>
-        <td>
-          <select id="championshipPosition"
-                  onchange=championshipInput()>
-            <option value="1">1st</option>
-            <option value="2">2nd</option>
-            <option value="3">3rd</option>
-            <option value="4">4th</option>
-            <option value="5">5th</option>
-            <option value="6">6th</option>
-            <option value="7">7th</option>
-            <option value="8">8th</option>
-            <option value="9">9th</option>
-            <option value="10">10th</option>
-            <option value="11">11th</option>
-            <option value="12">12th</option>
-            <option value="0"
-                    selected="selected">
-              DNF
-            </option>
-        </td>
-        <td>
-          <input id="championshipDamage"
-                 type="number"
-                 placeholder="Repair cost"
-                 style="width: 100%"
-                 onkeyup=championshipInput()>
-        </td>
-        <td>
-          <button id="championshipTotal"
-                  onclick="championshipAddTotal()">
-            Add
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
 <div id="racesDiv" style="display: block">
-  <h1>Races</h1>
+  <h1>Race</h1>
   <table class="races">
     <thead id="racesTableHead">
       <td>Name</td>
@@ -90,40 +39,6 @@ layout: home
       <td>Total</td>
     </thead>
     <tbody id="racesTableBody">
-      <tr>
-        <td>Championship</td>
-        <td></td>
-        <td></td>
-        <td>
-          <button id="championshipStart"
-                  onclick="championshipStart()">
-            Start
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <td>Custom race</td>
-        <td>
-          <input id="customRacePrize"
-                 type="number"
-                 placeholder="Race winnings"
-                 style="width: 100%"
-                 onkeyup=customRaceInput()>
-        </td>
-        <td>
-          <input id="customRaceDamage"
-                 type="number"
-                 placeholder="Repair cost"
-                 style="width: 100%"
-                 onkeyup=customRaceInput()>
-        </td>
-        <td>
-          <button id="customRaceTotal"
-                  onclick="customRaceAddTotal()">
-            Add
-          </button>
-        </td>
-      </tr>
     </tbody>
   </table>
 </div>

@@ -7,21 +7,9 @@ let eStateCar = document.getElementById("stateCar");
 let eStateCredits = document.getElementById("stateCredits");
 let eStateDR = document.getElementById("stateDR");
 let eStateDRProgress = document.getElementById("stateDRProgress");
-let eChamp = document.getElementById("championshipDiv");
-let eChampTH = document.getElementById("championshipTableHead");
-let eChampTB = document.getElementById("championshipTableBody");
-let eChampTR = document.getElementById("championshipTableRow");
-let eChampRace = document.getElementById("championshipRace");
-let eChampPosition = document.getElementById("championshipPosition");
-let eChampDamage = document.getElementById("championshipDamage");
-let eChampTotal = document.getElementById("championshipTotal");
 let eRaces = document.getElementById("racesDiv");
 let eRacesTH = document.getElementById("racesTableHead");
 let eRacesTB = document.getElementById("racesTableBody");
-let eChampStart = document.getElementById("championshipStart");
-let eCustomRacePrize = document.getElementById("customRacePrize");
-let eCustomRaceDamage = document.getElementById("customRaceDamage");
-let eCustomRaceTotal = document.getElementById("customRaceTotal");
 let eGarageTH = document.getElementById("garageTableHead");
 let eToggleOptions = document.getElementById("toggleOptionsButton");
 let eGarageTB = document.getElementById("garageTableBody");
@@ -43,8 +31,7 @@ const defaultState = {
     wins: 0,
     credits: 25000,
     currentCar: -1,
-    cars: [],
-    races: []
+    cars: []
 }
 
 const classPI = [
@@ -138,7 +125,7 @@ const positionName = [
     "12th"];
 
 // -----------------------------------------------------------------------
-// Classes
+// Class HTML element mappings
 // -----------------------------------------------------------------------
 
 // These maps and functions are necessary
@@ -148,7 +135,9 @@ const positionName = [
 
 let carMap = new Map();
 let raceMap = new Map();
+let champMap = new Map();
 
+// Car
 function getInButtonClick() {
     carMap.get(this.id).getIn();
 }
@@ -183,6 +172,7 @@ function abortUpgradeButtonClick() {
     carMap.get(this.id).abortUpgrade();
 }
 
+// Race
 function positionSelectChange() {
     raceMap.get(this.id).setPosition(this.value);
 }
@@ -197,8 +187,18 @@ function finishButtonClick() {
     raceMap.get(this.id).finish();
 }
 
+// Championship
+function enterChampButtonClick() {
+    champMap.get(this.id).enter();
+}
+
+// -----------------------------------------------------------------------
+// Classes
+// -----------------------------------------------------------------------
+
 class Car {
     constructor(name, pi, value, buttonDisplay) {
+        // Add car to map
         carMap.set(name, this);
 
         // Car state variables
@@ -307,8 +307,8 @@ class Car {
     showUpgrade() {
         // Hide the car state and show upgrade inputs
         this.row.cells[1].innerHTML = "";
-        this.row.cells[1].appendChild(this.piInput);
         this.row.cells[2].innerHTML = "";
+        this.row.cells[1].appendChild(this.piInput);
         this.row.cells[2].appendChild(this.costInput);
 
         // Hide all buttons
@@ -407,22 +407,24 @@ class Car {
 }
 
 class Race {
-    constructor(name) {
-        this.name = name;
+    constructor(name, iRace) {
+        // Add race to map
         raceMap.set(name, this);
 
-        // insertRow(???), 0 for now
-        // In the future, add all Race objects to a state array and use
-        // it's length to determine iRow
-        this.row = eRacesTB.insertRow(0);
+        // Race state variables
+        this.name = name;
+        this.iRace = iRace;
+
+        // Add and populate new row
+        this.row = eRacesTB.insertRow(this.iRace);
         for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
             this.row.insertCell();
         }
+        this.row.cells[0].innerText = this.name;
 
-        this.row.cells[0].innerText = name;
-
+        // Create and add the position selector
         this.positionSelect = document.createElement("select");
-        this.positionSelect.id = name;
+        this.positionSelect.id = this.name;
         this.positionSelect.onchange = positionSelectChange;
         for (let pos = 0; pos < positionName.length; pos++) {
             let option = document.createElement("option");
@@ -432,16 +434,18 @@ class Race {
         }
         this.row.cells[1].appendChild(this.positionSelect);
 
+        // Create and add the damage input
         this.damageInput = document.createElement("input");
-        this.damageInput.id = name;
+        this.damageInput.id = this.name;
         this.damageInput.type = "number";
         this.damageInput.style.width = "100%";
         this.damageInput.placeholder = "Repair cost";
         this.damageInput.onkeyup = damageInputKeyup;
         this.row.cells[2].appendChild(this.damageInput);
 
+        // Create and add the finish button
         this.finishButton = document.createElement("button");
-        this.finishButton.id = name;
+        this.finishButton.id = this.name;
         this.finishButton.onclick = finishButtonClick;
         this.row.cells[3].appendChild(this.finishButton);
 
@@ -451,11 +455,13 @@ class Race {
     }
 
     reset() {
+        // Reset position and damage inputs
         this.position = 0;
         this.positionSelect.value = "0";
         this.damage = 0;
         this.damageInput.value = "";
 
+        // Update result variables
         if (state.currentCar !== -1) {
             this.setDeltaCredits(state.cars[state.currentCar].pi);
             this.setDeltaDR(state.cars[state.currentCar].pi);
@@ -466,10 +472,12 @@ class Race {
     }
 
     setDeltaCredits(pi) {
+        // Prize depends on class, position and damage
         this.deltaCredits = classPrize[iClassFromPI(pi)]
                           * positionPrize[this.position]
                           - this.damage;
 
+        // Set button text depending on prize
         if (this.deltaCredits > 0) {
             this.finishButton.innerText = "Finish! "
                                         + formatCredits(this.deltaCredits);
@@ -533,7 +541,7 @@ class Race {
             return;
         }
 
-        // Calculate the deltaDR
+        // Calculate the deltaDR, messy but should be cool
         let subClass = this.getSubClass(pi);
         let baseDR = this.getBaseDR();
         let classFactor = subClass * Math.pow(10, iClass - 1);
@@ -581,6 +589,126 @@ class Race {
         updateState();
 
         this.reset();
+    }
+}
+
+class Championship {
+    constructor(name, iRace, raceNames) {
+        // Add to both championship and race maps
+        // This way, championship races will go via here
+        champMap.set(name, this);
+        raceMap.set(name, this);
+
+        this.name = name;
+        this.iRace = iRace;
+        this.raceNames = raceNames;
+
+        this.currentRace = -1;
+        this.races = [];
+
+        // Add and populate new row
+        this.row = eRacesTB.insertRow(iRace);
+        for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
+            this.row.insertCell();
+        }
+        this.row.cells[0].innerText = this.name;
+
+        // Create and add the enter championship button
+        this.enterButton = document.createElement("button");
+        this.enterButton.id = this.name;
+        this.enterButton.onclick = enterChampButtonClick;
+        this.enterButton.innerText = "Enter";
+        this.row.cells[3].appendChild(this.enterButton);
+    }
+
+    enter() {
+        // Hide all other races, including the championship enters
+        for (let iRace = 0; iRace < races.length; iRace++) {
+            races[iRace].row.style.display = "none";
+        }
+
+        // Create all championship races
+        for (let iRace = 0; iRace < this.raceNames.length; iRace++) {
+            this.races.push(new Race(this.raceNames[iRace], iRace));
+            this.races[iRace].row.style.display = "none";
+            this.races[iRace].positionSelect.id = this.name;
+            this.races[iRace].damageInput.id = this.name;
+            this.races[iRace].finishButton.id = this.name;
+        }
+
+        // Create the bonus collector
+        this.bonus = new Race("Championship Bonus", this.races.length);
+        this.bonus.row.style.display = "none";
+        this.bonus.positionSelect.id = this.name;
+        this.bonus.damageInput.id = this.name;
+        this.bonus.finishButton.id = this.name;
+        this.bonus.row.cells[1].removeChild(this.bonus.positionSelect);
+        this.bonus.row.cells[2].removeChild(this.bonus.damageInput);
+        this.bonus.setPosition(1);
+        this.bonus.setDamage(0);
+
+        // Show first race
+        this.currentRace = 0;
+        this.races[this.currentRace].row.style.display = "table-row";
+    }
+
+    setPosition(value) {
+        if (this.currentRace >= 0
+         && this.currentRace < this.races.length) {
+            this.races[this.currentRace].setPosition(value);
+        }
+    }
+
+    setDamage(value) {
+        if (this.currentRace >= 0
+         && this.currentRace < this.races.length) {
+            this.races[this.currentRace].setDamage(value);
+        }
+    }
+
+    finish() {
+        if (this.currentRace >= 0
+         && this.currentRace < this.races.length) {
+            let thisRace = this.races[this.currentRace];
+
+            // Remove interactive elements
+            thisRace.row.cells[1].removeChild(thisRace.positionSelect);
+            thisRace.row.cells[2].removeChild(thisRace.damageInput);
+            thisRace.row.cells[3].removeChild(thisRace.finishButton);
+
+            // Display results
+            thisRace.row.cells[1].innerText = positionName[thisRace.position];
+            thisRace.row.cells[2].innerText = formatCredits(thisRace.damage);
+            thisRace.row.cells[3].innerText = formatCredits(thisRace.deltaCredits);
+
+            thisRace.finish()
+
+            // Show next race or bonus if no more races
+            this.currentRace++;
+            if (this.currentRace < this.races.length) {
+                this.races[this.currentRace].row.style.display = "table-row";
+            } else {
+                this.bonus.row.style.display = "table-row";
+            }
+        } else if (this.currentRace === this.races.length) {
+            this.bonus.finish();
+
+            // Hide championship races
+            this.currentRace = -1;
+            for (let iRace = 0; iRace < this.races.length; iRace++) {
+                this.races[iRace].row.style.display = "none";
+            }
+            this.bonus.row.style.display = "none";
+
+            // Remove championship races
+            this.races = [];
+            this.bonus = undefined;
+
+            // Show all other races and championships again
+            for (let iRace = 0; iRace < races.length; iRace++) {
+                races[iRace].row.style.display = "table-row";
+            }
+        }
     }
 }
 
@@ -687,6 +815,10 @@ function formatCredits(credits) {
     }
 }
 
+// -----------------------------------------------------------------------
+// State functions
+// -----------------------------------------------------------------------
+
 function updateState() {
 
     // Update state table data
@@ -701,20 +833,14 @@ function updateState() {
         if (state.currentCar !== -1) {
             eStateCar.innerText = state.cars[state.currentCar].name + " "
                                 + addClassToPI(state.cars[state.currentCar].pi);
-            if (eChamp.style.display === "none") {
-                eRaces.style.display = "block";
-            }
+            eRaces.style.display = "block";
         } else {
             eStateCar.innerText = "Not in a car!";
-            if (eChamp.style.display === "none") {
-                eRaces.style.display = "none";
-            }
+            eRaces.style.display = "none";
         }
     } else {
         eStateCar.innerText = "No cars!";
-        if (eChamp.style.display === "none") {
-            eRaces.style.display = "none";
-        }
+        eRaces.style.display = "none";
     }
 
     eStateCredits.innerText = formatCredits(state.credits);
@@ -736,59 +862,6 @@ function updateState() {
         carArgs.push(state.cars[iCar].getArgs());
     }
     localStorage.setItem("sCars", JSON.stringify(carArgs));
-}
-
-function getDeltaDR(position, damage) {
-    let currentPI = state.cars[state.currentCar].pi;
-    let iClass = iClassFromPI(currentPI);
-    if (iClass === 0) {
-        // Return 0 for invalid class
-        return 0;
-    }
-
-    // subClass will be [1, 10] depending on how far in the class pi is
-    let subClass = Math.ceil((((currentPI - 1) % 100) + 1) / 10);
-    if (iClass === 1) {
-        // Will be [6, 10] for D class, quicker start
-        subClass = Math.ceil(currentPI / 100) + 5;
-    } else if (iClass === 7) {
-        // Always min out subClass for X
-        subClass = 1;
-    }
-
-    // Check for win streak in past 3 races and modify baseDR
-    let baseDR = positionDR[position];
-    if (Math.floor(state.wins / 100) === 1) {
-        // Previous race win
-        if (position === 1 || position === 2 || position === 3) {
-            // This race podium
-            baseDR--;
-        }
-    }
-    if (position === 1) {
-        // This race win
-        if (Math.floor((state.wins % 100) / 10) === 1) {
-            // Second previous race win
-            baseDR--;
-        }
-        if ((state.wins % 10) === 1) {
-            // Third previous race win
-            baseDR--;
-        }
-    }
-
-    // Update win streak history
-    state.wins = Math.floor(state.wins / 10);
-    if (position === 1) {
-        state.wins += 100;
-    }
-
-    // Calculate the deltaDR
-    let classFactor = subClass * Math.pow(10, iClass - 1);
-    let prizeFactor = classPrize[iClassFromPI(currentPI)] * (positionPrize[2] + positionPrize[position]);
-    let damageRatio = Math.max(0, Math.min(1, damage / prizeFactor));
-    let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
-    return Math.ceil(gameSpeed * damageFactor * classFactor);
 }
 
 function getStateFromLocalStorage() {
@@ -831,187 +904,6 @@ function getStateFromLocalStorage() {
 // -----------------------------------------------------------------------
 // HTML element functions
 // -----------------------------------------------------------------------
-
-// Championship
-
-function championshipAddBonus() {
-    // Get this somehow
-    let position = 1;
-    let damage = 0;
-
-    // Update DR disregarding the state.wins
-    let previousWins = state.wins;
-    state.wins = 0;
-    state.dr += getDeltaDR(position, damage);
-    state.wins = previousWins;
-    if (state.dr < classDR[0]) {
-        state.dr = classDR[0];
-    }
-
-    // Reset championship table
-    eChampRace.innerText = "Race name";
-    eChampTR.style.display = "table-row";
-    for (let iRow = 0; iRow < 4; iRow++) {
-        eChampTB.deleteRow(0);
-    }
-
-    // Hide championship and show races again
-    eChamp.style.display = "none";
-    eRaces.style.display = "block";
-
-    // Add bonus to credits
-    let currentPI = state.cars[state.currentCar].pi;
-    state.credits += classPrize[iClassFromPI(currentPI)] * positionPrize[position];
-    updateState();
-}
-
-function championshipGetTotal() {
-    // Get values from input
-    let position = toInt(eChampPosition.value);
-    let damage = toPositiveInt(eChampDamage.value);
-
-    // Set total based on position and damage
-    // position can only be OK values since it's a select
-    let currentPI = state.cars[state.currentCar].pi;
-    return classPrize[iClassFromPI(currentPI)] * positionPrize[position] - damage;
-}
-
-function championshipAddTotal() {
-    let position = toInt(eChampPosition.value);
-    let damage = toPositiveInt(eChampDamage.value);
-    let total = championshipGetTotal();
-
-    // Update DR
-    state.dr += getDeltaDR(position, damage);
-    if (state.dr < classDR[0]) {
-        state.dr = classDR[0];
-    }
-
-    // Document championship results
-    if (eChampRace.innerText === "1: Race") {
-        // Make a new row with race results
-        let raceRow = eChampTB.insertRow(0);
-        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
-            raceRow.insertCell();
-        }
-        raceRow.cells[0].innerText = eChampRace.innerText;
-        raceRow.cells[1].innerText = positionName[position];
-        raceRow.cells[2].innerText = formatCredits(damage);
-        raceRow.cells[3].innerText = formatCredits(total);
-
-        // Change input row to next race
-        eChampRace.innerText = "2: Race";
-    } else if (eChampRace.innerText === "2: Race") {
-        let raceRow = eChampTB.insertRow(1);
-        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
-            raceRow.insertCell();
-        }
-        raceRow.cells[0].innerText = eChampRace.innerText;
-        raceRow.cells[1].innerText = positionName[position];
-        raceRow.cells[2].innerText = formatCredits(damage);
-        raceRow.cells[3].innerText = formatCredits(total);
-
-        eChampRace.innerText = "3: Race";
-    } else if (eChampRace.innerText === "3: Race") {
-        let raceRow = eChampTB.insertRow(2);
-        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
-            raceRow.insertCell();
-        }
-        raceRow.cells[0].innerText = eChampRace.innerText;
-        raceRow.cells[1].innerText = positionName[position];
-        raceRow.cells[2].innerText = formatCredits(damage);
-        raceRow.cells[3].innerText = formatCredits(total);
-
-        // Add championship results row with bonus button
-        let bonusRow = eChampTB.insertRow(3);
-        for (let c = 0; c < eChampTH.rows[0].cells.length; c++) {
-            bonusRow.insertCell();
-        }
-        bonusRow.cells[0].innerText = "Championship";
-        bonusRow.cells[1].innerText = positionName[1];
-        bonusRow.cells[2].innerText = "";
-
-        let getBonusButton = document.createElement("button");
-        let currentPI = state.cars[state.currentCar].pi;
-        getBonusButton.innerText = "Bonus: " + formatCredits(classPrize[iClassFromPI(currentPI)] * positionPrize[1]);
-        getBonusButton.onclick = championshipAddBonus;
-        bonusRow.cells[3].appendChild(getBonusButton);
-
-        // Hide race input row
-        eChampTR.style.display = "none";
-    }
-
-    // Clear the fields
-    eChampPosition.value = "0";
-    eChampDamage.value = "";
-    eChampTotal.innerText = "Add";
-
-    // Add total to credits
-    state.credits += total;
-    updateState();
-}
-
-function championshipInput() {
-    let total = championshipGetTotal();
-
-    // Update button text
-    if (total > 0 || total < 0) {
-        eChampTotal.innerText = "Add: " + formatCredits(total);
-    } else {
-        eChampTotal.innerText = "Add";
-    }
-
-    // Actually enter the data with enter
-    if (event.key === "Enter") {
-        championshipAddTotal();
-    }
-}
-
-// Races
-
-function championshipStart() {
-    eChamp.style.display = "block";
-    eRaces.style.display = "none";
-    eChampRace.innerText = "1: Race";
-}
-
-function customRaceGetTotal() {
-    // Get values from input
-    let prize = toPositiveInt(eCustomRacePrize.value);
-    let damage = toPositiveInt(eCustomRaceDamage.value);
-
-    // Set total based on prize and damage
-    return prize - damage;
-}
-
-function customRaceAddTotal() {
-    let total = customRaceGetTotal();
-
-    // Clear the fields
-    eCustomRacePrize.value = "";
-    eCustomRaceDamage.value = "";
-    eCustomRaceTotal.innerText = "Add";
-
-    // Add total to credits
-    state.credits += total;
-    updateState();
-}
-
-function customRaceInput() {
-    let total = customRaceGetTotal();
-
-    // Update button text
-    if (total > 0 || total < 0) {
-        eCustomRaceTotal.innerText = "Add: " + formatCredits(total);
-    } else {
-        eCustomRaceTotal.innerText = "Add";
-    }
-
-    // Actually enter the data with enter
-    if (event.key === "Enter") {
-        customRaceAddTotal();
-    }
-}
 
 // Garage
 
@@ -1105,5 +997,6 @@ function resetButton() {
 let state = JSON.parse(JSON.stringify(defaultState));
 getStateFromLocalStorage();
 
-let basicRace = new Race("Basic Race");
-let coolRace = new Race("Cool Race");
+races = [];
+races.push(new Race("Basic Race", 0));
+races.push(new Championship("Basic Championship", 1, ["1: Race", "2: Race", "3: Race"]));
