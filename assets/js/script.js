@@ -32,6 +32,7 @@ const gameSpeed = 5;
 const defaultState = {
     name: "",
     dr: 100,
+    iDR: 1,
     wins: 0,
     credits: 25000,
     cCar: -1,
@@ -304,7 +305,7 @@ class Car {
 
     getIn() {
         // Only allow getting into car if PI is equal to or lower than DR
-        if (iClassFromPI(this.pi) <= iClassFromDR(state.dr)) {
+        if (iClassFromPI(this.pi) <= state.iDR) {
             state.cCar = this.iCar;
         }
 
@@ -390,7 +391,7 @@ class Car {
 
     doUpgrade() {
         // Ask for confirmation if car PI is too high after upgrade
-        if (iClassFromPI(this.upgradePI) > iClassFromDR(state.dr)) {
+        if (iClassFromPI(this.upgradePI) > state.iDR) {
             if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, are you sure you want to upgrade?")) {
                 return;
             } else if (state.cCar === this.iCar) {
@@ -623,6 +624,7 @@ class Event {
         this.raceNames = raceNames;
         this.cRace = -1;
         this.races = [];
+        this.levelUp = false;
 
         // Add and populate new row in event table
         this.row = eEventsTB.insertRow(iRace);
@@ -751,6 +753,10 @@ class Event {
                 this.races[this.cRace].row.style.display = "table-row";
             } else {
                 this.returnButton.innerText = "Return";
+                if (this.levelUp) {
+                    state.iDR++;
+                    updateState();
+                }
             }
         }
     }
@@ -843,7 +849,7 @@ function drToPercent(dr) {
     if (dr < classDR[0]) {
         return 0 + "%";
     }
-    return Math.floor(100 * dr / classDR[iClassFromDR(dr)]) + "%";
+    return Math.floor(100 * dr / classDR[state.iDR]) + "%";
 }
 
 function drToColor(dr) {
@@ -888,14 +894,22 @@ function updateState() {
     }
 
     eStateCredits.innerText = formatCredits(state.credits);
-    eStateDR.innerHTML = drToClass(state.dr);
-    eStateDRProgress.style.width = drToPercent(state.dr);
-    eStateDRProgress.style.backgroundColor = drToColor(state.dr);
+    if (iClassFromDR(state.dr) > state.iDR) {
+        eStateDR.innerHTML = classLetter[state.iDR] + "+";
+        eStateDRProgress.style.width = "100%";
+        eventMap.get("Class Level Up Championship").row.style.display = "table-row";
+    } else {
+        eStateDR.innerHTML = classLetter[state.iDR];
+        eStateDRProgress.style.width = drToPercent(state.dr);
+        eventMap.get("Class Level Up Championship").row.style.display = "none";
+    }
+    eStateDRProgress.style.backgroundColor = classColor[state.iDR];
 
     // Update localStorage one variable at a time
     // This should enable adding more elements without breaking saves
     localStorage.setItem("sName", JSON.stringify(state.name));
     localStorage.setItem("sDR", JSON.stringify(state.dr));
+    localStorage.setItem("sIDR", JSON.stringify(state.iDR));
     localStorage.setItem("sWins", JSON.stringify(state.wins));
     localStorage.setItem("sCredits", JSON.stringify(state.credits));
     localStorage.setItem("sCCar", JSON.stringify(state.cCar));
@@ -918,6 +932,9 @@ function getStateFromLocalStorage() {
     }
     if (localStorage.getItem("sDR") !== null) {
         state.dr = JSON.parse(localStorage.getItem("sDR"));
+    }
+    if (localStorage.getItem("sIDR") !== null) {
+        state.iDR = JSON.parse(localStorage.getItem("sIDR"));
     }
     if (localStorage.getItem("sWins") !== null) {
         state.wins = JSON.parse(localStorage.getItem("sWins"));
@@ -983,7 +1000,7 @@ function addCar() {
     let newCost = toPositiveInt(eNewCarCost.value);
 
     // Ask for confirmation if new car PI is too high
-    if (iClassFromPI(newPI) > iClassFromDR(state.dr)) {
+    if (iClassFromPI(newPI) > state.iDR) {
         if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
             return;
         }
@@ -997,7 +1014,7 @@ function addCar() {
     state.credits -= newCost;
 
     // Set to current car if possible
-    if (iClassFromPI(newPI) <= iClassFromDR(state.dr)) {
+    if (iClassFromPI(newPI) <= state.iDR) {
         state.cCar = state.cars.length - 1;
     }
 
@@ -1036,12 +1053,26 @@ function resetButton() {
 // Main
 // -----------------------------------------------------------------------
 
+// Create all events
+events = [];
+events.push(new Event("Basic Race",
+                      events.length,
+                      ["Race"]));
+events.push(new Event("Basic Endurance",
+                      events.length,
+                      ["Endurance"],
+                      4));
+events.push(new Event("Basic Championship",
+                      events.length,
+                      ["1: Race", "2: Race", "3: Race"]));
+events.push(new Event("Class Level Up Championship",
+                      events.length,
+                      ["1: Race", "2: Race", "3: Race"]));
+
+// This will make finishing the championship increase iDR
+eventMap.get("Class Level Up Championship").levelUp = true;
+
 // Initialize state - first to default, then localStorage
 // This means new variables not yet in localStorage will get default value
 let state = JSON.parse(JSON.stringify(defaultState));
 getStateFromLocalStorage();
-
-events = [];
-events.push(new Event("Basic Race", 0, ["Race"]));
-events.push(new Event("Basic Endurance", 1, ["Endurance"], 4));
-events.push(new Event("Basic Championship", 2, ["1: Race", "2: Race", "3: Race"]));
