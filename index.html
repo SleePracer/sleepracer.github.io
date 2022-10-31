@@ -100,5 +100,22 @@ layout: home
 </table>
 
 <h1>Settings</h1>
-<button onClick="changeNameButton()">Change name</button>
-<button onClick="resetButton()">Reset game</button>
+
+<h2>Game settings</h2>
+<div>
+  <button onClick="changeNameButton()">Change name</button>
+</div>
+
+<h2>Save settings</h2>
+<div>
+  <button onClick="saveGameButton()">Copy game save to clipboard</button>
+</div>
+<div>
+  <input id="loadGame"
+         placeholder="Paste game data here, then load"
+         onkeyup=loadGameInput()>
+  <button onClick="loadGameButton()">Load game</button>
+</div>
+<div>
+  <button onClick="resetGameButton()">Reset game</button>
+</div>

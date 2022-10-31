@@ -21,6 +21,7 @@ let eNewCarRow = document.getElementById("newCarRow");
 let eNewCarName = document.getElementById("newCarName");
 let eNewCarPI = document.getElementById("newCarPI");
 let eNewCarCost = document.getElementById("newCarCost");
+let eLoadGame = document.getElementById("loadGame");
 
 // -----------------------------------------------------------------------
 // Constants
@@ -29,15 +30,17 @@ let eNewCarCost = document.getElementById("newCarCost");
 // At 1, player will reach DR X after ~ 300 races.
 const gameSpeed = 5;
 
+const thisVersion = "0.1.0";
+
 const defaultState = {
+    version: thisVersion,
     name: "",
     dr: 100,
     iDR: 1,
     wins: 0,
     credits: 25000,
     cCar: -1,
-    cars: []
-}
+    cars: []};
 
 const classPI = [
     100,
@@ -293,10 +296,10 @@ class Car {
 
     getArgs() {
         return {
-            name: this.name,
+            n: this.name,
             pi: this.pi,
-            cost: this.cost,
-            value: this.value
+            c: this.cost,
+            v: this.value
         }
     }
 
@@ -928,6 +931,29 @@ function formatCredits(credits) {
 // State functions
 // -----------------------------------------------------------------------
 
+function getStateString(s = state) {
+    // Store cars as constructor argument objects
+    let carArgs = [];
+    for (let iCar = 0; iCar < s.cars.length; iCar++) {
+        carArgs.push(s.cars[iCar].getArgs());
+    }
+
+    // Store state as compact as possible
+    let compact = {
+        n: s.name,
+        dr: s.dr,
+        idr: s.iDR,
+        w: s.wins,
+        m: s.credits,
+        cc: s.cCar,
+        c: carArgs};
+
+    // Always return an array,
+    // where array[0] is the version
+    // and array[1] is the compact state
+    return JSON.stringify([s.version, compact]);
+}
+
 function updateState() {
 
     // Update state table data
@@ -964,59 +990,46 @@ function updateState() {
     }
     eStateDRProgress.style.backgroundColor = classColor[state.iDR];
 
-    // Update localStorage one variable at a time
-    // This should enable adding more elements without breaking saves
-    localStorage.setItem("sName", JSON.stringify(state.name));
-    localStorage.setItem("sDR", JSON.stringify(state.dr));
-    localStorage.setItem("sIDR", JSON.stringify(state.iDR));
-    localStorage.setItem("sWins", JSON.stringify(state.wins));
-    localStorage.setItem("sCredits", JSON.stringify(state.credits));
-    localStorage.setItem("sCCar", JSON.stringify(state.cCar));
-
-    // Store cars as constructor argument objects
-    let carArgs = [];
-    for (let iCar = 0; iCar < state.cars.length; iCar++) {
-        carArgs.push(state.cars[iCar].getArgs());
-    }
-    localStorage.setItem("sCars", JSON.stringify(carArgs));
+    localStorage.setItem("state", getStateString());
 }
 
-function getStateFromLocalStorage() {
-    // Assume !!! that state is currently default
+function setStateFromString(inputString) {
+    let parsed = JSON.parse(inputString);
+    let validVersions = ["0.1.0"];
 
-    // Get the state variables one at a time
-    // This should enable adding more elements without breaking saves
-    if (localStorage.getItem("sName") !== null) {
-        state.name = JSON.parse(localStorage.getItem("sName"));
+    // Make sure parsed string is an array,
+    // where array[0] is the version
+    // and array[1] is the actual state
+    if (parsed.length !== 2) {
+        console.log("Input (" + inputString + ") is not a valid state!")
+        return;
     }
-    if (localStorage.getItem("sDR") !== null) {
-        state.dr = JSON.parse(localStorage.getItem("sDR"));
-    }
-    if (localStorage.getItem("sIDR") !== null) {
-        state.iDR = JSON.parse(localStorage.getItem("sIDR"));
-    }
-    if (localStorage.getItem("sWins") !== null) {
-        state.wins = JSON.parse(localStorage.getItem("sWins"));
-    }
-    if (localStorage.getItem("sCredits") !== null) {
-        state.credits = JSON.parse(localStorage.getItem("sCredits"));
-    }
-    if (localStorage.getItem("sCCar") !== null) {
-        state.cCar = JSON.parse(localStorage.getItem("sCCar"));
+    let version = parsed[0];
+    if (!validVersions.includes(version)) {
+        console.log("Input version " + version + " is not valid!")
+        return;
     }
 
-    // Cars stored as constructor argument objects
-    if (localStorage.getItem("sCars") !== null) {
-        let carArgs = JSON.parse(localStorage.getItem("sCars"));
-        // Populate garage table with cars from state
-        for (let iCar = 0; iCar < carArgs.length; iCar++) {
-            state.cars.push(new Car(
-                carArgs[iCar].name,
-                carArgs[iCar].pi,
-                carArgs[iCar].cost,
-                carArgs[iCar].value,
-                "none"));
-        }
+    // inputString and version is valid, set state
+    let compact = parsed[1];
+    state.version = thisVersion;
+    state.name = compact.n;
+    state.dr = compact.dr;
+    state.iDR = compact.idr;
+    state.wins = compact.w;
+    state.credits = compact.m;
+    state.cCar = compact.cc;
+
+    // Create new cars with args from state
+    state.cars = [];
+    let carArgs = compact.c;
+    for (let iCar = 0; iCar < carArgs.length; iCar++) {
+        state.cars.push(new Car(
+            carArgs[iCar].n,
+            carArgs[iCar].pi,
+            carArgs[iCar].c,
+            carArgs[iCar].v,
+            "none"));
     }
 
     updateState();
@@ -1099,14 +1112,39 @@ function changeNameButton() {
     updateState();
 }
 
-function resetButton() {
+function resetGameButton() {
     // Set state to default
-    state = JSON.parse(JSON.stringify(defaultState));
-    updateState();
+    setStateFromString(getStateString(defaultState));
 
-    // Force refresh to clear the Garage table
+    // Force refresh to clear HTML
     window.location.reload();
 }
+
+function saveGameButton() {
+    let gameSave = getStateString();
+    navigator.clipboard.writeText(gameSave);
+}
+
+function loadGameButton() {
+    if (eLoadGame.value === "") {
+        return;
+    }
+    setStateFromString(eLoadGame.value);
+
+    // Reset input field
+    eLoadGame.value = "";
+
+    // Force refresh to clear HTML
+    window.location.reload();
+}
+
+function loadGameInput() {
+    // Actually enter input with Enter
+    if (event.key === "Enter") {
+        loadGameButton();
+    }
+}
+
 
 // -----------------------------------------------------------------------
 // Main
@@ -1136,7 +1174,10 @@ events.push(new Event("Class Level Up Championship",
 // This will make finishing the championship increase iDR
 eventMap.get("Class Level Up Championship").levelUp = true;
 
-// Initialize state - first to default, then localStorage
-// This means new variables not yet in localStorage will get default value
-let state = JSON.parse(JSON.stringify(defaultState));
-getStateFromLocalStorage();
+// Initialize state
+let state = {};
+if (localStorage.getItem("state") === null) {
+    setStateFromString(getStateString(defaultState));
+} else {
+    setStateFromString(localStorage.getItem("state"));
+}
