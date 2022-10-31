@@ -21,6 +21,7 @@ let eNewCarRow = document.getElementById("newCarRow");
 let eNewCarName = document.getElementById("newCarName");
 let eNewCarPI = document.getElementById("newCarPI");
 let eNewCarCost = document.getElementById("newCarCost");
+let eGameSpeed = document.getElementById("gameSpeed");
 let eLoadGame = document.getElementById("loadGame");
 
 // -----------------------------------------------------------------------
@@ -28,13 +29,14 @@ let eLoadGame = document.getElementById("loadGame");
 // -----------------------------------------------------------------------
 
 // At 1, player will reach DR X after ~ 300 races.
-const gameSpeed = 5;
+//const gameSpeed = 5;
 
 const thisVersion = "0.1.0";
 
 const defaultState = {
     version: thisVersion,
     name: "",
+    iGS: 2,
     dr: 100,
     iDR: 1,
     wins: 0,
@@ -42,6 +44,18 @@ const defaultState = {
     cEvent: null,
     cCar: -1,
     cars: []};
+
+const gameSpeed = [
+    1,
+    2,
+    4,
+    7,
+    11,
+    16,
+    22,
+    29,
+    37,
+    46];
 
 const classPI = [
     100,
@@ -587,10 +601,14 @@ class Race {
         let baseDR = this.getBaseDR();
         let classFactor = subClass * Math.pow(10, iClass - 1);
         let prizeFactor = classPrize[iClass]
-                        * (positionPrize[2] + positionPrize[this.position]);
-        let damageRatio = Math.max(0, Math.min(1, this.damage / prizeFactor));
+                        * (positionPrize[2]
+                         + positionPrize[this.position]);
+        let damageRatio = Math.max(0, Math.min(1, this.damage
+                                                / prizeFactor));
         let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
-        this.deltaDR = Math.ceil(gameSpeed * damageFactor * classFactor);
+        this.deltaDR = Math.ceil(gameSpeed[state.iGS]
+                               * damageFactor
+                               * classFactor);
     }
 
     setPosition(value) {
@@ -690,7 +708,8 @@ class Event {
     showInfo() {
         if (this.infoButton.innerText === "Info") {
             // Replace name with info
-            this.row.cells[0].innerText = this.name + ": " + this.infoString;
+            this.row.cells[0].innerText = this.name + ": "
+                                        + this.infoString;
 
             // Repurpose info button to close info
             this.infoButton.innerText = "Hide info";
@@ -741,6 +760,16 @@ class Event {
         // Create the bonus collector if more than one race
         if (this.races.length > 1) {
             let iBonus = this.races.length;
+            /*let bonus = this.races[iBonus];
+            bonus = new Race("Championship Bonus", iBonus);
+            bonus.row.style.display = "none";
+            bonus.positionSelect.id = this.name;
+            bonus.damageInput.id = this.name;
+            bonus.finishButton.id = this.name;
+            bonus.row.cells[1].removeChild(bonus.positionSelect);
+            bonus.row.cells[2].removeChild(bonus.damageInput);
+            bonus.setPosition(1);
+            bonus.setDamage(0);*/
             this.races[iBonus] = new Race("Championship Bonus", iBonus);
             this.races[iBonus].row.style.display = "none";
             this.races[iBonus].positionSelect.id = this.name;
@@ -986,6 +1015,7 @@ function getStateString(s = state) {
     // Store state as compact as possible
     let compact = {
         n: s.name,
+        igs: s.iGS,
         dr: s.dr,
         idr: s.iDR,
         w: s.wins,
@@ -1036,6 +1066,8 @@ function updateState() {
     }
     eStateDRProgress.style.backgroundColor = classColor[state.iDR];
 
+    eGameSpeed.value = state.iGS;
+
     localStorage.setItem("state", getStateString());
 }
 
@@ -1060,6 +1092,7 @@ function setStateFromString(inputString) {
     let compact = parsed[1];
     state.version = thisVersion;
     state.name = compact.n;
+    state.iGS = compact.igs;
     state.dr = compact.dr;
     state.iDR = compact.idr;
     state.wins = compact.w;
@@ -1164,6 +1197,11 @@ function newCarInput() {
 
 function changeNameButton() {
     state.name = prompt("Please enter your name: ");
+    updateState();
+}
+
+function gameSpeedInput() {
+    state.iGS = toPositiveInt(eGameSpeed.value);
     updateState();
 }
 
