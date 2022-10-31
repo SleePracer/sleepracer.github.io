@@ -39,6 +39,7 @@ const defaultState = {
     iDR: 1,
     wins: 0,
     credits: 25000,
+    cEvent: null,
     cCar: -1,
     cars: []};
 
@@ -640,7 +641,7 @@ class Race {
 // -----------------------------------------------------------------------
 
 class Event {
-    constructor(name, iRace, info, raceNames, resultFactor = 1) {
+    constructor(name, iEvent, info, raceNames, resultFactor = 1) {
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here
         eventMap.set(name, this);
@@ -648,7 +649,7 @@ class Event {
 
         // Event state variables
         this.name = name;
-        this.iRace = iRace;
+        this.iEvent = iEvent;
         this.infoString = info;
         this.raceNames = raceNames;
         this.resultFactor = resultFactor;
@@ -657,7 +658,7 @@ class Event {
         this.levelUp = false;
 
         // Add and populate new row in event table
-        this.row = eEventsTB.insertRow(this.iRace);
+        this.row = eEventsTB.insertRow(this.iEvent);
         for (let cell = 0; cell < eEventsTH.rows[0].cells.length; cell++) {
             this.row.insertCell();
         }
@@ -711,6 +712,15 @@ class Event {
     }
 
     enter() {
+        // Add progress to state
+        if (state.cEvent === null) {
+            // If not null, we're just loading progress
+            state.cEvent = {
+                ie: this.iEvent,
+                p: []};
+            updateState();
+        }
+
         // Hide all other events
         eEventsT.style.display = "none";
 
@@ -755,6 +765,10 @@ class Event {
     }
 
     returnToEvents() {
+        // Clear progress from state
+        state.cEvent = null;
+        updateState();
+
         // Hide event races
         this.cRace = -1;
         for (let iRace = 0; iRace < this.races.length; iRace++) {
@@ -790,37 +804,68 @@ class Event {
         }
     }
 
+    displayResults(position, damage, credits) {
+        let thisRace = this.races[this.cRace];
+
+        // Remove interactive elements and display results
+        if (this.races.length === 1
+         || this.cRace !== this.races.length - 1) {
+            // These cells are not populated for bonus collection
+            thisRace.row.cells[1].removeChild(thisRace.positionSelect);
+            thisRace.row.cells[1].innerText = positionName[position];
+            thisRace.row.cells[2].removeChild(thisRace.damageInput);
+            thisRace.row.cells[2].innerText = formatCredits(damage);
+        }
+        thisRace.row.cells[3].removeChild(thisRace.finishButton);
+        thisRace.row.cells[3].innerText = formatCredits(credits);
+    }
+
+    showNext() {
+        // Show next race or return button
+        this.cRace++;
+        if (this.cRace < this.races.length) {
+            this.races[this.cRace].row.style.display = "table-row";
+        } else {
+            this.returnButton.innerText = "Return";
+        }
+    }
+
     finish() {
         if (this.cRace >= 0
          && this.cRace < this.races.length) {
             let thisRace = this.races[this.cRace];
 
-            // Remove interactive elements and display results
-            if (this.races.length === 1
-             || this.cRace !== this.races.length - 1) {
-                // These cells are not populated for bonus collection
-                thisRace.row.cells[1].removeChild(thisRace.positionSelect);
-                thisRace.row.cells[1].innerText = positionName[thisRace.position];
-                thisRace.row.cells[2].removeChild(thisRace.damageInput);
-                thisRace.row.cells[2].innerText = formatCredits(thisRace.damage);
-            }
-            thisRace.row.cells[3].removeChild(thisRace.finishButton);
-            thisRace.row.cells[3].innerText = formatCredits(thisRace.deltaCredits);
+            this.displayResults(thisRace.position,
+                                thisRace.damage,
+                                thisRace.deltaCredits);
+
+            // Add progress to state
+            state.cEvent.p.push([
+                thisRace.position,
+                thisRace.damage,
+                thisRace.deltaCredits]);
+            updateState();
 
             thisRace.finish()
 
-            // Show next race or bonus if no more races
-            this.cRace++;
-            if (this.cRace < this.races.length) {
-                this.races[this.cRace].row.style.display = "table-row";
-            } else {
-                this.returnButton.innerText = "Return";
-                if (this.levelUp) {
-                    state.iDR++;
-                    updateState();
-                }
+            this.showNext();
+
+            if (this.cRace === this.races.length
+             && this.levelUp) {
+                state.iDR++;
+                updateState();
             }
         }
+    }
+
+    load(aProgress) {
+        // This function should only be called when loading state
+        // It only reloads the previous results
+        this.displayResults(aProgress[0],
+                            aProgress[1],
+                            aProgress[2]);
+
+        this.showNext();
     }
 }
 
@@ -945,6 +990,7 @@ function getStateString(s = state) {
         idr: s.iDR,
         w: s.wins,
         m: s.credits,
+        ce: s.cEvent,
         cc: s.cCar,
         c: carArgs};
 
@@ -1018,6 +1064,7 @@ function setStateFromString(inputString) {
     state.iDR = compact.idr;
     state.wins = compact.w;
     state.credits = compact.m;
+    state.cEvent = compact.ce;
     state.cCar = compact.cc;
 
     // Create new cars with args from state
@@ -1030,6 +1077,14 @@ function setStateFromString(inputString) {
             carArgs[iCar].c,
             carArgs[iCar].v,
             "none"));
+    }
+
+    // Enter event if in progress
+    if (compact.ce !== null) {
+        events[compact.ce.ie].enter();
+        for (let iRace = 0; iRace < compact.ce.p.length; iRace++) {
+            events[compact.ce.ie].load(compact.ce.p[iRace]);
+        }
     }
 
     updateState();
