@@ -28,9 +28,6 @@ let eLoadGame = document.getElementById("loadGame");
 // Constants
 // -----------------------------------------------------------------------
 
-// At 1, player will reach DR X after ~ 300 races.
-//const gameSpeed = 5;
-
 const thisVersion = "0.1.0";
 
 const defaultState = {
@@ -116,6 +113,21 @@ const positionPrize = [
     200,
     100,
     0, 0, 0, 0, 0, 0];
+
+const positionPoints = [
+    1,
+    20,
+    16,
+    14,
+    12,
+    10,
+    8,
+    6,
+    5,
+    4,
+    3,
+    2,
+    1];
 
 const positionDR = [
     -1,
@@ -674,6 +686,8 @@ class Event {
         this.cRace = -1;
         this.races = [];
         this.levelUp = false;
+        this.playerPoints = 0;
+        this.drivatarPoints = [];
 
         // Add and populate new row in event table
         this.row = eEventsTB.insertRow(this.iEvent);
@@ -731,12 +745,17 @@ class Event {
     }
 
     enter() {
+        // Initialize championship points
+        this.playerPoints = 0;
+        this.drivatarPoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
         // Add progress to state
         if (state.cEvent === null) {
             // If not null, we're just loading progress
             state.cEvent = {
                 ie: this.iEvent,
-                p: []};
+                p: [],
+                dp: JSON.parse(JSON.stringify(this.drivatarPoints))};
             updateState();
         }
 
@@ -760,8 +779,10 @@ class Event {
         // Create the bonus collector if more than one race
         if (this.races.length > 1) {
             let iBonus = this.races.length;
-            /*let bonus = this.races[iBonus];
-            bonus = new Race("Championship Bonus", iBonus);
+            this.races.push(new Race("Championship Bonus",
+                                     iBonus,
+                                     this.resultFactor));
+            let bonus = this.races[iBonus];
             bonus.row.style.display = "none";
             bonus.positionSelect.id = this.name;
             bonus.damageInput.id = this.name;
@@ -769,16 +790,7 @@ class Event {
             bonus.row.cells[1].removeChild(bonus.positionSelect);
             bonus.row.cells[2].removeChild(bonus.damageInput);
             bonus.setPosition(1);
-            bonus.setDamage(0);*/
-            this.races[iBonus] = new Race("Championship Bonus", iBonus);
-            this.races[iBonus].row.style.display = "none";
-            this.races[iBonus].positionSelect.id = this.name;
-            this.races[iBonus].damageInput.id = this.name;
-            this.races[iBonus].finishButton.id = this.name;
-            this.races[iBonus].row.cells[1].removeChild(this.races[iBonus].positionSelect);
-            this.races[iBonus].row.cells[2].removeChild(this.races[iBonus].damageInput);
-            this.races[iBonus].setPosition(1);
-            this.races[iBonus].setDamage(0);
+            bonus.setDamage(0);
         }
 
         // Add the return from event button to a final row
@@ -847,6 +859,32 @@ class Event {
         }
         thisRace.row.cells[3].removeChild(thisRace.finishButton);
         thisRace.row.cells[3].innerText = formatCredits(credits);
+
+        if (this.races.length > 1) {
+            // Get current position in championship
+            let champPos = 1;
+            for (let d = 0; d < this.drivatarPoints.length; d++) {
+                if (this.playerPoints < this.drivatarPoints[d]) {
+                    champPos++;
+                }
+            }
+
+            // Set championship bonus to current championship position
+            this.races[this.races.length - 1].setPosition(champPos);
+
+            if (this.cRace < this.races.length - 2) {
+                // Normal race, update current position
+                this.returnRow.cells[0].innerText = "Total standings";
+                this.returnRow.cells[1].innerText = positionName[champPos];
+            } else if (this.cRace === this.races.length - 2){
+                // Bonus collector is next,
+                // so set current championship position in that row
+                // and clear return row
+                this.races[this.races.length - 1].row.cells[1].innerText = positionName[champPos];
+                this.returnRow.cells[0].innerText = "";
+                this.returnRow.cells[1].innerText = "";
+            }
+        }
     }
 
     showNext() {
@@ -859,10 +897,48 @@ class Event {
         }
     }
 
+    addArrays(a, b) {
+        // Stolen from stackoverflow idk
+        return a.map((e,i) => e + b[i]);
+    }
+
+    addDrivatarPoints(playerPosition) {
+        // Deep copy position points
+        let points = JSON.parse(JSON.stringify(positionPoints));
+
+        // Remove player position and null element
+        if (playerPosition === 0) {
+            points.splice(points.length - 1, 1);
+        } else {
+            points.splice(playerPosition, 1);
+        }
+        points.splice(0, 1);
+
+        // Randomize array in-place using Durstenfeld shuffle algorithm
+        for (let i = points.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = points[i];
+            points[i] = points[j];
+            points[j] = temp;
+        }
+
+        // Add points to drivatars
+        this.drivatarPoints = this.addArrays(this.drivatarPoints, points);
+        state.cEvent.dp = JSON.parse(JSON.stringify(this.drivatarPoints));
+    }
+
     finish() {
+        // Sanity check
         if (this.cRace >= 0
          && this.cRace < this.races.length) {
             let thisRace = this.races[this.cRace];
+
+            // Championship race
+            if (this.races.length > 1
+             && this.cRace < this.races.length - 1) {
+                this.playerPoints += positionPoints[thisRace.position];
+                this.addDrivatarPoints(thisRace.position);
+            }
 
             this.displayResults(thisRace.position,
                                 thisRace.damage,
@@ -875,21 +951,37 @@ class Event {
                 thisRace.deltaCredits]);
             updateState();
 
-            thisRace.finish()
+            // Save DR, this will be rolled back if just collecting bonus
+            let preDR = state.dr;
+
+            // Check if podium before finishing
+            let podium = thisRace.position < 4;
+
+            thisRace.finish();
 
             this.showNext();
 
-            if (this.cRace === this.races.length
-             && this.levelUp) {
-                state.iDR++;
+            // Roll back DR if collecting bonus
+            if (this.races.length > 1
+             && this.cRace === this.races.length) {
+                state.dr = preDR;
+
+                // Only level up with a podium
+                if (this.levelUp && podium) {
+                    state.iDR++;
+                }
+
                 updateState();
             }
         }
     }
 
-    load(aProgress) {
+    load(aProgress, drivatarPoints) {
         // This function should only be called when loading state
         // It only reloads the previous results
+        this.drivatarPoints = JSON.parse(JSON.stringify(drivatarPoints));
+        this.playerPoints += positionPoints[aProgress[0]];
+
         this.displayResults(aProgress[0],
                             aProgress[1],
                             aProgress[2]);
@@ -1115,8 +1207,11 @@ function setStateFromString(inputString) {
     // Enter event if in progress
     if (compact.ce !== null) {
         events[compact.ce.ie].enter();
+
+        // Load previous results
         for (let iRace = 0; iRace < compact.ce.p.length; iRace++) {
-            events[compact.ce.ie].load(compact.ce.p[iRace]);
+            events[compact.ce.ie].load(compact.ce.p[iRace],
+                                       compact.ce.dp);
         }
     }
 
