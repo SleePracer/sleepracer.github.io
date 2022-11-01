@@ -771,6 +771,9 @@ class Event {
         // Show the races table
         eRacesT.style.display = "table";
 
+        // Remove event races
+        this.races = [];
+
         // Create all event races
         for (let iRace = 0; iRace < this.raceNames.length; iRace++) {
             this.races.push(new Race(this.raceNames[iRace],
