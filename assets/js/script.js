@@ -2,6 +2,12 @@
 // HTML elements
 // -----------------------------------------------------------------------
 
+let eStart = document.getElementById("start");
+let eStartName = document.getElementById("startName");
+let eStartClass = document.getElementById("startClass");
+let eStartLoad = document.getElementById("startLoad");
+
+let eGame = document.getElementById("game");
 let eStateName = document.getElementById("stateName");
 let eStateCar = document.getElementById("stateCar");
 let eStateCredits = document.getElementById("stateCredits");
@@ -22,7 +28,7 @@ let eNewCarName = document.getElementById("newCarName");
 let eNewCarPI = document.getElementById("newCarPI");
 let eNewCarCost = document.getElementById("newCarCost");
 let eGameSpeed = document.getElementById("gameSpeed");
-let eLoadGame = document.getElementById("loadGame");
+let eGameLoad = document.getElementById("gameLoad");
 
 // -----------------------------------------------------------------------
 // Constants
@@ -1222,6 +1228,32 @@ function setStateFromString(inputString) {
 // HTML element functions
 // -----------------------------------------------------------------------
 
+// Start
+
+function startNameInput() {
+    newName = eStartName.value;
+}
+
+function startClassSelect() {
+    newClass = toPositiveInt(eStartClass.value);
+}
+
+function startGameButton() {
+    // Start with default state
+    setStateFromString(getStateString(defaultState));
+
+    // Set the start game inputs
+    state.name = newName;
+    state.dr = Math.pow(10, newClass + 1);
+    state.iDR = newClass;
+
+    // Show the actual game
+    eStart.style.display = "none";
+    eGame.style.display = "block";
+
+    updateState();
+}
+
 // Garage
 
 function toggleOptions() {
@@ -1302,7 +1334,7 @@ function gameSpeedInput() {
 
 function resetGameButton() {
     // Set state to default
-    setStateFromString(getStateString(defaultState));
+    localStorage.setItem("state", null);
 
     // Force refresh to clear HTML
     window.location.reload();
@@ -1314,13 +1346,25 @@ function saveGameButton() {
 }
 
 function loadGameButton() {
-    if (eLoadGame.value === "") {
+    if (eStartLoad.value === ""
+     && eGameLoad.value === "") {
         return;
     }
-    setStateFromString(eLoadGame.value);
 
-    // Reset input field
-    eLoadGame.value = "";
+    // Get the non-empty data
+    // Should only be one, but if not, start is prio
+    let gameData = "";
+    if (eStartLoad.value !== "") {
+        gameData = eStartLoad.value;
+    } else if (eGameLoad.value !== "") {
+        gameData = eGameLoad.value;
+    }
+
+    setStateFromString(gameData);
+
+    // Reset input fields
+    eStartLoad.value = "";
+    eGameLoad.value = "";
 
     // Force refresh to clear HTML
     window.location.reload();
@@ -1345,7 +1389,7 @@ events.push(new Event("Basic Race",
                       events.length,
                       info,
                       ["Race"]));
-events.push(new Event("Basic Endurance",
+/*events.push(new Event("Basic Endurance",
                       events.length,
                       info,
                       ["Endurance"],
@@ -1353,7 +1397,7 @@ events.push(new Event("Basic Endurance",
 events.push(new Event("Basic Championship",
                       events.length,
                       info,
-                      ["1: Race", "2: Race", "3: Race"]));
+                      ["1: Race", "2: Race", "3: Race"]));*/
 events.push(new Event("Class Level Up Championship",
                       events.length,
                       info,
@@ -1364,8 +1408,15 @@ eventMap.get("Class Level Up Championship").levelUp = true;
 
 // Initialize state
 let state = {};
-if (localStorage.getItem("state") === null) {
-    setStateFromString(getStateString(defaultState));
+
+// Set default new game values
+let newName = "";
+let newClass = 1;
+
+// Go to start or game
+if (JSON.parse(localStorage.getItem("state")) === null) {
+    eStart.style.display = "block";
 } else {
+    eGame.style.display = "block";
     setStateFromString(localStorage.getItem("state"));
 }

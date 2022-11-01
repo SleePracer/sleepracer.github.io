@@ -8,6 +8,43 @@ layout: home
 <script defer src="./assets/js/script.js"></script>
 <link rel="stylesheet" href="./assets/css/style.css"></link>
 
+<!-- Start screen -->
+<div id="start" style="display: none">
+
+<h1>Start new game</h1>
+<div>
+  <input id="startName"
+         type="text"
+         placeholder="Player name"
+         onkeyup=startNameInput()>
+</div>
+<br>
+<div>
+  <label for="startClass">Choose starting class:</label>
+  <select id="startClass"
+          onchange="startClassSelect()">
+    <option value="1">D</option>
+    <option value="2">C</option>
+    <option value="3">B</option>
+  </select>
+</div>
+<br>
+<button onClick="startGameButton()">Start game</button>
+<br>
+<br>
+<h1>Load game</h1>
+<div>
+  <input id="startLoad"
+         placeholder="Paste game data here"
+         onkeyup=loadGameInput()>
+  <button onClick="loadGameButton()">Load game</button>
+</div>
+
+</div>
+
+<!-- The actual game -->
+<div id="game" style="display: none">
+
 <!-- Header -->
 <table class="state">
   <thead>
@@ -100,12 +137,7 @@ layout: home
 </table>
 
 <h1>Settings</h1>
-
 <h2>Game settings</h2>
-<div>
-  <button onClick="changeNameButton()">Change name</button>
-</div>
-<br>
 Game speed:
 <div>
   <input id="gameSpeed"
@@ -115,17 +147,23 @@ Game speed:
          value="0"
          onChange="gameSpeedInput()">
 </div>
-
 <h2>Save settings</h2>
+Save game:
 <div>
-  <button onClick="saveGameButton()">Copy game save to clipboard</button>
+  <button onClick="saveGameButton()">Copy game data to clipboard</button>
 </div>
+<br>
+Load game:
 <div>
-  <input id="loadGame"
-         placeholder="Paste game data here, then load"
+  <input id="gameLoad"
+         placeholder="Paste game data here"
          onkeyup=loadGameInput()>
   <button onClick="loadGameButton()">Load game</button>
 </div>
+<br>
+Reset game:
 <div>
-  <button onClick="resetGameButton()">Reset game</button>
+  <button onClick="resetGameButton()">Reset</button>
+</div>
+
 </div>
