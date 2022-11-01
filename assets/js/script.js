@@ -347,19 +347,28 @@ class Car {
         this.abortUpgradeButton.style.display = buttonDisplay;
     }
 
-    depreciate(value) {
-        // Max depreciation at 10% of value
-        // When damage is mean of value and cost,
-        // will depreciate half of max
-        // So when value has fallen a lot,
-        // it will still require some damage to reach high depreciation
-        let max = 0.1 * this.value;
-        let halfway = (this.value + this.cost) / 2;
-        this.value -= Math.floor(max
-                               * value / (value + halfway));
+    repairCost(damage) {
+        // Damage is [0, 200]%
+        // At 100% damage, repair costs should be
+        // 50% of mean of value and cost
+        let mean = (this.value + this.cost) / 2;
+        let repair = 0.5 * mean * damage / 100;
+        return Math.floor(repair);
+    }
 
-        // Also depreciate 0.5% for mileage
-        this.value -= Math.floor(0.005 * this.value);
+    depreciate(damage) {
+        // Max depreciation at 5% of value
+        let max = 0.05 * this.value;
+
+        // Depreciate with d/(d+n) formula
+        // Damage is [0, 200]%
+        // When damage is 100%
+        // depreciate half of max
+        this.value -= Math.floor(max
+                               * damage / (damage + 100));
+
+        // Also depreciate 0.2% for mileage
+        this.value -= Math.floor(0.002 * this.value);
 
         // Update table
         this.row.cells[2].innerHTML = formatCredits(this.value);
@@ -511,7 +520,7 @@ class Race {
         this.damageInput.id = this.name;
         this.damageInput.type = "number";
         this.damageInput.style.width = "100%";
-        this.damageInput.placeholder = "Repair cost";
+        this.damageInput.placeholder = "Damage %";
         this.damageInput.onkeyup = damageInputKeyup;
         this.row.cells[2].appendChild(this.damageInput);
 
@@ -548,7 +557,7 @@ class Race {
         this.deltaCredits = classPrize[iClassFromPI(pi)]
                           * positionPrize[this.position]
                           * this.resultFactor
-                          - this.damage;
+                          - state.cars[state.cCar].repairCost(this.damage);
 
         // Set button text depending on prize
         if (this.deltaCredits > 0) {
@@ -621,7 +630,8 @@ class Race {
         let prizeFactor = classPrize[iClass]
                         * (positionPrize[2]
                          + positionPrize[this.position]);
-        let damageRatio = Math.max(0, Math.min(1, this.damage
+        let repairCost = state.cars[state.cCar].repairCost(this.damage);
+        let damageRatio = Math.max(0, Math.min(1, repairCost
                                                 / prizeFactor));
         let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
         this.deltaDR = Math.ceil(gameSpeed[state.iGS]
@@ -854,7 +864,7 @@ class Event {
         }
     }
 
-    displayResults(position, damage, credits) {
+    displayResults(position, repairCost, credits) {
         let thisRace = this.races[this.cRace];
 
         // Remove interactive elements and display results
@@ -864,7 +874,7 @@ class Event {
             thisRace.row.cells[1].removeChild(thisRace.positionSelect);
             thisRace.row.cells[1].innerText = positionName[position];
             thisRace.row.cells[2].removeChild(thisRace.damageInput);
-            thisRace.row.cells[2].innerText = formatCredits(damage);
+            thisRace.row.cells[2].innerText = formatCredits(repairCost);
         }
         thisRace.row.cells[3].removeChild(thisRace.finishButton);
         thisRace.row.cells[3].innerText = formatCredits(credits);
@@ -949,14 +959,15 @@ class Event {
                 this.addDrivatarPoints(thisRace.position);
             }
 
+            let repairCost = state.cars[state.cCar].repairCost(thisRace.damage);
             this.displayResults(thisRace.position,
-                                thisRace.damage,
+                                repairCost,
                                 thisRace.deltaCredits);
 
             // Add progress to state
             state.cEvent.p.push([
                 thisRace.position,
-                thisRace.damage,
+                repairCost,
                 thisRace.deltaCredits]);
             updateState();
 
