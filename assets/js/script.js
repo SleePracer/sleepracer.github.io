@@ -39,7 +39,7 @@ const thisVersion = "0.1.0";
 const defaultState = {
     version: thisVersion,
     name: "",
-    iGS: 2,
+    iGS: 5,
     dr: 100,
     iDR: 1,
     wins: 0,
@@ -49,16 +49,16 @@ const defaultState = {
     cars: []};
 
 const gameSpeed = [
-    1,
-    2,
-    4,
-    7,
-    11,
-    16,
-    22,
-    29,
-    37,
-    46];
+    1.0,
+    1.5,
+    2.1,
+    2.8,
+    3.6,
+    4.5,
+    5.5,
+    6.6,
+    7.8,
+    9.1];
 
 const classPI = [
     100,
@@ -1329,6 +1329,11 @@ function changeNameButton() {
 
 function gameSpeedInput() {
     state.iGS = toPositiveInt(eGameSpeed.value);
+    updateState();
+}
+
+function gameSpeedDefaultButton() {
+    state.iGS = toPositiveInt(defaultState.iGS);
     updateState();
 }
 
