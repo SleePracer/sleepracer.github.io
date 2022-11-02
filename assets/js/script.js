@@ -256,18 +256,29 @@ function returnEventButtonClick() {
 // -----------------------------------------------------------------------
 
 class Car {
-    constructor(name, pi, cost, value = 0, buttonDisplay = "inline") {
+    constructor(name,
+                make,
+                model,
+                pi = 0,
+                value = 0,
+                buttonDisplay = "inline") {
+
         // Add car to map
         carMap.set(name, this);
 
         // Car state variables
         this.iCar = state.cars.length;
         this.name = name;
+        this.make = make;
+        this.model = model;
         this.pi = pi;
-        this.cost = cost;
+        if (pi === 0) {
+            this.pi = carList[make][model][1];
+        }
+        this.cost = carList[make][model][2];
         this.value = value;
         if (value === 0) {
-            this.value = Math.floor(0.9 * cost);
+            this.value = Math.floor(0.9 * this.cost);
         }
 
         // Car upgrade variables
@@ -342,8 +353,8 @@ class Car {
     getArgs() {
         return {
             n: this.name,
+            m: [this.make, this.model],
             pi: this.pi,
-            c: this.cost,
             v: this.value
         }
     }
@@ -1297,8 +1308,9 @@ function setStateFromString(inputString) {
     for (let iCar = 0; iCar < carArgs.length; iCar++) {
         state.cars.push(new Car(
             carArgs[iCar].n,
+            carArgs[iCar].m[0],
+            carArgs[iCar].m[1],
             carArgs[iCar].pi,
-            carArgs[iCar].c,
             carArgs[iCar].v,
             "none"));
     }
@@ -1391,8 +1403,8 @@ function addCar() {
 
     // Save input to state
     state.cars.push(new Car(newName,
-                            newPI,
-                            newCost));
+                            newMake,
+                            newModel));
     state.credits -= newCost;
 
     // Set to current car if possible
