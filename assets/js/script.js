@@ -25,14 +25,26 @@ let eToggleOptions = document.getElementById("toggleOptionsButton");
 let eGarageTB = document.getElementById("garageTableBody");
 let eNewCarRow = document.getElementById("newCarRow");
 let eNewCarName = document.getElementById("newCarName");
-let eNewCarPI = document.getElementById("newCarPI");
-let eNewCarCost = document.getElementById("newCarCost");
+let eNewCarMake = document.getElementById("newCarMake");
+let eNewCarModel = document.getElementById("newCarModel");
 let eGameSpeed = document.getElementById("gameSpeed");
 let eGameLoad = document.getElementById("gameLoad");
 
 // -----------------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------------
+
+const carList = [
+    ["Choose manufacturer", "Choose model"],
+    ["Mitsubishi",
+        ["Lancer", 670, 35000],
+        ["Starion", 550, 20000],
+        ["Eclipse", 490, 24000]],
+    ["Subaru",
+        ["Impreza", 660, 34000],
+        ["Legacy", 410, 23000]],
+    ["Toyota",
+        ["Celica", 690, 33000]]];
 
 const thisVersion = "0.1.0";
 
@@ -350,15 +362,15 @@ class Car {
     repairCost(damage) {
         // Damage is [0, 200]%
         // At 100% damage, repair costs should be
-        // 50% of mean of value and cost
+        // 25% of mean of value and cost
         let mean = (this.value + this.cost) / 2;
-        let repair = 0.5 * mean * damage / 100;
+        let repair = 0.25 * mean * damage / 100;
         return Math.floor(repair);
     }
 
     depreciate(damage) {
-        // Max depreciation at 5% of value
-        let max = 0.05 * this.value;
+        // Max depreciation at 10% of value
+        let max = 0.1 * this.value;
 
         // Depreciate with d/(d+n) formula
         // Damage is [0, 200]%
@@ -1113,6 +1125,36 @@ function formatCredits(credits) {
     }
 }
 
+function slowestCar(make) {
+    let iMake = toPositiveInt(make);
+    if (iMake === 0 || iMake >= carList.length) {
+        return;
+    }
+
+    let pi = 999;
+    for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
+        if (pi > carList[iMake][iModel][1]) {
+            pi = carList[iMake][iModel][1];
+        }
+    }
+    return pi;
+}
+
+function cheapestCar(make) {
+    let iMake = toPositiveInt(make);
+    if (iMake === 0 || iMake >= carList.length) {
+        return;
+    }
+
+    let prize = Infinity;
+    for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
+        if (prize > carList[iMake][iModel][2]) {
+            prize = carList[iMake][iModel][2];
+        }
+    }
+    return prize;
+}
+
 // -----------------------------------------------------------------------
 // State functions
 // -----------------------------------------------------------------------
@@ -1140,6 +1182,19 @@ function getStateString(s = state) {
     // where array[0] is the version
     // and array[1] is the compact state
     return JSON.stringify([s.version, compact]);
+}
+
+function clearNewCarModel() {
+    // Clear model selector
+    while (eNewCarModel.options.length > 0) {
+        eNewCarModel.remove(0);
+    }
+
+    // Add "Choose model"
+    let modelOption = document.createElement("option");
+    modelOption.value = 0;
+    modelOption.text = carList[0][1];
+    eNewCarModel.appendChild(modelOption);
 }
 
 function updateState() {
@@ -1179,6 +1234,30 @@ function updateState() {
     eStateDRProgress.style.backgroundColor = classColor[state.iDR];
 
     eGameSpeed.value = state.iGS;
+
+    // Clear make selector
+    while (eNewCarMake.options.length > 0) {
+        eNewCarMake.remove(0);
+    }
+
+    // Add "Choose manufacturer"
+    let baseMakeOption = document.createElement("option");
+    baseMakeOption.value = 0;
+    baseMakeOption.text = carList[0][0];
+    eNewCarMake.appendChild(baseMakeOption);
+
+    // Add all buyable makes
+    for (let iMake = 1; iMake < carList.length; iMake++) {
+        if (state.iDR >= iClassFromPI(slowestCar(iMake))
+         && state.credits > cheapestCar(iMake)) {
+            let makeOption = document.createElement("option");
+            makeOption.value = iMake;
+            makeOption.text = carList[iMake][0];
+            eNewCarMake.appendChild(makeOption);
+        }
+    }
+
+    clearNewCarModel();
 
     localStorage.setItem("state", getStateString());
 }
@@ -1291,15 +1370,17 @@ function toggleOptions() {
 function addCar() {
     // Check if the input fields are filled out
     if (eNewCarName.value === ""
-     || eNewCarPI.value === ""
-     || eNewCarCost.value === "") {
+     || toPositiveInt(eNewCarMake.value) === 0
+     || toPositiveInt(eNewCarModel.value) === 0) {
         return;
     }
 
     // Save input values
     let newName = eNewCarName.value;
-    let newPI = toIntPI(eNewCarPI.value);
-    let newCost = toPositiveInt(eNewCarCost.value);
+    let newMake = toPositiveInt(eNewCarMake.value);
+    let newModel = toPositiveInt(eNewCarModel.value);
+    let newPI = carList[newMake][newModel][1];
+    let newCost = carList[newMake][newModel][2];
 
     // Ask for confirmation if new car PI is too high
     if (iClassFromPI(newPI) > state.iDR) {
@@ -1320,9 +1401,10 @@ function addCar() {
     }
 
     // Clear input fields
+    // Car selectors will be reset in updateState
     eNewCarName.value = "";
-    eNewCarPI.value = "";
-    eNewCarCost.value = "";
+    eNewCarRow.cells[1].innerHTML = "";
+    eNewCarRow.cells[2].innerHTML = "";
 
     updateState();
 }
@@ -1332,6 +1414,47 @@ function newCarInput() {
     if (event.key === "Enter") {
         addCar();
     }
+}
+
+function newCarMakeSelect() {
+    clearNewCarModel();
+
+    // Clear display
+    eNewCarRow.cells[1].innerHTML = "";
+    eNewCarRow.cells[2].innerHTML = "";
+
+    // "Choose manufacturer"
+    let make = toPositiveInt(eNewCarMake.value);
+    if (make === 0) {
+        return;
+    }
+
+    // Add all buyable models
+    for (let iModel = 1; iModel < carList[make].length; iModel++) {
+        if (state.iDR >= iClassFromPI(carList[make][iModel][1])
+         && state.credits > carList[make][iModel][2]) {
+            let option = document.createElement("option");
+            option.value = iModel;
+            option.text = carList[make][iModel][0];
+            eNewCarModel.appendChild(option);
+        }
+    }
+}
+
+function newCarModelSelect() {
+    // "Choose manufacturer" or "Choose model"
+    let make = toPositiveInt(eNewCarMake.value);
+    let model = toPositiveInt(eNewCarModel.value);
+    if (make === 0 || model === 0) {
+        // Clear display and return
+        eNewCarRow.cells[1].innerHTML = "";
+        eNewCarRow.cells[2].innerHTML = "";
+        return;
+    }
+
+    // Show PI and cost
+    eNewCarRow.cells[1].innerHTML = addClassToPI(carList[make][model][1]);
+    eNewCarRow.cells[2].innerHTML = formatCredits(carList[make][model][2]);
 }
 
 // Settings

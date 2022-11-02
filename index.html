@@ -112,21 +112,15 @@ layout: home
                placeholder="Name"
                style="width: 100%"
                onkeyup=newCarInput()>
+        <select id="newCarMake"
+                onchange="newCarMakeSelect()">
+        </select>
+        <select id="newCarModel"
+                onchange="newCarModelSelect()">
+        </select>
       </td>
-      <td>
-        <input id="newCarPI"
-               type="number"
-               placeholder="PI"
-               style="width: 100%"
-               onkeyup=newCarInput()>
-      </td>
-      <td>
-        <input id="newCarCost"
-               type="number"
-               placeholder="Cost"
-               style="width: 100%"
-               onkeyup=newCarInput()>
-      </td>
+      <td></td>
+      <td></td>
       <td>
         <button onClick="addCar()">
           Add car
