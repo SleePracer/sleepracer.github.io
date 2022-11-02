@@ -350,10 +350,14 @@ class Car {
         this.row.cells[3].appendChild(this.abortUpgradeButton);
     }
 
+    getModel() {
+        return [this.make, this.model];
+    }
+
     getArgs() {
         return {
             n: this.name,
-            m: [this.make, this.model],
+            m: this.getModel(),
             pi: this.pi,
             v: this.value
         }
@@ -710,7 +714,12 @@ class Race {
 // -----------------------------------------------------------------------
 
 class Event {
-    constructor(name, iEvent, info, raceNames, resultFactor = 1) {
+    constructor(name,
+                iEvent,
+                info,
+                raceNames,
+                models = 0,
+                resultFactor = 1) {
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here
         eventMap.set(name, this);
@@ -720,11 +729,12 @@ class Event {
         this.name = name;
         this.iEvent = iEvent;
         this.infoString = info;
-        this.raceNames = raceNames;
+        this.raceNames = JSON.parse(JSON.stringify(raceNames));
+        this.models = JSON.parse(JSON.stringify(models));
         this.resultFactor = resultFactor;
         this.cRace = -1;
         this.races = [];
-        this.levelUp = false;
+        this.levelUpEvent = false;
         this.playerPoints = 0;
         this.drivatarPoints = [];
 
@@ -756,6 +766,35 @@ class Event {
         this.returnButton.id = this.name;
         this.returnButton.onclick = returnEventButtonClick;
         this.returnButton.innerText = "Retire";
+    }
+
+    showOrHide() {
+        // Check if current car is included in model list for event
+        let cModel = state.cars[state.cCar].getModel();
+        let carAllowed = false;
+        if (this.models === 0) {
+            carAllowed = true;
+        } else {
+            for (let iModel = 0; iModel < this.models.length; iModel++) {
+                if (cModel[0] === this.models[iModel][0]
+                 && cModel[1] === this.models[iModel][1]) {
+                    carAllowed = true;
+                }
+            }
+        }
+
+        // Check if ready for level up (if level up event)
+        let levelUpReady = !this.levelUpEvent;
+        if (iClassFromDR(state.dr) > state.iDR) {
+            levelUpReady = true;
+        }
+
+        // If everything ok, show event!
+        if (carAllowed && levelUpReady) {
+            this.row.style.display = "table-row";
+        } else {
+            this.row.style.display = "none";
+        }
     }
 
     showInfo() {
@@ -996,6 +1035,7 @@ class Event {
 
             // Save DR, this will be rolled back if just collecting bonus
             let preDR = state.dr;
+            let preValue = state.cars[state.cCar].value;
 
             // Check if podium before finishing
             let podium = thisRace.position < 4;
@@ -1008,9 +1048,11 @@ class Event {
             if (this.races.length > 1
              && this.cRace === this.races.length) {
                 state.dr = preDR;
+                state.cars[state.cCar].value = preValue;
+                state.cars[state.cCar].row.cells[2].innerHTML = formatCredits(preValue);
 
                 // Only level up with a podium
-                if (this.levelUp && podium) {
+                if (this.levelUpEvent && podium) {
                     state.iDR++;
                 }
 
@@ -1236,15 +1278,15 @@ function updateState() {
     if (iClassFromDR(state.dr) > state.iDR) {
         eStateDR.innerHTML = classLetter[state.iDR] + "+";
         eStateDRProgress.style.width = "100%";
-        eventMap.get("Class Level Up Championship").row.style.display = "table-row";
     } else {
         eStateDR.innerHTML = classLetter[state.iDR];
         eStateDRProgress.style.width = drToPercent(state.dr);
-        eventMap.get("Class Level Up Championship").row.style.display = "none";
     }
     eStateDRProgress.style.backgroundColor = classColor[state.iDR];
 
-    eGameSpeed.value = state.iGS;
+    for (let iEvent = 0; iEvent < events.length; iEvent++) {
+        events[iEvent].showOrHide();
+    }
 
     // Clear make selector
     while (eNewCarMake.options.length > 0) {
@@ -1269,6 +1311,8 @@ function updateState() {
     }
 
     clearNewCarModel();
+
+    eGameSpeed.value = state.iGS;
 
     localStorage.setItem("state", getStateString());
 }
@@ -1543,7 +1587,17 @@ events.push(new Event("Basic Race",
                       events.length,
                       info,
                       ["Race"]));
-/*events.push(new Event("Basic Endurance",
+events.push(new Event("Class Level Up Championship",
+                      events.length,
+                      info,
+                      ["1: Race", "2: Race", "3: Race"]));
+
+// This will make finishing the championship increase iDR
+eventMap.get("Class Level Up Championship").levelUpEvent = true;
+
+/* some proof of concept events
+
+events.push(new Event("Basic Endurance",
                       events.length,
                       info,
                       ["Endurance"],
@@ -1551,14 +1605,14 @@ events.push(new Event("Basic Race",
 events.push(new Event("Basic Championship",
                       events.length,
                       info,
-                      ["1: Race", "2: Race", "3: Race"]));*/
-events.push(new Event("Class Level Up Championship",
+                      ["1: Race", "2: Race", "3: Race"]));
+events.push(new Event("Basic One Make",
                       events.length,
                       info,
-                      ["1: Race", "2: Race", "3: Race"]));
-
-// This will make finishing the championship increase iDR
-eventMap.get("Class Level Up Championship").levelUp = true;
+                      ["One Make 1"],
+                      [[2,2]], // Legacy
+                      4));
+*/
 
 // Initialize state
 let state = {};
