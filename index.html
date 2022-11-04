@@ -70,7 +70,7 @@ layout: home
   <h1>Events</h1>
   <table id="eventsTable"
          class="events">
-    <thead id="eventsTableHead">
+    <thead id="eventsTableHead" style="display:none">
       <td>Name</td>
       <td></td>
     </thead>
@@ -80,7 +80,7 @@ layout: home
   <table id="racesTable"
          class="races">
     <thead id="racesTableHead">
-      <td>Name</td>
+      <td>Race</td>
       <td>Position</td>
       <td>Damage</td>
       <td>Total</td>
@@ -123,7 +123,7 @@ layout: home
       <td></td>
       <td>
         <button onClick="addCar()">
-          Add car
+          Buy car
         </button>
       </td>
     </tr>
@@ -143,6 +143,17 @@ Game speed:
 </div>
 <div>
   <button onClick="gameSpeedDefaultButton()">Set default</button>
+</div>
+<br>
+When browsing for new cars, hide:
+<div>
+  <input id="autoshowCheck"
+         type="checkbox"
+         checked="true"
+         onClick="autoshowClick()">
+  <label for="autoshowCheck">
+    Cars not available from the autoshow
+  </label>
 </div>
 <br>
 <h2>Save settings</h2>

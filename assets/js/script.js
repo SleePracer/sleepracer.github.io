@@ -28,6 +28,7 @@ let eNewCarName = document.getElementById("newCarName");
 let eNewCarMake = document.getElementById("newCarMake");
 let eNewCarModel = document.getElementById("newCarModel");
 let eGameSpeed = document.getElementById("gameSpeed");
+let eAutoshow = document.getElementById("autoshowCheck");
 let eGameLoad = document.getElementById("gameLoad");
 
 // -----------------------------------------------------------------------
@@ -3423,6 +3424,7 @@ const defaultState = {
     version: thisVersion,
     name: "",
     iGS: 5,
+    hide: {autoshow: true},
     dr: 100,
     iDR: 1,
     wins: 0,
@@ -4596,9 +4598,9 @@ function hasBuyableModel(make) {
 
     let foundModel = false;
     for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
-        if ((state.iDR >= iClassFromPI(carList[iMake][iModel].pi))
-         && (state.credits >= carList[iMake][iModel].cost)
-         && (carList[iMake][iModel].autoshow)) {
+        if (state.iDR >= iClassFromPI(carList[iMake][iModel].pi)
+         && state.credits >= carList[iMake][iModel].cost
+         && (carList[iMake][iModel].autoshow || !state.hide.autoshow)) {
             foundModel = true;
         }
     }
@@ -4620,6 +4622,7 @@ function getStateString(s = state) {
     let compact = {
         n: s.name,
         igs: s.iGS,
+        h: {a: 0},
         dr: s.dr,
         idr: s.iDR,
         w: s.wins,
@@ -4628,6 +4631,9 @@ function getStateString(s = state) {
         cc: s.cCar,
         c: carArgs};
 
+    if (s.hide.autoshow) {
+        compact.h.a = 1;
+    }
     // Always return an array,
     // where array[0] is the version
     // and array[1] is the compact state
@@ -4710,6 +4716,8 @@ function updateState() {
 
     eGameSpeed.value = state.iGS;
 
+    eAutoshow.checked = state.hide.autoshow;
+
     localStorage.setItem("state", getStateString());
 }
 
@@ -4735,6 +4743,10 @@ function setStateFromString(inputString) {
     state.version = thisVersion;
     state.name = compact.n;
     state.iGS = compact.igs;
+    state.hide = {autoshow: false};
+    if (compact.h.a === 1) {
+        state.hide.autoshow = true;
+    }
     state.dr = compact.dr;
     state.iDR = compact.idr;
     state.wins = compact.w;
@@ -4885,7 +4897,7 @@ function newCarMakeSelect() {
     for (let iModel = 1; iModel < carList[make].length; iModel++) {
         if (state.iDR >= iClassFromPI(carList[make][iModel].pi)
          && state.credits >= carList[make][iModel].cost
-         && carList[make][iModel].autoshow) {
+         && (carList[make][iModel].autoshow || !state.hide.autoshow)) {
             let option = document.createElement("option");
             option.value = iModel;
             option.text = carList[make][iModel].name + " ("
@@ -4925,6 +4937,11 @@ function gameSpeedInput() {
 
 function gameSpeedDefaultButton() {
     state.iGS = toPositiveInt(defaultState.iGS);
+    updateState();
+}
+
+function autoshowClick() {
+    state.hide.autoshow = eAutoshow.checked;
     updateState();
 }
 
