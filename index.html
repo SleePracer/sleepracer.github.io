@@ -66,11 +66,13 @@ layout: home
   </thead>
 </table>
 
-<div id="eventsDiv" style="display: block">
+<div id="eventsDiv"
+     style="display: block">
   <h1>Events</h1>
   <table id="eventsTable"
          class="events">
-    <thead id="eventsTableHead" style="display:none">
+    <thead id="eventsTableHead"
+           style="display:none">
       <td>Name</td>
       <td></td>
     </thead>
@@ -149,10 +151,41 @@ When browsing for new cars, hide:
 <div>
   <input id="autoshowCheck"
          type="checkbox"
-         checked="true"
          onClick="autoshowClick()">
   <label for="autoshowCheck">
-    Cars not available from the autoshow
+    Cars not available from the Autoshow
+  </label>
+</div>
+<div>
+  <input id="carPassCheck"
+         type="checkbox"
+         onClick="carPassClick()">
+  <label for="carPassCheck">
+    Car Pass cars
+  </label>
+</div>
+<div>
+  <input id="hotWheelsCheck"
+         type="checkbox"
+         onClick="hotWheelsClick()">
+  <label for="hotWheelsCheck">
+    Hot Wheels DLC cars
+  </label>
+</div>
+<div>
+  <input id="welcomeCheck"
+         type="checkbox"
+         onClick="welcomeClick()">
+  <label for="welcomeCheck">
+    Welcome Pack cars
+  </label>
+</div>
+<div>
+  <input id="barnFindCheck"
+         type="checkbox"
+         onClick="barnFindClick()">
+  <label for="barnFindCheck">
+    Barn Find cars
   </label>
 </div>
 <br>
