@@ -7307,15 +7307,14 @@ function clearNewCarModel() {
 }
 
 function updateState() {
-
-    // Update state table data
-
+    // Update player name
     if (state.name === "") {
         eStateName.innerText = "No name!";
     } else {
         eStateName.innerText = state.name;
     }
 
+    // Update car name
     if (state.cars.length > 0) {
         if (state.cCar !== -1) {
             eStateCar.innerText = state.cars[state.cCar].name + " "
@@ -7330,6 +7329,7 @@ function updateState() {
         eEvents.style.display = "none";
     }
 
+    // Update driver rating progress bar
     eStateCredits.innerText = formatCredits(state.credits);
     if (iClassFromDR(state.dr) > state.iDR) {
         eStateDR.innerHTML = classLetter[state.iDR] + "+";
@@ -7340,8 +7340,14 @@ function updateState() {
     }
     eStateDRProgress.style.backgroundColor = classColor[state.iDR];
 
+    // Only show events that should be
     for (let iEvent = 0; iEvent < events.length; iEvent++) {
         events[iEvent].showOrHide();
+    }
+
+    // Show garage options if no cars
+    if (state.cars.length === 0) {
+        toggleOptions(true);
     }
 
     // Clear make selector
@@ -7365,8 +7371,10 @@ function updateState() {
         }
     }
 
+    // Only "Choose model" shown
     clearNewCarModel();
 
+    // Set game speed slider value
     eGameSpeed.value = state.iGS;
 
     // Set all checkboxes
@@ -7488,10 +7496,11 @@ function startGameButton() {
 
 // Garage
 
-function toggleOptions() {
+function toggleOptions(show = false) {
     // Show or hide based on current status
     let newDisplay = "none";
-    if (eToggleOptions.innerText === "Show options") {
+    if (eToggleOptions.innerText === "Show options"
+     || show) {
         newDisplay = "inline";
         eNewCarRow.style.display = "table-row";
         eToggleOptions.innerText = "Hide options";
