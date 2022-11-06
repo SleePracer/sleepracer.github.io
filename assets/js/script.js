@@ -6720,6 +6720,7 @@ class Event {
                 iEvent,
                 info,
                 raceNames,
+                iClass = 0,
                 models = 0,
                 resultFactor = 1) {
         // Add to event map for the enter button
@@ -6732,6 +6733,7 @@ class Event {
         this.iEvent = iEvent;
         this.infoString = info;
         this.raceNames = JSON.parse(JSON.stringify(raceNames));
+        this.iClass = iClass;
         this.models = JSON.parse(JSON.stringify(models));
         this.resultFactor = resultFactor;
         this.cRace = -1;
@@ -6789,6 +6791,13 @@ class Event {
             }
         }
 
+        // Check if current car is of the correct class
+        let classAllowed = false;
+        if (this.iClass === 0
+         || this.iClass === iClassFromPI(state.cars[state.cCar].pi)) {
+            classAllowed = true;
+        }
+
         // Check if ready for level up (if level up event)
         let levelUpReady = !this.levelUpEvent;
         if (iClassFromDR(state.dr) > state.iDR) {
@@ -6796,7 +6805,7 @@ class Event {
         }
 
         // If everything ok, show event!
-        if (carAllowed && levelUpReady) {
+        if (carAllowed && classAllowed && levelUpReady) {
             this.row.style.display = "table-row";
         } else {
             this.row.style.display = "none";
@@ -7717,6 +7726,11 @@ events.push(new Event("Basic One Make",
                       ["One Make 1"],
                       [[2,2]], // Legacy
                       4));
+events.push(new Event("Basic C Class",
+                      events.length,
+                      info,
+                      ["Race 1", "Race 2"],
+                      2));
 */
 
 // Initialize state
