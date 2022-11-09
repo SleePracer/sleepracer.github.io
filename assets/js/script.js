@@ -8059,6 +8059,12 @@ function newCarMakeSelect() {
             eNewCarModel.appendChild(option);
         }
     }
+
+    // If only one model, set it as chosen
+    if (eNewCarModel.options.length === 2) {
+        eNewCarModel.value = eNewCarModel.options[1].value;
+        newCarModelSelect();
+    }
 }
 
 function newCarModelSelect() {
