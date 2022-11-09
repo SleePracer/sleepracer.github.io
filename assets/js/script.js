@@ -41,6 +41,23 @@ let eGameLoad = document.getElementById("gameLoad");
 
 const thisVersion = "0.1.0";
 
+const defaultState = {
+    version: thisVersion,
+    name: "",
+    iGS: 5,
+    hide: {autoshow: false,
+           carPass: false,
+           hotWheels: false,
+           welcome: true,
+           barnFind: false},
+    dr: 100,
+    iDR: 1,
+    wins: 0,
+    credits: 20000,
+    cEvent: null,
+    cCar: -1,
+    cars: []};
+
 const carList = [
     ["Choose manufacturer", "Choose model"],
     ["Acura",
@@ -259,7 +276,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["ATS",
+    ["ATS", // 10
         {name: "GT",
          pi: 877,
          cost: 850000,
@@ -269,7 +286,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Audi",
+    ["Audi", // 11
         {name: "RS E-Tron GT",
          pi: 770,
          cost: 250000,
@@ -333,7 +350,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "RS 6 Avant",
+        {name: "RS 6 Avant", // 8
          pi: 754,
          cost: 150000,
          year: 2015,
@@ -351,7 +368,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "S1",
+        {name: "S1", // 10
          pi: 644,
          cost: 35000,
          year: 2015,
@@ -441,7 +458,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "RS 4 Avant",
+        {name: "RS 4 Avant", // 20
          pi: 663,
          cost: 94000,
          year: 2001,
@@ -468,7 +485,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Austin-Healey",
+    ["Austin-Healey", // 12
         {name: "Sprite MKI",
          pi: 131,
          cost: 20000,
@@ -544,7 +561,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["BMW",
+    ["BMW", // 16
         {name: "M4 Competition Coupé",
          pi: 778,
          cost: 250000,
@@ -581,7 +598,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "M4 GTS",
+        {name: "M4 GTS", // 5
          pi: 814,
          cost: 135000,
          year: 2016,
@@ -626,7 +643,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "M6 Coupe",
+        {name: "M6 Coupe", // 10
          pi: 758,
          cost: 120000,
          year: 2013,
@@ -716,7 +733,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "M5",
+        {name: "M5", // 20
          pi: 694,
          cost: 30000,
          year: 2003,
@@ -761,7 +778,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "M3",
+        {name: "M3", // 25
          pi: 583,
          cost: 70000,
          year: 1991,
@@ -779,7 +796,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "M1",
+        {name: "M1", // 27
          pi: 629,
          cost: 585000,
          year: 1981,
@@ -788,7 +805,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "2002 Turbo",
+        {name: "2002 Turbo", // 28
          pi: 531,
          cost: 26000,
          year: 1973,
@@ -816,7 +833,7 @@ const carList = [
          hotWheels: true,
          welcome: false,
          barnFind: false}],
-    ["Bugatti",
+    ["Bugatti", // 18
         {name: "Divo",
          pi: 958,
          cost: 3000000,
@@ -835,7 +852,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Veyron Super Sport",
+        {name: "Veyron Super Sport", // 3
          pi: 913,
          cost: 2200000,
          year: 2011,
@@ -881,7 +898,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Cadillac",
+    ["Cadillac", // 20
         {name: "CTS-V Sedan",
          pi: 761,
          cost: 80000,
@@ -920,7 +937,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Chevrolet",
+    ["Chevrolet", // 23
         {name: "Corvette Stingray Coupé",
          pi: 806,
          cost: 65000,
@@ -957,7 +974,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Camaro ZL1",
+        {name: "Camaro ZL1", // 5
          pi: 821,
          cost: 60000,
          year: 2017,
@@ -1002,7 +1019,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Corvette Z06",
+        {name: "Corvette Z06", // 10
          pi: 722,
          cost: 35000,
          year: 2002,
@@ -1011,7 +1028,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Impala Super Sport",
+        {name: "Impala Super Sport", // 11
          pi: 509,
          cost: 20000,
          year: 1996,
@@ -1056,7 +1073,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "El Camino Super Sport 454",
+        {name: "El Camino Super Sport 454", // 16
          pi: 544,
          cost: 65000,
          year: 1970,
@@ -1083,7 +1100,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Camaro Super Sport Coupe",
+        {name: "Camaro Super Sport Coupe", // 19
          pi: 585,
          cost: 110000,
          year: 1969,
@@ -1092,7 +1109,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Nova Super Sport 396",
+        {name: "Nova Super Sport 396", // 20
          pi: 545,
          cost: 47000,
          year: 1969,
@@ -1119,7 +1136,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Corvette",
+        {name: "Corvette", // 23
          pi: 541,
          cost: 150000,
          year: 1960,
@@ -1155,7 +1172,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Corvette",
+        {name: "Corvette", // 27
          pi: 366,
          cost: 210000,
          year: 1953,
@@ -1211,7 +1228,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Delorean",
+    ["Delorean", // 26
         {name: "DMC-12",
          pi: 464,
          cost: 15000,
@@ -1221,7 +1238,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Dodge",
+    ["Dodge", // 27
         {name: "Challenger SRT Demon",
          pi: 786,
          cost: 150000,
@@ -1303,7 +1320,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Viper GTS ACR",
+        {name: "Viper GTS ACR", // 10
          pi: 717,
          cost: 75000,
          year: 1999,
@@ -1348,7 +1365,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Charger R/T",
+        {name: "Charger R/T", // 15
          pi: 548,
          cost: 103000,
          year: 1969,
@@ -1386,7 +1403,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Exomotive",
+    ["Exomotive", // 30
         {name: "Exocet Off-Road FE",
          pi: 800,
          cost: 500000,
@@ -1496,7 +1513,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Ferrari",
+    ["Ferrari", // 32
         {name: "SF90 Stradale",
          pi: 915,
          cost: 750000,
@@ -1578,7 +1595,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "GTC4Lusso",
+        {name: "GTC4Lusso", // 10
          pi: 816,
          cost: 300000,
          year: 2017,
@@ -1668,7 +1685,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "458 Italia",
+        {name: "458 Italia", // 20
          pi: 823,
          cost: 225000,
          year: 2009,
@@ -1758,7 +1775,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "F40 Competizione",
+        {name: "F40 Competizione", // 30
          pi: 947,
          cost: 2000000,
          year: 1989,
@@ -1839,7 +1856,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "250 California",
+        {name: "250 California", // 39
          pi: 564,
          cost: 18500000,
          year: 1957,
@@ -1848,7 +1865,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Ford",
+    ["Ford", // 33
         {name: "Mustang Mach-E 1400",
          pi: 900,
          cost: 750000,
@@ -1930,7 +1947,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Mustang RTR Spec 5",
+        {name: "Mustang RTR Spec 5", // 10
          pi: 757,
          cost: 105000,
          year: 2018,
@@ -2020,7 +2037,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "#11 Rockstar F-150 Trophy Truck",
+        {name: "#11 Rockstar F-150 Trophy Truck", // 20
          pi: 731,
          cost: 500000,
          year: 2014,
@@ -2047,7 +2064,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Fiesta ST",
+        {name: "Fiesta ST", // 23
          pi: 607,
          cost: 25000,
          year: 2014,
@@ -2083,7 +2100,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Crown Victoria Police Interceptor",
+        {name: "Crown Victoria Police Interceptor", // 27
          pi: 462,
          cost: 25000,
          year: 2010,
@@ -2110,7 +2127,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Focus RS",
+        {name: "Focus RS", // 30
          pi: 593,
          cost: 30000,
          year: 2003,
@@ -2119,7 +2136,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "F-150 SVT Lightning",
+        {name: "F-150 SVT Lightning", // 31
          pi: 585,
          cost: 20000,
          year: 2003,
@@ -2146,7 +2163,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Racing Puma",
+        {name: "Racing Puma", // 34
          pi: 514,
          cost: 20000,
          year: 1999,
@@ -2173,7 +2190,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Escort RS Cosworth",
+        {name: "Escort RS Cosworth", // 37
          pi: 565,
          cost: 66000,
          year: 1992,
@@ -2182,7 +2199,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Sierra Cosworth RS500",
+        {name: "Sierra Cosworth RS500", // 38
          pi: 604,
          cost: 66000,
          year: 1987,
@@ -2191,7 +2208,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Mustang SVO",
+        {name: "Mustang SVO", // 39
          pi: 525,
          cost: 15000,
          year: 1986,
@@ -2200,7 +2217,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Escort RS Turbo",
+        {name: "Escort RS Turbo", // 40
          pi: 516,
          cost: 25000,
          year: 1986,
@@ -2218,7 +2235,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Fiesta XR2",
+        {name: "Fiesta XR2", // 42
          pi: 369,
          cost: 25000,
          year: 1981,
@@ -2245,7 +2262,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Bronco",
+        {name: "Bronco", // 45
          pi: 421,
          cost: 38000,
          year: 1975,
@@ -2263,7 +2280,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Escort RS1600",
+        {name: "Escort RS1600", // 47
          pi: 476,
          cost: 73000,
          year: 1973,
@@ -2290,7 +2307,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "GT70",
+        {name: "GT70", // 50
          pi: 671,
          cost: 150000,
          year: 1970,
@@ -2353,7 +2370,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Transit",
+        {name: "Transit", // 57
          pi: 100,
          cost: 25000,
          year: 1965,
@@ -2371,7 +2388,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Anglia 105E",
+        {name: "Anglia 105E", // 59
          pi: 100,
          cost: 20000,
          year: 1959,
@@ -2380,7 +2397,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "F-100",
+        {name: "F-100", // 60
          pi: 302,
          cost: 36000,
          year: 1956,
@@ -2398,7 +2415,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "De Luxe Five-Window Coupe",
+        {name: "De Luxe Five-Window Coupe", // 62
          pi: 126,
          cost: 35000,
          year: 1932,
@@ -2572,7 +2589,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["GMC",
+    ["GMC", // 37
         {name: "Vandura G-1500",
          pi: 226,
          cost: 25000,
@@ -2591,7 +2608,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: true}],
-    ["HDT",
+    ["HDT", // 38
         {name: "VK Commodore Group A",
          pi: 550,
          cost: 250000,
@@ -2629,7 +2646,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Holden",
+    ["Holden", // 40
         {name: "Torana A9X",
          pi: 517,
          cost: 130000,
@@ -2657,7 +2674,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Honda",
+    ["Honda", // 41
         {name: "Civic Type R",
          pi: 727,
          cost: 59000,
@@ -2694,7 +2711,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Civic Type R",
+        {name: "Civic Type R", // 5
          pi: 574,
          cost: 20000,
          year: 2007,
@@ -2730,7 +2747,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "S2000",
+        {name: "S2000", // 9
          pi: 630,
          cost: 25000,
          year: 2003,
@@ -2739,7 +2756,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Civic Type R",
+        {name: "Civic Type R", // 10
          pi: 553,
          cost: 25000,
          year: 1997,
@@ -2748,7 +2765,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Prelude SI",
+        {name: "Prelude Si", // 11
          pi: 521,
          cost: 20000,
          year: 1994,
@@ -2766,7 +2783,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "CR-X SIR",
+        {name: "CR-X SiR", // 13
          pi: 534,
          cost: 20000,
          year: 1991,
@@ -2784,7 +2801,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Civic RS",
+        {name: "Civic RS", // 15
          pi: 368,
          cost: 25000,
          year: 1974,
@@ -3042,7 +3059,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["International",
+    ["International", // 48
         {name: "Scout 800A",
          pi: 384,
          cost: 40000,
@@ -3062,7 +3079,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Jaguar",
+    ["Jaguar", // 50
         {name: "I-Pace",
          pi: 705,
          cost: 87000,
@@ -3144,7 +3161,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "XJ220S TWR",
+        {name: "XJ220S TWR", // 10
          pi: 848,
          cost: 400000,
          year: 1993,
@@ -3171,7 +3188,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: true},
-        {name: "XJ13",
+        {name: "XJ13", // 13
          pi: 779,
          cost: 18000000,
          year: 1966,
@@ -3198,7 +3215,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "MK II 3.8",
+        {name: "MK II 3.8", // 16
          pi: 448,
          cost: 80000,
          year: 1959,
@@ -3207,7 +3224,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "D-Type",
+        {name: "D-Type", // 17
          pi: 630,
          cost: 22000000,
          year: 1956,
@@ -3216,7 +3233,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Jeep",
+    ["Jeep", // 51
         {name: "Gladiator Rubicon",
          pi: 456,
          cost: 45000,
@@ -3262,7 +3279,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "CJ5 Renegade",
+        {name: "CJ5 Renegade", // 6
          pi: 431,
          cost: 60000,
          year: 1976,
@@ -3354,7 +3371,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Lamborghini",
+    ["Lamborghini", // 54
         {name: "Huracán Evo",
          pi: 851,
          cost: 340000,
@@ -3400,7 +3417,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Aventador Superveloce",
+        {name: "Aventador Superveloce", // 6
          pi: 872,
          cost: 480000,
          year: 2016,
@@ -3436,7 +3453,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Aventador J",
+        {name: "Aventador J", // 10
          pi: 839,
          cost: 2700000,
          year: 2012,
@@ -3526,7 +3543,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "LM 002",
+        {name: "LM 002", // 20
          pi: 562,
          cost: 180000,
          year: 1986,
@@ -3553,7 +3570,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Land Rover",
+    ["Land Rover", // 55
         {name: "Defender 110 X",
          pi: 534,
          cost: 80000,
@@ -3599,7 +3616,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Series III",
+        {name: "Series III", // 6
          pi: 100,
          cost: 20000,
          year: 1972,
@@ -3665,7 +3682,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Lotus",
+    ["Lotus", // 59
         {name: "Evija",
          pi: 994,
          cost: 2500000,
@@ -3702,7 +3719,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Elise GT1",
+        {name: "Elise GT1", // 5
          pi: 794,
          cost: 1800000,
          year: 1997,
@@ -3711,7 +3728,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Elan Sprint",
+        {name: "Elan Sprint", // 6
          pi: 443,
          cost: 57000,
          year: 1971,
@@ -3720,7 +3737,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Lynk & Co",
+    ["Lynk & Co", // 60
         {name: "03+",
          pi: 679,
          cost: 250000,
@@ -3776,7 +3793,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Mazda",
+    ["Mazda", // 62
         {name: "MX-5",
          pi: 620,
          cost: 35000,
@@ -3813,7 +3830,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "RX-7 Spirit R Type-A",
+        {name: "RX-7 Spirit R Type-A", // 5
          pi: 687,
          cost: 30000,
          year: 2002,
@@ -3831,7 +3848,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "MX-5 Miata",
+        {name: "MX-5 Miata", // 7
          pi: 445,
          cost: 25000,
          year: 1994,
@@ -3840,7 +3857,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "323 GT-R",
+        {name: "323 GT-R", // 8
          pi: 589,
          cost: 25000,
          year: 1992,
@@ -3849,7 +3866,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Savanna RX-7",
+        {name: "Savanna RX-7", // 9
          pi: 558,
          cost: 25000,
          year: 1990,
@@ -3858,7 +3875,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["McLaren",
+    ["McLaren", // 63
         {name: "765LT",
          pi: 913,
          cost: 400000,
@@ -3940,7 +3957,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "570S Coupé",
+        {name: "570S Coupé", // 10
          pi: 824,
          cost: 224000,
          year: 2015,
@@ -3976,7 +3993,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "F1",
+        {name: "F1", // 14
          pi: 817,
          cost: 15000000,
          year: 1993,
@@ -4040,7 +4057,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Mercedes-Benz",
+    ["Mercedes-Benz", // 65
         {name: "X-Class",
          pi: 368,
          cost: 65000,
@@ -4077,7 +4094,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Unimog U5023",
+        {name: "Unimog U5023", // 5
          pi: 103,
          cost: 100000,
          year: 2014,
@@ -4122,7 +4139,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "SLK 55 AMG",
+        {name: "SLK 55 AMG", // 10
          pi: 740,
          cost: 78000,
          year: 2012,
@@ -4131,10 +4148,10 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "SLS AMG",
+        {name: "SLS AMG", // 11
          pi: 804,
          cost: 200000,
-         year: 804,
+         year: 2011,
          autoshow: true,
          carPass: false,
          hotWheels: false,
@@ -4149,7 +4166,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "AMG CLK GTR",
+        {name: "AMG CLK GTR", // 12
          pi: 829,
          cost: 2000000,
          year: 1998,
@@ -4158,7 +4175,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "190E 2.5-16 Evolution II",
+        {name: "190E 2.5-16 Evolution II", // 14
          pi: 579,
          cost: 150000,
          year: 1990,
@@ -4185,7 +4202,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "300 SL Coupé",
+        {name: "300 SL Coupé", // 17
          pi: 498,
          cost: 1200000,
          year: 1954,
@@ -4269,7 +4286,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Mini",
+    ["Mini", // 69
         {name: "John Cooper Works GP",
          pi: 719,
          cost: 42000,
@@ -4333,7 +4350,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Cooper S",
+        {name: "Cooper S", // 8
          pi: 281,
          cost: 30000,
          year: 1965,
@@ -4342,7 +4359,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Mitsubishi",
+    ["Mitsubishi", // 70
         {name: "Lancer Evolution X GSR \"Welcome Pack\"",
          pi: 800,
          cost: 43000,
@@ -4379,7 +4396,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Lancer Evolution VI GSR",
+        {name: "Lancer Evolution VI GSR", // 5
          pi: 659,
          cost: 28000,
          year: 1999,
@@ -4397,7 +4414,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Eclipse GSX",
+        {name: "Eclipse GSX", // 7
          pi: 543,
          cost: 25000,
          year: 1995,
@@ -4406,7 +4423,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Starion ESI-R",
+        {name: "Starion ESI-R", // 8
          pi: 549,
          cost: 20000,
          year: 1988,
@@ -4425,7 +4442,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Morris",
+    ["Morris", // 72
         {name: "Minor 1000 FE",
          pi: 800,
          cost: 500000,
@@ -4435,7 +4452,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Minor 1000",
+        {name: "Minor 1000", // 2
          pi: 100,
          cost: 20000,
          year: 1953,
@@ -4483,7 +4500,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Nissan",
+    ["Nissan", // 76
         {name: "GT-R Nismo (R35)",
          pi: 846,
          cost: 250000,
@@ -4565,7 +4582,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Fairlady Z",
+        {name: "Fairlady Z", // 10
          pi: 650,
          cost: 35000,
          year: 2003,
@@ -4592,7 +4609,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "R390 (GT1)",
+        {name: "R390 (GT1)", // 13
          pi: 859,
          cost: 1250000,
          year: 1998,
@@ -4601,7 +4618,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Silvia K's Aero",
+        {name: "Silvia K's Aero", // 14
          pi: 609,
          cost: 25000,
          year: 1998,
@@ -4610,7 +4627,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Skyline GT-R V-Spec",
+        {name: "Skyline GT-R V-Spec", // 15
          pi: 635,
          cost: 37000,
          year: 1997,
@@ -4655,7 +4672,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "240SX SE",
+        {name: "240SX SE", // 20
          pi: 445,
          cost: 25000,
          year: 1993,
@@ -4664,7 +4681,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Silvia Club K's",
+        {name: "Silvia Club K's", // 21
          pi: 537,
          cost: 25000,
          year: 1992,
@@ -4673,7 +4690,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Pulsar GTI-R",
+        {name: "Pulsar GTI-R", // 22
          pi: 594,
          cost: 20000,
          year: 1990,
@@ -4682,7 +4699,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Skyline GTS-R (HR31)",
+        {name: "Skyline GTS-R (HR31)", // 23
          pi: 543,
          cost: 100000,
          year: 1987,
@@ -4709,7 +4726,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Fairlady Z 432",
+        {name: "Fairlady Z 432", // 26
          pi: 482,
          cost: 150000,
          year: 1969,
@@ -4757,7 +4774,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Pagani",
+    ["Pagani", // 80
         {name: "Huayra BC FE",
          pi: 998,
          cost: 2700000,
@@ -4823,7 +4840,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Peugeot",
+    ["Peugeot", // 83
         {name: "207 Super 2000",
          pi: 755,
          cost: 150000,
@@ -4917,7 +4934,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Porsche",
+    ["Porsche", // 87
         {name: "911 GT3",
          pi: 858,
          cost: 250000,
@@ -4999,7 +5016,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "718 Cayman GTS",
+        {name: "718 Cayman GTS", // 10
          pi: 785,
          cost: 90000,
          year: 2018,
@@ -5089,7 +5106,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "911 GT3 RS 4.0",
+        {name: "911 GT3 RS 4.0", // 20
          pi: 825,
          cost: 250000,
          year: 2012,
@@ -5128,7 +5145,7 @@ const carList = [
         {name: "911 GT1 Strassenversion",
          pi: 840,
          cost: 2500000,
-         year: 840,
+         year: 1998,
          autoshow: true,
          carPass: false,
          hotWheels: false,
@@ -5179,7 +5196,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "944 Turbo",
+        {name: "944 Turbo", // 30
          pi: 651,
          cost: 35000,
          year: 1989,
@@ -5242,7 +5259,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "914/6",
+        {name: "914/6", // 37
          pi: 427,
          cost: 24000,
          year: 1970,
@@ -5269,7 +5286,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "550A Spyder",
+        {name: "550A Spyder", // 40
          pi: 514,
          cost: 600000,
          year: 1955,
@@ -5298,7 +5315,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Ram",
+    ["Ram", // 90
         {name: "2500 Power Wagon",
          pi: 467,
          cost: 47000,
@@ -5318,7 +5335,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Renault",
+    ["Renault", // 92
         {name: "Megane R.S.",
          pi: 670,
          cost: 37000,
@@ -5346,7 +5363,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Clio Williams",
+        {name: "Clio Williams", // 4
          pi: 511,
          cost: 30000,
          year: 1993,
@@ -5364,7 +5381,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "4L Export",
+        {name: "4L Export", // 6
          pi: 100,
          cost: 20000,
          year: 1968,
@@ -5421,7 +5438,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Schuppan",
+    ["Schuppan", // 96
         {name: "962CR",
          pi: 869,
          cost: 2500000,
@@ -5469,7 +5486,7 @@ const carList = [
          hotWheels: true,
          welcome: false,
          barnFind: false}],
-    ["Subaru",
+    ["Subaru", // 99
         {name: "STI S209",
          pi: 689,
          cost: 70000,
@@ -5551,7 +5568,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Legacy RS",
+        {name: "Legacy RS", // 10
          pi: 514,
          cost: 250000,
          year: 1990,
@@ -5560,7 +5577,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Toyota",
+    ["Toyota", // 100
         {name: "GR Supra",
          pi: 731,
          cost: 55000,
@@ -5642,7 +5659,7 @@ const carList = [
          hotWheels: false,
          welcome: true,
          barnFind: false},
-        {name: "Supra RZ",
+        {name: "Supra RZ", // 10
          pi: 646,
          cost: 38000,
          year: 1998,
@@ -5651,7 +5668,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Celica GT-Four ST205",
+        {name: "Celica GT-Four ST205", // 11
          pi: 590,
          cost: 20000,
          year: 1994,
@@ -5669,7 +5686,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: true},
-        {name: "Supra 2.0 GT",
+        {name: "Supra 2.0 GT", // 13
          pi: 558,
          cost: 20000,
          year: 1992,
@@ -5678,7 +5695,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Celica GT-Four RC ST185",
+        {name: "Celica GT-Four RC ST185", // 14
          pi: 544,
          cost: 25000,
          year: 1992,
@@ -5687,7 +5704,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "MR2 SC",
+        {name: "MR2 SC", // 15
          pi: 502,
          cost: 20000,
          year: 1989,
@@ -5696,7 +5713,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Sprinter Trueno GT Apex",
+        {name: "Sprinter Trueno GT Apex", // 16
          pi: 480,
          cost: 20000,
          year: 1985,
@@ -5705,7 +5722,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "FJ40",
+        {name: "FJ40", // 17
          pi: 269,
          cost: 55000,
          year: 1979,
@@ -5714,7 +5731,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Celica GT",
+        {name: "Celica GT", // 18
          pi: 315,
          cost: 20000,
          year: 1974,
@@ -5732,7 +5749,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["TVR",
+    ["TVR", // 101
         {name: "Griffith",
          pi: 825,
          cost: 105000,
@@ -5798,13 +5815,13 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Volkswagen",
+    ["Volkswagen", // 104
         {name: "Golf R",
          pi: 668,
          cost: 65000,
          year: 2021,
          autoshow: true,
-         carPass: true, // CHECK ME : wikia says 2019?
+         carPass: true,
          hotWheels: false,
          welcome: false,
          barnFind: false},
@@ -5817,7 +5834,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Golf R",
+        {name: "Golf R", // 3
          pi: 663,
          cost: 50000,
          year: 2014,
@@ -5862,7 +5879,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Corrado VR6",
+        {name: "Corrado VR6", // 8
          pi: 533,
          cost: 20000,
          year: 1995,
@@ -5880,7 +5897,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Golf GTI",
+        {name: "Golf GTI", // 10
          pi: 428,
          cost: 20000,
          year: 1983,
@@ -5889,7 +5906,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Pickup LX",
+        {name: "Pickup LX", // 11
          pi: 100,
          cost: 20000,
          year: 1982,
@@ -5898,7 +5915,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Scirocco S",
+        {name: "Scirocco S", // 12
          pi: 293,
          cost: 20000,
          year: 1981,
@@ -5934,7 +5951,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Beetle",
+        {name: "Beetle", // 16
          pi: 100,
          cost: 20000,
          year: 1963,
@@ -5943,7 +5960,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false},
-        {name: "Type 2 De Luxe",
+        {name: "Type 2 De Luxe", // 17
          pi: 100,
          cost: 40000,
          year: 1963,
@@ -5952,7 +5969,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Volvo",
+    ["Volvo", // 105
         {name: "V60 Polestar",
          pi: 662,
          cost: 62000,
@@ -5990,7 +6007,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Willys",
+    ["Willys", // 107
         {name: "MB Jeep",
          pi: 198,
          cost: 40000,
@@ -6020,7 +6037,7 @@ const carList = [
          hotWheels: false,
          welcome: false,
          barnFind: false}],
-    ["Zenvo",
+    ["Zenvo", // 110
         {name: "TSR-S",
          pi: 927,
          cost: 1200000,
@@ -6040,22 +6057,429 @@ const carList = [
          welcome: false,
          barnFind: false}]];
 
-const defaultState = {
-    version: thisVersion,
-    name: "",
-    iGS: 5,
-    hide: {autoshow: false,
-           carPass: false,
-           hotWheels: false,
-           welcome: true,
-           barnFind: false},
-    dr: 100,
-    iDR: 1,
-    wins: 0,
-    credits: 20000,
-    cEvent: null,
-    cCar: -1,
-    cars: []};
+// Antique: more than 100 years old
+// Vintage: 40 - 100 years old
+// Retro: 20 - 30 years old
+
+// D Class 20k cars
+// Austin-Healey Sprite 1958 D131
+    // vintageRoadsters
+// Delorean DMC-12 1982 D464
+    // wedges
+// Ford Anglia 1959 D100
+    // vintageEconoboxes
+// Land Rover Series III 1972 D100
+    // explorers70s
+// Morris Minor 1953 D100
+    // vintageEconoboxes
+// Peugeot 205 1991 D462
+    // hatchbacksEarly90s
+// Renault 4L 1968 D100
+    // vintageEconoboxes
+// Toyota AE86 1985 D480
+    // sportLiftbacks80s
+// Toyota Celica 1975 D315
+    // sportsCars70s
+// Volkswagen Golf MK2 1992 D429
+    // hatchbacksEarly90s
+// Volkswagen Golf MK1 1983 D428
+    // hatchbacks70s
+// Volkswagen Pickup 1982 D100
+    // vintageUtility
+// Volkswagen Scirocco 1981 D293
+    // hatchbacks70s
+// Volkswagen Beetle 1963 D100
+    // vintageEconoboxes
+
+// C Class 20k cars
+// Chevrolet Impala 1996 C509
+    // policeCars
+// Ford F-150 Lightning 2003 C585
+    // fastAndFurious
+// Ford Puma 1999 C514
+    // hatchbacksLate90s
+// Ford Mustang 1986 C525
+    // sportLiftbacks80s
+// Honda Civic 2007 C574
+    // hondaCivics
+// Honda Prelude 1994 C521
+    // granTurismoStart
+// Honda CR-X 1991 C534
+    // granTurismoStart
+// Mitsubishi Starion 1988 C549
+    // sportLiftbacks80s
+// Nissan Pulsar 1990 C594
+    // rallyGroupA
+// Toyota Celica 1994 C590
+    // rallyGroupA
+// Toyota Supra 1992 C558
+    // sportLiftbacks80s
+// Toyota MR2 1989 C502
+    // sportLiftbacks80s
+// Volkswagen Corrado 1995 C533
+    // lakesideDiner
+
+// B Class 20k cars
+// Mitsubishi GTO 1997 B610
+    // topJapanese90s
+// Nissan Fairlady 1994 B607
+    // topJapanese90s
+// Volkswagen Golf 2003 B618
+    // volkswagenGolfs
+
+// What about sprite? Roadsters if enough, or Sport cars
+// Sprite is gold
+// Corvette is roadster, probably good
+// Ferrari is roaster, probably good but C class
+// Check the otehrs?
+const vintageRoadsters = [
+    [12, 1], // Austin-Healey Sprite 1958 D131
+    [23, 23], // Chevrolet Corvette 1960 C541
+    [23, 27], // Chevrolet Corvette 1953 D366
+    [32, 39], // Ferrari 250 Cali 1957 C564
+    [97, 1]]; // Shelby Cobra 427 1965 B694
+
+// Porsche is roadster, but race car? like jag
+// Ferrari Testa Rossa is like D-type and 550
+// Jag D-type is like porsche kinda (literally competed in 24LM)
+// MB 300 is sports
+const vintageRaceCars = [
+    [32, 38], // Ferrari 250 TR 1957 C691
+    [50, 13], // Jaguar XJ13 1966 A779
+    [50, 17], // Jaguar D-Type 1956 C630
+    [65, 16], // Mercedes-Benz 300 SLR 1955 A714
+    [87, 40]]; // Porsche 550A 1955 C514
+
+// Anglia and Minor are gold, Beetle works too
+// Renault 4L is later, but it fits the theme kinda
+// Mini is pushing it since it's so small
+// Renault 8 Gordini? No, rally car?
+// Austin-Healey sticks out as a cabriolet too, more of a sports car
+// Some easy cruises on tarmac, at most a 50/50 rally track
+// Reservorio -> Llanuras -> El Pípila? some dirt at the end?
+// Or maybe just Panorámica
+const vintageEconoboxes = [
+    [33, 59], // Ford Anglia 1959 D100
+    [72, 2], // Morris Minor 1953 D100
+    [92, 6], // Renault 4L 1968 D100
+    [104, 16]]; // Volkswagen Beetle 1963 D100
+
+const vintageUtility = [
+    [23, 16], // Chevrolet El Camino 1970 C544
+    [33, 57], // Ford Transit 1965 D100
+    [33, 60], // Ford F-100 1956 D302
+    [37, 1], // GMC Vandura 1983 D226
+    [37, 2], // GMC Jimmy 1970 C521
+    [40, 2], // Holden Sandman 1974 C501
+    [104, 11], // Volkswagen Pickup 1982 D100
+    [104, 17], // Volkswagen Type 2 1963 D100
+    [107, 1]]; // Willys Jeep 1945 D198
+
+// 2000GT and Fairlady are gold
+// Ferrari Dino 246 GT too? E-Type?
+const sportsCars60s = [
+    [76, 26], // Nissan Fairlady Z 1969 D482
+    [100, 19]]; // Toyota 2000GT 1969 D487
+
+// Where does Celica 75 belong?
+// Not with skyline 73 or Z/2000GT
+// With Escort, 2002 and Skyline 71
+// Possibly with 914 and Elan
+const sportsCars70s = [
+    [16, 28], // BMW 2002 1973 C531
+    [33, 47], // Ford Escort 1973 D476
+    [59, 6], // Lotus Elan 1971 D443
+    [76, 25], // Nissan Skyline 1971 D493
+    [87, 37], // Porsche 914 1970 D427
+    [100, 18]]; // Toyota Celica 1975 D315
+
+// Bronco, Scout, Series III and FJ40 are gold
+// Jeep sticks out a little bit but kinda fits still (unless I find a better use for it?)
+// Something out in the desert at first?
+const explorers70s = [
+    [33, 45], // Ford Bronco 1975 D421
+    [48, 1], // International Scout 1970 D384
+    [51, 6], // Jeep CJ5 1976 D431
+    [55, 6], // Land Rover Series III 1972 D100
+    [100, 17]]; // Toyota FJ40 1979 D269
+
+// Fiesta, Civic and Golf are gold
+// Mini is a bit smaller but works
+// FWD only so no Gremlin ? try gremlin! gremlin could go with renault 5
+// Try scirocco too!
+// I want this to be rallycross folkrace kinda
+const hatchbacks70s = [
+    [33, 42], // Ford Fiesta 1981 D369
+    [41, 15], // Honda Civic 1974 D368
+    [69, 8], // Mini Cooper 1965 D281
+    [104, 10]]; // Volkswagen Golf MK1 1983 D428
+
+// Delorean and M1
+const wedges80s = [
+    [16, 27], // BMW M1 1981 B629
+    [26, 1]]; // Delorean DMC-12 1982 D464
+
+const sportSedans80s = [
+    [16, 25], // BMW M3 1991 C583
+    [38, 1], // HDT VK Commodore 1985 C550
+    [65, 14], // Mercedes 190E 1990 C579
+    [76, 21], // Nissan S13 1992 C537
+    [76, 23], // Nissan R31 1987 C543
+    [105, 3]]; // Volvo 242 1983 C548
+
+const sportLiftbacks80s = [
+    [33, 38], // Ford Sierra 1987 C604
+    [33, 39], // Ford Mustang 1986 C525
+    [62, 9], // Mazda RX-7 1990 C558
+    [70, 8], // Mitsubishi Starion 1988 C549
+    [87, 30], // Porsche 944 1989 B651
+    [100, 13], // Toyota Supra 1992 C558
+    [100, 15], // Toyota MR2 1989 C502
+    [100, 16]]; // Toyota AE86 1985 D480
+
+// Should 205 + MK2 be available in D? Probably...
+const hatchbacksEarly90s = [
+    [83, 2], // Peugeot 205 1991 D462
+    [92, 4], // Renault Clio 1993 C511
+    [104, 9]]; // Volkswagen Golf MK2 1992 D429
+
+const hatchbacksLate90s = [
+    [33, 34], // Ford Puma 1999 C514
+    [41, 10], // Honda Civic 1997 C553
+    [104, 7]]; // Volkswagen Golf MK3 1998 C510
+
+const rallyGroupA = [
+    [33, 37], // Ford Escort 1992 C565
+    [62, 8], // Mazda 323 1992 C589
+    [70, 5], // Mitsubishi Evo VI 1999 B659
+    [76, 22], // Nissan Pulsar 1990 C594
+    [99, 9], // Subaru Impreza 1998 B640
+    [99, 10], // Subaru Legacy 1990 C514
+    [100, 11], // Toyota Celica 1994 C590
+    [100, 14]]; // Toyota Celica 1992 C544
+
+const topJapanese90s = [
+    [41, 12], // Honda NSX-R 1992 B691
+    [62, 6], // Mazda RX-7 1997 B645
+    [70, 5], // Mitsubishi Evo VI 1999 B659
+    [70, 6], // Mitsubishi GTO 1997 B610
+    [76, 15], // Nissan R33 1997 B635
+    [76, 18], // Nissan Fairlady Z 1994 B607
+    [76, 19], // Nissan R32 1993 B626
+    [99, 9], // Subaru Impreza 1998 B640
+    [100, 10], // Toyota Supra 1998 B646
+    [100, 11]]; // Toyota Celica 1994 C590
+
+const supercars90s = [
+    [18, 4], // Bugatti EB110 1992 S805
+    [32, 27], // Ferrari F50 1995 A789
+    [50, 11], // Jaguar XJ220 1993 A786
+    [50, 12], // Jaguar XJR-15 1991 S828
+    [54, 18], // Lamborghini Diablo 1997 A763
+    [63, 14], // McLaren F1 1993 S817
+    [87, 26], // Porsche 911 GT2 1995 A753
+    [96, 1], // Schuppan 962CR 1993 S869
+    [101, 3]]; // TVR Cerbera 1998 S861
+
+const topRaceCars90s = [
+    [32, 26], // Ferrari F50 1996 H976
+    [50, 10], // Jaguar XJ220S 1993 S848
+    [54, 17], // Lamborghini Diablo 1999 S881
+    [59, 5], // Lotus Elise GT1 1997 A794
+    [63, 13], // McLaren F1 1997 S866
+    [65, 12], // Mercedes AMG CLK GTR 1998 S829
+    [76, 13], // Nissan R390 1998 S859
+    [87, 24]]; // Porsche 911 GT1 1998 S840
+
+const worldRallyCars00s = [
+    [33, 28], // Ford Focus 2009 B660
+    [33, 30], // Ford Focus 2003 C593
+    [70, 3], // Mitsubishi Evo IX 2006 B632
+    [70, 4], // Mitsubishi Evo VIII 2004 B664
+    [99, 6], // Subaru Impreza 2008 B649
+    [99, 7], // Subaru Impreza 2005 B669
+    [99, 8]]; // Subaru Impreza 2004 B652
+
+const worldRallyCars10s = [
+    [33, 23], // Ford Fiesta 2014 B607
+    [69, 6]]; // Mini John Cooper 2009 C598
+
+const fastAndFurious = [
+    [1, 3], // Acura Integra 2001 C596 Mia
+    [27, 15], // Dodge Charger 1969 C548 Dom
+    [33, 31], // Ford F-150 Lightning 2003 C585 Brian
+    [41, 9], // Honda S2000 2003 B630 Johnny
+    [62, 6], // Mazda RX-7 1997 B645 Dom
+    [70, 7], // Mitsubishi Eclipse 1995 C543 Brian
+    [76, 14], // Nissan Silvia 1998 B609 Letty
+    [76, 15], // Nissan R33 1997 B635 Leon
+    [100, 10]]; // Toyota Supra 1998 B646 Brian
+
+const granTurismoStarters = [
+    [41, 11], // Honda Prelude 1994 C521
+    [41, 13], // Honda CR-X 1991 C534
+    [62, 7], // Mazda MX-5 1994 D445
+    [62, 9], // Mazda RX-7 1990 C558
+    [76, 21], // Nissan S13 1992 C537
+    [100, 13], // Toyota Supra 1992 C558
+    [100, 16]]; // Toyota AE86 1985 D480
+
+const lakesideDiner = [
+    [23, 19], // Chevrolet Camaro 1969 C585
+    [33, 23], // Ford Fiesta 1994 B607
+    [70, 5], // Mitsubishi Evo IV 1999 B664
+    [100, 10], // Toyota Supra 1998 B646
+    [104, 8]]; // Volkswagen Corrado 1995 C533
+
+const hondaCivics = [
+    [41, 1], // Honda Civic 2018 A727
+    [41, 3], // Honda Civic 2016 B699
+    [41, 5], // Honda Civic 2007 C574
+    [41, 8], // Honda Civic 2004 C600
+    [41, 10], // Honda Civic 1997 C553
+    [41, 15]]; // Honda Civic 1974 D368
+
+const volkswagenGolfs = [
+    [104, 1], // Volkswagen Golf 2021 B668
+    [104, 3], // Volkswagen Golf 2014 B663
+    [104, 5], // Volkswagen Golf 2010 B645
+    [104, 6], // Volkswagen Golf 2003 B618
+    [104, 7], // Volkswagen Golf 1998 C510
+    [104, 9], // Volkswagen Golf 1992 D429
+    [104, 10]]; // Volkswagen Golf 1983 D428
+
+const policeCars = [
+    [11, 8], // Audi RS6 2015 A754
+    [16, 5], // BMW M4 2016 S814
+    [18, 3], // Bugatti Veyron 2011 H913
+    [23, 11], // Chevrolet Impala 1996 C509
+    [23, 5], // Chevrolet Camaro 2017 S821
+    [33, 2], // Ford Bronco 2021 C590
+    [33, 27], // Ford Crown Victoria 2010 D462
+    [50, 16], // Jaguar MK II 1959 D448
+    [54, 6], // Lamborghini Aventador 2016 S872
+    [65, 5], // Mercedes Unimog 2014 D103
+    [65, 11], // Mercedes SLS 2011 S804
+    [70, 2], // Mitsubishi Evo X 2008 B649
+    [104, 3]]; // Volkswagen Golf 2014 B663
+
+const roadSprints = [
+    "Dunas Blancas",
+    "Descansar Dorado",
+    "Reservorio",
+    "Copper Canyon",
+    "Volcán",
+    "Gran Pantano",
+    "Sierra Verde",
+    "Llanuras",
+    "Panorámica",
+    "Riviera"];
+
+const roadCircuits = [
+    "Bahía de Plano",
+    "Arch of Mulegé",
+    "Los Jardines",
+    "Chihuahua",
+    "Tierra Próspera",
+    "Playa Azul",
+    "Lookout",
+    "Horizon Mexico",
+    "Emerald",
+    "Estadio",
+    "Cathedral",
+    "Plaza",
+    "Bola Ocho"];
+
+const dirtTrails = [
+    "Cascada",
+    "Montaña",
+    "Desierto",
+    "Baja California",
+    "Bajío",
+    "Cordillera",
+    "Tapalpa",
+    "Fuera del Camino",
+    "Tulum",
+    "Barranca"];
+
+const dirtScrambles = [
+    "River",
+    "Mangrove",
+    "Mulegé Town",
+    "San Juan",
+    "Horizon Baja",
+    "Teotihuacan",
+    "Caldera",
+    "La Selva",
+    "El Pípila",];
+
+const crossCountrySprints = [
+    "Las Ranas",
+    "Las Dunas",
+    "Ribera Rocosa",
+    "Costa Este",
+    "El Descenso",
+    "Oasis",
+    "Trópico",
+    "Las Granjas",
+    "Restos",
+    "Foto Final",
+    "Copper Canyon",
+    "Festival"];
+
+const crossCountryCircuits = [
+    "Baja",
+    "Costera",
+    "Estadio",
+    "Urban",
+    "Ek' Balam",
+    "Herencia",
+    "Airfield"];
+
+const streetSprints = [
+    "El Lago Blanco",
+    "Ruta Norte",
+    "Festival Gatecrash",
+    "Coast Run",
+    "Carretera Chase",
+    "Costa Rocosa",
+    "Horizon Callejera",
+    "Hilltop Descent",
+    "Jungle Descent",
+    "Las Laderas",
+    "Granajas de Tapalpa",
+    "Wetland Charge",
+    "Las Afueras",
+    "Cruce del Valle",
+    "Tunnel Run",
+    "Bosque del Sur",
+    "Guanajuato Sur",
+    "Highland Climb",
+    "Cañón Run",
+    "Castillo del Mar"];
+
+const endurances = [
+    "The Goliath",
+    "The Colossus",
+    "The Gauntlet",
+    "The Titan",
+    "The Marathon"];
+
+const firstTracks = [
+    roadCircuits[7],
+    roadCircuits[8],
+    dirtTrails[2],
+    dirtScrambles[2],
+    crossCountrySprints[5],
+    crossCountryCircuits[6]];
+
+const allShortTracks = roadSprints.concat(
+    roadCircuits,
+    dirtTrails,
+    dirtScrambles,
+    crossCountrySprints,
+    crossCountryCircuits,
+    streetSprints);
 
 const gameSpeed = [
     1.0,
@@ -6733,7 +7157,7 @@ class Event {
         this.iEvent = iEvent;
         this.infoString = info;
         this.raceNames = JSON.parse(JSON.stringify(raceNames));
-        this.iClass = iClass;
+        this.iClass = JSON.parse(JSON.stringify(iClass));
         this.models = JSON.parse(JSON.stringify(models));
         this.resultFactor = resultFactor;
         this.cRace = -1;
@@ -6773,11 +7197,13 @@ class Event {
     }
 
     showOrHide() {
-        // Check if current car is included in model list for event
+        // Hide everything if not in a car
         if (state.cCar === -1) {
             this.row.style.display = "none";
             return;
         }
+
+        // Check if current car is included in model list for event
         let cModel = state.cars[state.cCar].getModel();
         let carAllowed = false;
         if (this.models === 0) {
@@ -6793,9 +7219,14 @@ class Event {
 
         // Check if current car is of the correct class
         let classAllowed = false;
-        if (this.iClass === 0
-         || this.iClass === iClassFromPI(state.cars[state.cCar].pi)) {
+        if (this.iClass === 0) {
             classAllowed = true;
+        } else if (this.iClass.length > 0) {
+            for (let c = 0; c < this.iClass.length; c++) {
+                if (this.iClass[c] === iClassFromPI(state.cars[state.cCar].pi)) {
+                    classAllowed = true;
+                }
+            }
         }
 
         // Check if ready for level up (if level up event)
@@ -6814,9 +7245,35 @@ class Event {
 
     showInfo() {
         if (this.infoButton.innerText === "Info") {
+            // Add provided info
+            let allInfo = this.name + ": ";
+            allInfo += this.infoString;
+
+            // Add class
+            if (this.iClass !== 0) {
+                allInfo += "\n\n";
+                if (this.iClass.length > 0) {
+                    allInfo += "Class: " + classLetter[this.iClass[0]];
+                    for (let c = 1; c < this.iClass.length; c++) {
+                        allInfo += ", " + classLetter[this.iClass[c]];
+                    }
+                } else {
+                    allInfo += "Class: " + classLetter[this.iClass];
+                }
+            }
+
+            // Add eligible models
+            if (this.models !== 0 && this.models.length !== 0) {
+                allInfo += "\n\nEligible cars:\n";
+                for (let iModel = 0; iModel < this.models.length; iModel++) {
+                    allInfo += carList[this.models[iModel][0]][0] + " ";
+                    allInfo += carList[this.models[iModel][0]][this.models[iModel][1]].name + " (";
+                    allInfo += carList[this.models[iModel][0]][this.models[iModel][1]].year + ")\n";
+                }
+            }
+
             // Replace name with info
-            this.row.cells[0].innerText = this.name + ": "
-                                        + this.infoString;
+            this.row.cells[0].innerText = allInfo;
 
             // Repurpose info button to close info
             this.infoButton.innerText = "Hide info";
@@ -7705,18 +8162,136 @@ function loadGameInput() {
 
 // Create all events
 events = [];
-info = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet nisi magna. Sed magna nibh, fermentum in semper sit amet, commodo quis dolor. Sed tempus dolor leo, at pharetra massa interdum non. Pellentesque eu urna eget diam lobortis egestas. Nam malesuada maximus odio, et tempus est egestas id. Pellentesque sit amet risus id eros fringilla rutrum. Nullam volutpat mi et laoreet pulvinar. In vel ante felis. Nam auctor vestibulum tempor. Ut eu elit egestas, sollicitudin metus et, pulvinar nibh. Phasellus purus ante, commodo a neque vitae, auctor viverra neque. Pellentesque sit amet tortor enim. Vestibulum et eleifend felis. Vivamus vel quam ultricies, lacinia lacus et, faucibus dui.";
-events.push(new Event("Basic Race",
-                      events.length,
-                      info,
+info = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+events.push(new Event("Open Race", events.length,
+                      "Single race on random track, any car allowed!",
                       ["Race"]));
-events.push(new Event("Class Level Up Championship",
-                      events.length,
-                      info,
+
+events.push(new Event("Class Level Up Championship", events.length, info,
                       ["1: Race", "2: Race", "3: Race"]));
 
 // This will make finishing the championship increase iDR
 eventMap.get("Class Level Up Championship").levelUpEvent = true;
+
+events.push(new Event("Vintage Roadsters", events.length, "",
+                      ["some road race"],
+                      [1, 2, 3], // 131 - 694
+                      vintageRoadsters));
+
+events.push(new Event("Vintage Race Cars", events.length, "",
+                      ["some road race"],
+                      [2, 3, 4], // 514 - 714
+                      vintageRaceCars));
+
+events.push(new Event("Vintage Econoboxes", events.length, "",
+                      ["some road race"],
+                      1, // 100
+                      vintageEconoboxes));
+
+events.push(new Event("Vintage Utility", events.length, "",
+                      ["some road race"],
+                      [1, 2], // 100 - 544
+                      vintageUtility));
+
+events.push(new Event("60s Sports Cars", events.length, "",
+                      ["some road race"],
+                      1, // 482 - 487
+                      sportsCars60s));
+
+events.push(new Event("70s Sports Cars", events.length, "",
+                      ["some road race"],
+                      [1, 2], // 315 - 531
+                      sportsCars70s));
+
+events.push(new Event("70s Explorers", events.length, "",
+                      ["some road race"],
+                      1, // 100 - 431
+                      explorers70s));
+
+events.push(new Event("70s Hatchbacks", events.length, "",
+                      ["some road race"],
+                      1, // 281 - 428
+                      hatchbacks70s));
+
+events.push(new Event("80s Wedge Showdown", events.length, "",
+                      ["some road race"],
+                      [1, 2, 3], // 464 - 629
+                      wedges80s));
+
+events.push(new Event("80s Sport Sedans", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 537 - 583
+                      sportSedans80s));
+
+events.push(new Event("80s Sport Liftbacks", events.length, "",
+                      ["some road race"],
+                      [1, 2, 3], // 480 - 651
+                      sportLiftbacks80s));
+
+events.push(new Event("Early 90s Hatchbacks", events.length, "",
+                      ["some road race"],
+                      [1, 2], // 429 - 511
+                      hatchbacksEarly90s));
+
+events.push(new Event("Late 90s Hatchbacks", events.length, "",
+                      ["some road race"],
+                      2, // 510 - 553
+                      hatchbacksLate90s));
+
+events.push(new Event("Group A Rally Cars", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 514 - 659
+                      rallyGroupA));
+
+events.push(new Event("90s Japanese Sports Cars", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 590 - 691
+                      topJapanese90s));
+
+events.push(new Event("90s Supercars", events.length, "",
+                      ["some road race"],
+                      [4, 5], // 753 - 869
+                      supercars90s));
+
+events.push(new Event("90s Race Cars", events.length, "",
+                      ["some road race"],
+                      [4, 5, 6], // 794 - 976
+                      topRaceCars90s));
+
+events.push(new Event("00s World Rally Cars", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 593 - 669
+                      worldRallyCars00s));
+
+events.push(new Event("10s World Rally Cars", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 598 - 607
+                      worldRallyCars10s));
+
+events.push(new Event("The Fast and the Furious", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 543 - 646
+                      fastAndFurious));
+
+events.push(new Event("Gran Turismo Starter Cars", events.length, "",
+                      ["some road race"],
+                      [1, 2], // 445 - 558
+                      granTurismoStarters));
+
+events.push(new Event("Lakeside Diner Horizon", events.length, "",
+                      ["some road race"],
+                      [2, 3], // 533 - 664
+                      lakesideDiner));
+
+events.push(new Event("Civic vs. Golf Showdown", events.length, "",
+                      ["some road race"],
+                      [1, 2, 3, 4], // 368 - 727
+                      hondaCivics.concat(volkswagenGolfs)));
+
+events.push(new Event("Police Car Showdown", events.length, "",
+                      ["some road race"],
+                      [1, 2, 3, 4, 5, 6], // 103 - 913
+                      policeCars));
 
 /* some proof of concept events
 
