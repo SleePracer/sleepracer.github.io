@@ -7173,20 +7173,20 @@ class Event {
         }
         this.row.cells[0].innerText = this.name;
 
-        // Create and add the enter event button
-        this.enterButton = document.createElement("button");
-        this.enterButton.id = this.name;
-        this.enterButton.onclick = enterEventButtonClick;
-        this.enterButton.innerText = "Enter";
-        this.row.cells[1].appendChild(this.enterButton);
-
         // Create and add the info button
         this.infoButton = document.createElement("button");
         this.infoButton.id = this.name;
         this.infoButton.onclick = infoButtonClick;
         this.infoButton.innerText = "Info";
-        this.infoButton.className = "margin";
         this.row.cells[1].appendChild(this.infoButton);
+
+        // Create and add the enter event button
+        this.enterButton = document.createElement("button");
+        this.enterButton.id = this.name;
+        this.enterButton.onclick = enterEventButtonClick;
+        this.enterButton.innerText = "Enter";
+        this.enterButton.className = "margin";
+        this.row.cells[1].appendChild(this.enterButton);
 
         // Create the return from event button
         // It will be added to the races table later
@@ -7205,26 +7205,31 @@ class Event {
 
         // Check if current car is included in model list for event
         let cModel = state.cars[state.cCar].getModel();
-        let carAllowed = false;
+        let carModelOk = false;
         if (this.models === 0) {
-            carAllowed = true;
+            carModelOk = true;
         } else {
             for (let iModel = 0; iModel < this.models.length; iModel++) {
                 if (cModel[0] === this.models[iModel][0]
                  && cModel[1] === this.models[iModel][1]) {
-                    carAllowed = true;
+                    carModelOk = true;
                 }
             }
         }
 
         // Check if current car is of the correct class
-        let classAllowed = false;
+        let playerDROk = false;
+        let carClassOk = false;
         if (this.iClass === 0) {
-            classAllowed = true;
+            playerDROk = true;
+            carClassOk = true;
         } else if (this.iClass.length > 0) {
             for (let c = 0; c < this.iClass.length; c++) {
+                if (this.iClass[c] <= state.iDR) {
+                    playerDROk = true;
+                }
                 if (this.iClass[c] === iClassFromPI(state.cars[state.cCar].pi)) {
-                    classAllowed = true;
+                    carClassOk = true;
                 }
             }
         }
@@ -7235,11 +7240,18 @@ class Event {
             levelUpReady = true;
         }
 
-        // If everything ok, show event!
-        if (carAllowed && classAllowed && levelUpReady) {
+        // If player is ok, show table row
+        if (playerDROk && levelUpReady) {
             this.row.style.display = "table-row";
         } else {
             this.row.style.display = "none";
+        }
+
+        // If car is ok, show Enter button
+        if (carModelOk && carClassOk) {
+            this.enterButton.style.display = "inline";
+        } else {
+            this.enterButton.style.display = "none";
         }
     }
 
@@ -7277,7 +7289,6 @@ class Event {
 
             // Repurpose info button to close info
             this.infoButton.innerText = "Hide info";
-            this.infoButton.className = "";
 
             // Hide enter button
             this.enterButton.style.display = "none";
@@ -7287,10 +7298,8 @@ class Event {
 
             // Return info button back to it's original state
             this.infoButton.innerText = "Info";
-            this.infoButton.className = "margin";
 
-            // Show enter button again
-            this.enterButton.style.display = "inline";
+            this.showOrHide();
         }
     }
 
