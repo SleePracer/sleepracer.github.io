@@ -7144,9 +7144,9 @@ class Event {
                 iEvent,
                 info,
                 raceNames,
+                resultFactor = 1,
                 iClass = 0,
-                models = 0,
-                resultFactor = 1) {
+                models = 0) {
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here
         eventMap.set(name, this);
@@ -7157,9 +7157,15 @@ class Event {
         this.iEvent = iEvent;
         this.infoString = info;
         this.raceNames = JSON.parse(JSON.stringify(raceNames));
+        this.resultFactor = JSON.parse(JSON.stringify(resultFactor));
+        if (!(this.resultFactor instanceof Array)) {
+            this.resultFactor = [this.resultFactor];
+        }
         this.iClass = JSON.parse(JSON.stringify(iClass));
+        if (!(this.iClass instanceof Array)) {
+            this.iClass = [this.iClass];
+        }
         this.models = JSON.parse(JSON.stringify(models));
-        this.resultFactor = resultFactor;
         this.cRace = -1;
         this.races = [];
         this.levelUpEvent = false;
@@ -7220,10 +7226,10 @@ class Event {
         // Check if current car is of the correct class
         let playerDROk = false;
         let carClassOk = false;
-        if (this.iClass === 0) {
+        if (this.iClass[0] === 0) {
             playerDROk = true;
             carClassOk = true;
-        } else if (this.iClass.length > 0) {
+        } else {
             for (let c = 0; c < this.iClass.length; c++) {
                 if (this.iClass[c] <= state.iDR) {
                     playerDROk = true;
@@ -7262,15 +7268,11 @@ class Event {
             allInfo += this.infoString;
 
             // Add class
-            if (this.iClass !== 0) {
+            if (this.iClass[0] !== 0) {
                 allInfo += "\n\n";
-                if (this.iClass.length > 0) {
-                    allInfo += "Class: " + classLetter[this.iClass[0]];
-                    for (let c = 1; c < this.iClass.length; c++) {
-                        allInfo += ", " + classLetter[this.iClass[c]];
-                    }
-                } else {
-                    allInfo += "Class: " + classLetter[this.iClass];
+                allInfo += "Class: " + classLetter[this.iClass[0]];
+                for (let c = 1; c < this.iClass.length; c++) {
+                    allInfo += ", " + classLetter[this.iClass[c]];
                 }
             }
 
@@ -7304,6 +7306,26 @@ class Event {
     }
 
     enter() {
+        // What kind of event is this?
+        let single = false;
+        let championship = false;
+        let random = false;
+        if (this.raceNames.length === 1
+         && this.resultFactor.length === 1) {
+            single = true;
+        } else if (this.raceNames.length > 1
+                && this.resultFactor.length === 1) {
+            random = true;
+        } else if (this.raceNames.length >= this.resultFactor.length - 1
+                && this.resultFactor.length > 1) {
+            championship = true;
+        }
+
+        // Something is wrong
+        if (!(single || random || championship)) {
+            return;
+        }
+
         // Initialize championship points
         this.playerPoints = 0;
         this.drivatarPoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -7327,23 +7349,23 @@ class Event {
         // Remove event races
         this.races = [];
 
-        // Create all event races
-        for (let iRace = 0; iRace < this.raceNames.length; iRace++) {
-            this.races.push(new Race(this.raceNames[iRace],
-                                     iRace,
-                                     this.resultFactor));
-            this.races[iRace].row.style.display = "none";
-            this.races[iRace].positionSelect.id = this.name;
-            this.races[iRace].damageInput.id = this.name;
-            this.races[iRace].finishButton.id = this.name;
-        }
+        if (championship) {
+            // Create all event races
+            for (let iRace = 0; iRace < this.resultFactor.length - 1; iRace++) {
+                this.races.push(new Race(this.raceNames[iRace],
+                                         iRace,
+                                         this.resultFactor[iRace]));
+                this.races[iRace].row.style.display = "none";
+                this.races[iRace].positionSelect.id = this.name;
+                this.races[iRace].damageInput.id = this.name;
+                this.races[iRace].finishButton.id = this.name;
+            }
 
-        // Create the bonus collector if more than one race
-        if (this.races.length > 1) {
-            let iBonus = this.races.length;
+            // Create the bonus collector
+            let iBonus = this.resultFactor.length - 1;
             this.races.push(new Race("Championship Bonus",
                                      iBonus,
-                                     this.resultFactor));
+                                     this.resultFactor[iBonus]));
             let bonus = this.races[iBonus];
             bonus.row.style.display = "none";
             bonus.positionSelect.id = this.name;
@@ -7353,6 +7375,18 @@ class Event {
             bonus.row.cells[2].removeChild(bonus.damageInput);
             bonus.setPosition(1);
             bonus.setDamage(0);
+        } else if (single || random) {
+            // Create the event race
+            let iRace = 0;
+            if (random) {
+                iRace = Math.floor(Math.random() * this.raceNames.length);
+            }
+            this.races.push(new Race(this.raceNames[iRace],
+                                     0,
+                                     this.resultFactor[0]));
+            this.races[0].positionSelect.id = this.name;
+            this.races[0].damageInput.id = this.name;
+            this.races[0].finishButton.id = this.name;
         }
 
         // Add the return from event button to a final row
@@ -8180,7 +8214,7 @@ events = [];
 info = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 events.push(new Event("Open Race", events.length,
                       "Single race on random track, any car allowed!",
-                      ["Race"]));
+                      allShortTracks));
 
 events.push(new Event("Class Level Up Championship", events.length, info,
                       ["1: Race", "2: Race", "3: Race"]));
@@ -8189,122 +8223,122 @@ events.push(new Event("Class Level Up Championship", events.length, info,
 eventMap.get("Class Level Up Championship").levelUpEvent = true;
 
 events.push(new Event("Vintage Roadsters", events.length, "",
-                      ["some road race"],
+                      ["some road race", "race 2"], 1,
                       [1, 2, 3], // 131 - 694
                       vintageRoadsters));
 
 events.push(new Event("Vintage Race Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3, 4], // 514 - 714
                       vintageRaceCars));
 
 events.push(new Event("Vintage Econoboxes", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       1, // 100
                       vintageEconoboxes));
 
 events.push(new Event("Vintage Utility", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2], // 100 - 544
                       vintageUtility));
 
 events.push(new Event("60s Sports Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       1, // 482 - 487
                       sportsCars60s));
 
 events.push(new Event("70s Sports Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2], // 315 - 531
                       sportsCars70s));
 
 events.push(new Event("70s Explorers", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       1, // 100 - 431
                       explorers70s));
 
 events.push(new Event("70s Hatchbacks", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       1, // 281 - 428
                       hatchbacks70s));
 
 events.push(new Event("80s Wedge Showdown", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2, 3], // 464 - 629
                       wedges80s));
 
 events.push(new Event("80s Sport Sedans", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 537 - 583
                       sportSedans80s));
 
 events.push(new Event("80s Sport Liftbacks", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2, 3], // 480 - 651
                       sportLiftbacks80s));
 
 events.push(new Event("Early 90s Hatchbacks", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2], // 429 - 511
                       hatchbacksEarly90s));
 
 events.push(new Event("Late 90s Hatchbacks", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       2, // 510 - 553
                       hatchbacksLate90s));
 
 events.push(new Event("Group A Rally Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 514 - 659
                       rallyGroupA));
 
 events.push(new Event("90s Japanese Sports Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 590 - 691
                       topJapanese90s));
 
 events.push(new Event("90s Supercars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [4, 5], // 753 - 869
                       supercars90s));
 
 events.push(new Event("90s Race Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [4, 5, 6], // 794 - 976
                       topRaceCars90s));
 
 events.push(new Event("00s World Rally Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 593 - 669
                       worldRallyCars00s));
 
 events.push(new Event("10s World Rally Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 598 - 607
                       worldRallyCars10s));
 
 events.push(new Event("The Fast and the Furious", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 543 - 646
                       fastAndFurious));
 
 events.push(new Event("Gran Turismo Starter Cars", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2], // 445 - 558
                       granTurismoStarters));
 
 events.push(new Event("Lakeside Diner Horizon", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [2, 3], // 533 - 664
                       lakesideDiner));
 
 events.push(new Event("Civic vs. Golf Showdown", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2, 3, 4], // 368 - 727
                       hondaCivics.concat(volkswagenGolfs)));
 
 events.push(new Event("Police Car Showdown", events.length, "",
-                      ["some road race"],
+                      ["some road race"], 1,
                       [1, 2, 3, 4, 5, 6], // 103 - 913
                       policeCars));
 
