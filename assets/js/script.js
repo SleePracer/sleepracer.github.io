@@ -7058,10 +7058,10 @@ class Race {
 
         let iClass = iClassFromPI(pi);
 
-        // subClass will be [1, 10] depending on how far in the class pi is
-        let subClass = Math.ceil((((pi - 1) % 100) + 1) / 10);
+        // subClass will be [6, 10] depending on how far in the class pi is
+        let subClass = Math.ceil((((pi - 1) % 100) + 1) / 20) + 5;
         if (iClass === 1) {
-            // Will be [6, 10] for D class, quicker start
+            // D class needs special treatment
             subClass = Math.ceil(pi / 100) + 5;
         } else if (iClass === 7) {
             // Always min out subClass for X
