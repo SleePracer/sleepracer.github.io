@@ -7211,32 +7211,41 @@ class Event {
             return;
         }
 
-        // Check if current car is included in model list for event
-        let cModel = state.cars[state.cCar].getModel();
+        // Check if any car in garage is included in model list for event
+        // Also check if current car is included in model list for event
+        let cCar = state.cars[state.cCar];
+        let garageOk = false;
         let carModelOk = false;
         if (this.models === 0) {
+            garageOk = true;
             carModelOk = true;
         } else {
-            for (let iModel = 0; iModel < this.models.length; iModel++) {
-                if (cModel[0] === this.models[iModel][0]
-                 && cModel[1] === this.models[iModel][1]) {
-                    carModelOk = true;
+            for (let iCar = 0; iCar < state.cars.length; iCar++) {
+                let iCarModel = state.cars[iCar].getModel();
+                for (let iModel = 0; iModel < this.models.length; iModel++) {
+                    if (iCarModel[0] === this.models[iModel][0]
+                     && iCarModel[1] === this.models[iModel][1]) {
+                        garageOk = true;
+                        if (iCar === state.cCar) {
+                            carModelOk = true;
+                        }
+                    }
                 }
             }
         }
 
         // Check if current car is of the correct class
-        let playerDROk = false;
+        let playerOk = false;
         let carClassOk = false;
         if (this.iClass[0] === 0) {
-            playerDROk = true;
+            playerOk = true;
             carClassOk = true;
         } else {
             for (let c = 0; c < this.iClass.length; c++) {
                 if (this.iClass[c] <= state.iDR) {
-                    playerDROk = true;
+                    playerOk = true;
                 }
-                if (this.iClass[c] === iClassFromPI(state.cars[state.cCar].pi)) {
+                if (this.iClass[c] === iClassFromPI(cCar.pi)) {
                     carClassOk = true;
                 }
             }
@@ -7248,19 +7257,21 @@ class Event {
             levelUpReady = true;
         }
 
-        // If player is ok, show table row
-        if (playerDROk && levelUpReady) {
+        if (playerOk
+         && garageOk
+         && levelUpReady) {
+            // Show row, but only enter button if car ok
             this.row.style.display = "table-row";
+            if (carModelOk && carClassOk) {
+                this.enterButton.style.display = "inline";
+            } else {
+                this.enterButton.style.display = "none";
+            }
         } else {
             this.row.style.display = "none";
-        }
-
-        // If car is ok, show Enter button
-        if (carModelOk && carClassOk) {
-            this.enterButton.style.display = "inline";
-        } else {
             this.enterButton.style.display = "none";
         }
+
     }
 
     showInfo() {
