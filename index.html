@@ -12,21 +12,28 @@ layout: home
 <div id="start" style="display: none">
 
 <h1>Start new game</h1>
+<p>You have 20000 credits to spend on your first car! It will determine your starting class: D, C or B.</p>
 <div>
   <input id="startName"
          type="text"
          placeholder="Player name"
          onkeyup=startNameInput()>
 </div>
-<br>
 <div>
-  <label for="startClass">Choose starting class:</label>
-  <select id="startClass"
-          onchange="startClassSelect()">
-    <option value="1">D</option>
-    <option value="2">C</option>
-    <option value="3">B</option>
-  </select>
+  <input id="startCarName"
+         type="text"
+         placeholder="First Car Name"
+         onkeyup=startCarInput()>
+</div>
+<div>
+<select id="startCarMake"
+        onchange="startCarMakeSelect()">
+</select>
+<div>
+</div>
+<select id="startCarModel"
+        onchange="startCarModelSelect()">
+</select>
 </div>
 <br>
 <button onClick="startGameButton()">Start game</button>
@@ -134,7 +141,7 @@ layout: home
 
 <h1>Settings</h1>
 <h2>Game settings</h2>
-Game speed:
+Game speed: this sets the rate at which you gain DR.
 <div>
   <input id="gameSpeed"
          type="range"
