@@ -6427,7 +6427,7 @@ const dirtScramblesBase = [
     "Teotihuacan",
     "Caldera",
     "La Selva",
-    "El Pípila",];
+    "El Pípila"];
 
 const crossCountrySprintsBase = [
     "Las Ranas",
@@ -6514,13 +6514,89 @@ const firstTracks = [
     crossCountrySprints[5],
     crossCountryCircuits[6]];
 
-const allShortTracks = roadSprints.concat(
-    roadCircuits,
-    dirtTrails,
-    dirtScrambles,
-    crossCountrySprints,
-    crossCountryCircuits,
-    streetSprints);
+const firstChamp = [
+    "1: " + crossCountrySprints[5], // Oasis
+    "2: " + dirtScrambles[2], // Mulegé Town
+    "3: " + crossCountryCircuits[6], // Airfield
+//    roadCircuits[8], // Emerald
+    "4: " + dirtTrails[2], // Desierto
+    "5: " + roadCircuits[7]]; // Horizon Mexico
+
+const roadChamp1 = [
+    "1: " + roadCircuits[8] + " (6 laps)", // Emerald
+    "2: " + roadSprints[1], // Descansar Dorado
+    "3: " + roadCircuits[0] + " (8 laps)", // Bahía de Plano
+    "4: " + roadSprints[0], // Dunas Blancas
+    "5: " + roadSprints[4]]; // Volcán
+
+const roadChamp2 = [
+    "1: " + roadCircuits[6] + " (4 laps)", // Lookout
+    "2: " + roadSprints[3], // Copper Canyon
+    "3: " + roadCircuits[3] + " (4 laps)", // Chihuahua
+    "4: " + roadSprints[9], // Riviera
+    "5: " + roadCircuits[2] + " (6 laps)"]; // Los Jardines
+
+const roadChamp3 = [
+    "1: " + roadSprints[2], // Reservorio
+    "2: " + roadCircuits[1] + " (6 laps)", // Arch of Mulegé
+    "3: " + roadSprints[6], // Sierra Verde
+    "4: " + roadSprints[5], // Gran Pantano
+    "5: " + roadCircuits[5] + " (6 laps)"]; // Playa Azul
+
+const roadChamp4 = [
+    "1: " + roadSprints[7], // Llanuras
+    "2: " + roadCircuits[11] + "(4 laps)", // Plaza
+    "3: " + roadCircuits[12] + "(6 laps)", // Bola Ocho
+    "4: " + roadSprints[8], // Panorámica
+    "5: " + roadCircuits[10] + "(6 laps)"]; // Cathedral
+
+const roadChamp5 = [
+    "1: " + roadCircuits[7] + " (4 laps)", // Horizon Mexico
+    "2: " + roadSprints[2], // Reservorio
+    "3: " + roadSprints[7], // Llanuras
+    "4: " + roadCircuits[9] + " (4 laps)", // Estadio
+    "5: " + roadCircuits[4] + " (6 laps)"]; // Tierra Próspera
+
+const allRoadChamps = [
+    roadChamp1,
+    roadChamp2,
+    roadChamp3,
+    roadChamp4,
+    roadChamp5];
+
+const dirtChamp1 = [
+    "1: " + dirtTrails[4], // Bajío
+    "2: " + dirtScrambles[5] + " (6 laps)", // Teotihuacan
+    "3: " + dirtTrails[6], // Tapalpa
+    "4: " + dirtScrambles[0] + " (6 laps)", // River
+    "5: " + dirtTrails[5]]; // Cordillera
+
+const dirtChamp2 = [
+    "1: " + dirtTrails[4], // Bajío
+    "2: " + dirtScrambles[7] + " (6 laps)", // La Selva
+    "3: " + dirtTrails[0], // Cascada
+    "4: " + dirtTrails[8], // Tulum
+    "5: " + dirtScrambles[1] + " (6 laps)"]; // Mangrove
+
+const dirtChamp3 = [
+    "1: " + dirtScrambles[6] + " (6 laps)", // Caldera
+    "2: " + dirtTrails[1], // Montaña
+    "3: " + dirtScrambles[4] + " (4 laps)", // Horizon Baja
+    "4: " + dirtTrails[3], // Baja California
+    "5: " + dirtScrambles[2] + " (6 laps)"]; // Mulegé Town
+
+const dirtChamp4 = [
+    "1: " + dirtScrambles[8] + " (4 laps)", // El Pípila
+    "2: " + dirtTrails[7], // Fuera del Camino
+    "3: " + dirtScrambles[3] + " (4 laps)", // San Juan
+    "4: " + dirtTrails[2], // Desierto
+    "5: " + dirtScrambles[2] + " (6 laps)"]; // Mulegé Town
+
+const allDirtChamps = [
+    dirtChamp1,
+    dirtChamp2,
+    dirtChamp3,
+    dirtChamp4];
 
 const gameSpeed = [
     1.0,
@@ -7213,9 +7289,13 @@ class Event {
         this.models = JSON.parse(JSON.stringify(models));
         this.cRace = -1;
         this.races = [];
-        this.levelUpEvent = false;
         this.playerPoints = 0;
         this.drivatarPoints = [];
+
+        // Magic bools
+        this.levelUpEvent = false;
+        this.roadChamp = false;
+        this.dirtChamp = false;
 
         // Add and populate new row in event table
         this.row = eEventsTB.insertRow(this.iEvent);
@@ -7295,14 +7375,28 @@ class Event {
         }
 
         // Check if ready for level up (if level up event)
-        let levelUpReady = !this.levelUpEvent;
+        let levelUpOk = !this.levelUpEvent;
         if (iClassFromDR(state.dr) > state.iDR) {
-            levelUpReady = true;
+            if (this.roadChamp
+            && (state.tracks.roadSprints
+             || state.tracks.roadCircuits)) {
+                levelUpOk = true;
+            } else if (this.dirtChamp
+                   && (state.tracks.dirtTrails
+                    || state.tracks.dirtScrambles)) {
+                levelUpOk = true;
+            } else if (!(this.roadChamp || this.dirtChamp)
+                    && !(state.tracks.roadSprints
+                      || state.tracks.roadCircuits
+                      || state.tracks.dirtTrails
+                      || state.tracks.dirtScrambles)) {
+                levelUpOk = true;
+            }
         }
 
         if (playerOk
          && garageOk
-         && levelUpReady) {
+         && levelUpOk) {
             // Show row, but only enter button if car ok
             this.row.style.display = "table-row";
             if (carModelOk && carClassOk) {
@@ -7365,7 +7459,15 @@ class Event {
         // What kind of event is this?
         let single = false;
         let championship = false;
-        if (this.random) {
+        if (this.roadChamp) {
+            let iChamp = Math.floor(Math.random() * allRoadChamps.length);
+            this.raceNames = allRoadChamps[iChamp];
+            championship = true;
+        } else if (this.dirtChamp) {
+            let iChamp = Math.floor(Math.random() * allDirtChamps.length);
+            this.raceNames = allDirtChamps[iChamp];
+            championship = true;
+        } else if (this.random) {
             let iRace = Math.floor(Math.random() * shortTracks.length);
             this.raceNames = [shortTracks[iRace]];
             single = true;
@@ -8453,15 +8555,42 @@ function loadGameInput() {
 
 // Create all events
 events = [];
-info = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+events.push(new Event("Class Advancement Championship",
+                      events.length,
+                      "\n\nChampionship on five of the base tracks. "
+                    + "Choose any list of cars. "
+                    + "Get a podium position on the total points "
+                    + "to advance to the next class!",
+                      firstChamp,
+                      [1, 1, 1, 1, 1, 2]));
+
+events.push(new Event("Road Class Advancement Championship",
+                      events.length,
+                      "\n\nChampionship on five sequential road tracks. "
+                    + "Get a podium position on the total points "
+                    + "to advance to the next class!",
+                      ["Race", "Race", "Race", "Race", "Race"],
+                      [1, 1, 1, 1, 1, 2]));
+
+events.push(new Event("Dirt Class Advancement Championship",
+                      events.length,
+                      "\n\nChampionship on five sequential dirt tracks. "
+                    + "Get a podium position on the total points "
+                    + "to advance to the next class!",
+                      ["Race", "Race", "Race", "Race", "Race"],
+                      [1, 1, 1, 1, 1, 2]));
+
+// This will make the championships pull a random championship tracklist
+eventMap.get("Road Class Advancement Championship").roadChamp = true;
+eventMap.get("Dirt Class Advancement Championship").dirtChamp = true;
+
+// This will make finishing the championships increase iDR
+eventMap.get("Class Advancement Championship").levelUpEvent = true;
+eventMap.get("Road Class Advancement Championship").levelUpEvent = true;
+eventMap.get("Dirt Class Advancement Championship").levelUpEvent = true;
+
 events.push(new Event("Open Race", events.length,
                       "Single race on random track, any car allowed!"));
-
-events.push(new Event("Class Level Up Championship", events.length, info,
-                      ["1: Race", "2: Race", "3: Race"]));
-
-// This will make finishing the championship increase iDR
-eventMap.get("Class Level Up Championship").levelUpEvent = true;
 
 events.push(new Event("Vintage Roadsters", events.length, "",
                       "random", 1,
@@ -8582,30 +8711,6 @@ events.push(new Event("Police Car Showdown", events.length, "",
                       "random", 1,
                       [1, 2, 3, 4, 5, 6], // 103 - 913
                       policeCars));
-
-/* some proof of concept events
-
-events.push(new Event("Basic Endurance",
-                      events.length,
-                      info,
-                      ["Endurance"],
-                      4));
-events.push(new Event("Basic Championship",
-                      events.length,
-                      info,
-                      ["1: Race", "2: Race", "3: Race"]));
-events.push(new Event("Basic One Make",
-                      events.length,
-                      info,
-                      ["One Make 1"],
-                      [[2,2]], // Legacy
-                      4));
-events.push(new Event("Basic C Class",
-                      events.length,
-                      info,
-                      ["Race 1", "Race 2"],
-                      2));
-*/
 
 // Initialize state
 let state = {};
