@@ -30,6 +30,13 @@ let eNewCarName = document.getElementById("newCarName");
 let eNewCarMake = document.getElementById("newCarMake");
 let eNewCarModel = document.getElementById("newCarModel");
 let eGameSpeed = document.getElementById("gameSpeed");
+let eRoadSprints = document.getElementById("roadSprintsCheck");
+let eRoadCircuits = document.getElementById("roadCircuitsCheck");
+let eDirtTrails = document.getElementById("dirtTrailsCheck");
+let eDirtScrambles = document.getElementById("dirtScramblesCheck");
+let eCrossCountrySprints = document.getElementById("crossCountrySprintsCheck");
+let eCrossCountryCircuits = document.getElementById("crossCountryCircuitsCheck");
+let eStreetSprints = document.getElementById("streetSprintsCheck");
 let eAutoshow = document.getElementById("autoshowCheck");
 let eCarPass = document.getElementById("carPassCheck");
 let eHotWheels = document.getElementById("hotWheelsCheck");
@@ -47,6 +54,13 @@ const defaultState = {
     version: thisVersion,
     name: "",
     iGS: 5,
+    tracks: {roadSprints: true,
+             roadCircuits: true,
+             dirtTrails: true,
+             dirtScrambles: true,
+             crossCountrySprints: true,
+             crossCountryCircuits: true,
+             streetSprints: true},
     hide: {autoshow: false,
            carPass: false,
            hotWheels: false,
@@ -6365,7 +6379,7 @@ const policeCars = [
     [70, 2], // Mitsubishi Evo X 2008 B649
     [104, 3]]; // Volkswagen Golf 2014 B663
 
-const roadSprints = [
+const roadSprintsBase = [
     "Dunas Blancas",
     "Descansar Dorado",
     "Reservorio",
@@ -6377,7 +6391,7 @@ const roadSprints = [
     "Panorámica",
     "Riviera"];
 
-const roadCircuits = [
+const roadCircuitsBase = [
     "Bahía de Plano",
     "Arch of Mulegé",
     "Los Jardines",
@@ -6392,7 +6406,7 @@ const roadCircuits = [
     "Plaza",
     "Bola Ocho"];
 
-const dirtTrails = [
+const dirtTrailsBase = [
     "Cascada",
     "Montaña",
     "Desierto",
@@ -6404,7 +6418,7 @@ const dirtTrails = [
     "Tulum",
     "Barranca"];
 
-const dirtScrambles = [
+const dirtScramblesBase = [
     "River",
     "Mangrove",
     "Mulegé Town",
@@ -6415,7 +6429,7 @@ const dirtScrambles = [
     "La Selva",
     "El Pípila",];
 
-const crossCountrySprints = [
+const crossCountrySprintsBase = [
     "Las Ranas",
     "Las Dunas",
     "Ribera Rocosa",
@@ -6429,7 +6443,7 @@ const crossCountrySprints = [
     "Copper Canyon",
     "Festival"];
 
-const crossCountryCircuits = [
+const crossCountryCircuitsBase = [
     "Baja",
     "Costera",
     "Estadio",
@@ -6466,6 +6480,31 @@ const endurances = [
     "The Gauntlet",
     "The Titan",
     "The Marathon"];
+
+let roadSprints = [];
+for (let i = 0; i < roadSprintsBase.length; i++) {
+    roadSprints.push(roadSprintsBase[i] + " Sprint");
+}
+let roadCircuits = [];
+for (let i = 0; i < roadCircuitsBase.length; i++) {
+    roadCircuits.push(roadCircuitsBase[i] + " Circuit");
+}
+let dirtTrails = [];
+for (let i = 0; i < dirtTrailsBase.length; i++) {
+    dirtTrails.push(dirtTrailsBase[i] + " Trail");
+}
+let dirtScrambles = [];
+for (let i = 0; i < dirtScramblesBase.length; i++) {
+    dirtScrambles.push(dirtScramblesBase[i] + " Scramble");
+}
+let crossCountrySprints = [];
+for (let i = 0; i < crossCountrySprintsBase.length; i++) {
+    crossCountrySprints.push(crossCountrySprintsBase[i] + " Cross Country");
+}
+let crossCountryCircuits = [];
+for (let i = 0; i < crossCountryCircuitsBase.length; i++) {
+    crossCountryCircuits.push(crossCountryCircuitsBase[i] + " Cross Country Circuit");
+}
 
 const firstTracks = [
     roadCircuits[7],
@@ -7145,7 +7184,7 @@ class Event {
     constructor(name,
                 iEvent,
                 info,
-                raceNames,
+                raceNames = "random",
                 resultFactor = 1,
                 iClass = 0,
                 models = 0) {
@@ -7159,6 +7198,10 @@ class Event {
         this.iEvent = iEvent;
         this.infoString = info;
         this.raceNames = JSON.parse(JSON.stringify(raceNames));
+        this.random = false;
+        if (raceNames === "random") {
+            this.random = true;
+        }
         this.resultFactor = JSON.parse(JSON.stringify(resultFactor));
         if (!(this.resultFactor instanceof Array)) {
             this.resultFactor = [this.resultFactor];
@@ -7322,20 +7365,20 @@ class Event {
         // What kind of event is this?
         let single = false;
         let championship = false;
-        let random = false;
-        if (this.raceNames.length === 1
-         && this.resultFactor.length === 1) {
+        if (this.random) {
+            let iRace = Math.floor(Math.random() * shortTracks.length);
+            this.raceNames = [shortTracks[iRace]];
             single = true;
-        } else if (this.raceNames.length > 1
+        } else if (this.raceNames.length === 1
                 && this.resultFactor.length === 1) {
-            random = true;
+            single = true;
         } else if (this.raceNames.length >= this.resultFactor.length - 1
                 && this.resultFactor.length > 1) {
             championship = true;
         }
 
         // Something is wrong
-        if (!(single || random || championship)) {
+        if (!(single || championship)) {
             return;
         }
 
@@ -7388,13 +7431,9 @@ class Event {
             bonus.row.cells[2].removeChild(bonus.damageInput);
             bonus.setPosition(1);
             bonus.setDamage(0);
-        } else if (single || random) {
+        } else if (single) {
             // Create the event race
-            let iRace = 0;
-            if (random) {
-                iRace = Math.floor(Math.random() * this.raceNames.length);
-            }
-            this.races.push(new Race(this.raceNames[iRace],
+            this.races.push(new Race(this.raceNames[0],
                                      0,
                                      this.resultFactor[0]));
             this.races[0].positionSelect.id = this.name;
@@ -7772,6 +7811,13 @@ function getStateString(s = state) {
     let compact = {
         n: s.name,
         igs: s.iGS,
+        t: {rs: 0,
+            rc: 0,
+            dt: 0,
+            ds: 0,
+            xs: 0,
+            xc: 0,
+            ss: 0},
         h: {a: 0,
             cp: 0,
             hw: 0,
@@ -7785,6 +7831,27 @@ function getStateString(s = state) {
         cc: s.cCar,
         c: carArgs};
 
+    if (s.tracks.roadSprints) {
+        compact.t.rs = 1;
+    }
+    if (s.tracks.roadCircuits) {
+        compact.t.rc = 1;
+    }
+    if (s.tracks.dirtTrails) {
+        compact.t.dt = 1;
+    }
+    if (s.tracks.dirtScrambles) {
+        compact.t.ds = 1;
+    }
+    if (s.tracks.crossCountrySprints) {
+        compact.t.xs = 1;
+    }
+    if (s.tracks.crossCountryCircuits) {
+        compact.t.xc = 1;
+    }
+    if (s.tracks.streetSprints) {
+        compact.t.ss = 1;
+    }
     if (s.hide.autoshow) {
         compact.h.a = 1;
     }
@@ -7858,6 +7925,33 @@ function updateState() {
         events[iEvent].showOrHide();
     }
 
+    // Update track list
+    shortTracks = [];
+    if (state.tracks.roadSprints) {
+        shortTracks = shortTracks.concat(roadSprints);
+    }
+    if (state.tracks.roadCircuits) {
+        shortTracks = shortTracks.concat(roadCircuits);
+    }
+    if (state.tracks.dirtTrails) {
+        shortTracks = shortTracks.concat(dirtTrails);
+    }
+    if (state.tracks.dirtScrambles) {
+        shortTracks = shortTracks.concat(dirtScrambles);
+    }
+    if (state.tracks.crossCountrySprints) {
+        shortTracks = shortTracks.concat(crossCountrySprints);
+    }
+    if (state.tracks.crossCountryCircuits) {
+        shortTracks = shortTracks.concat(crossCountryCircuits);
+    }
+    if (state.tracks.streetSprints) {
+        shortTracks = shortTracks.concat(streetSprints);
+    }
+    if (shortTracks.length === 0) {
+        shortTracks = JSON.parse(JSON.stringify(firstTracks));
+    }
+
     // Show garage options if no cars
     if (state.cars.length === 0) {
         toggleOptions(true);
@@ -7891,6 +7985,13 @@ function updateState() {
     eGameSpeed.value = state.iGS;
 
     // Set all checkboxes
+    eRoadSprints.checked = state.tracks.roadSprints;
+    eRoadCircuits.checked = state.tracks.roadCircuits;
+    eDirtTrails.checked = state.tracks.dirtTrails;
+    eDirtScrambles.checked = state.tracks.dirtScrambles;
+    eCrossCountrySprints.checked = state.tracks.crossCountrySprints;
+    eCrossCountryCircuits.checked = state.tracks.crossCountryCircuits;
+    eStreetSprints.checked = state.tracks.streetSprints;
     eAutoshow.checked = state.hide.autoshow;
     eCarPass.checked = state.hide.carPass;
     eHotWheels.checked = state.hide.hotWheels;
@@ -7923,6 +8024,34 @@ function setStateFromString(inputString) {
     state.version = thisVersion;
     state.name = compact.n;
     state.iGS = compact.igs;
+    state.tracks = {roadSprints: false,
+                    roadCircuits: false,
+                    dirtTrails: false,
+                    dirtScrambles: false,
+                    crossCountrySprints: false,
+                    crossCountryCircuits: false,
+                    streetSprints: false};
+    if (compact.t.rs === 1) {
+        state.tracks.roadSprints = true;
+    }
+    if (compact.t.rc === 1) {
+        state.tracks.roadCircuits = true;
+    }
+    if (compact.t.dt === 1) {
+        state.tracks.dirtTrails = true;
+    }
+    if (compact.t.ds === 1) {
+        state.tracks.dirtScrambles = true;
+    }
+    if (compact.t.xs === 1) {
+        state.tracks.crossCountrySprints = true;
+    }
+    if (compact.t.xc === 1) {
+        state.tracks.crossCountryCircuits = true;
+    }
+    if (compact.t.ss === 1) {
+        state.tracks.streetSprints = true;
+    }
     state.hide = {autoshow: false,
                   carPass: false,
                   hotWheels: false,
@@ -8212,6 +8341,41 @@ function gameSpeedDefaultButton() {
     updateState();
 }
 
+function roadSprintsClick() {
+    state.tracks.roadSprints = eRoadSprints.checked;
+    updateState();
+}
+
+function roadCircuitsClick() {
+    state.tracks.roadCircuits = eRoadCircuits.checked;
+    updateState();
+}
+
+function dirtTrailsClick() {
+    state.tracks.dirtTrails = eDirtTrails.checked;
+    updateState();
+}
+
+function dirtScramblesClick() {
+    state.tracks.dirtScrambles = eDirtScrambles.checked;
+    updateState();
+}
+
+function crossCountrySprintsClick() {
+    state.tracks.crossCountrySprints = eCrossCountrySprints.checked;
+    updateState();
+}
+
+function crossCountryCircuitsClick() {
+    state.tracks.crossCountryCircuits = eCrossCountryCircuits.checked;
+    updateState();
+}
+
+function streetSprintsClick() {
+    state.tracks.streetSprints = eStreetSprints.checked;
+    updateState();
+}
+
 function autoshowClick() {
     state.hide.autoshow = eAutoshow.checked;
     updateState();
@@ -8291,8 +8455,7 @@ function loadGameInput() {
 events = [];
 info = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 events.push(new Event("Open Race", events.length,
-                      "Single race on random track, any car allowed!",
-                      allShortTracks));
+                      "Single race on random track, any car allowed!"));
 
 events.push(new Event("Class Level Up Championship", events.length, info,
                       ["1: Race", "2: Race", "3: Race"]));
@@ -8301,122 +8464,122 @@ events.push(new Event("Class Level Up Championship", events.length, info,
 eventMap.get("Class Level Up Championship").levelUpEvent = true;
 
 events.push(new Event("Vintage Roadsters", events.length, "",
-                      ["some road race", "race 2"], 1,
+                      "random", 1,
                       [1, 2, 3], // 131 - 694
                       vintageRoadsters));
 
 events.push(new Event("Vintage Race Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3, 4], // 514 - 714
                       vintageRaceCars));
 
 events.push(new Event("Vintage Econoboxes", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       1, // 100
                       vintageEconoboxes));
 
 events.push(new Event("Vintage Utility", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2], // 100 - 544
                       vintageUtility));
 
 events.push(new Event("60s Sports Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       1, // 482 - 487
                       sportsCars60s));
 
 events.push(new Event("70s Sports Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2], // 315 - 531
                       sportsCars70s));
 
 events.push(new Event("70s Explorers", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       1, // 100 - 431
                       explorers70s));
 
 events.push(new Event("70s Hatchbacks", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       1, // 281 - 428
                       hatchbacks70s));
 
 events.push(new Event("80s Wedge Showdown", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2, 3], // 464 - 629
                       wedges80s));
 
 events.push(new Event("80s Sport Sedans", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 537 - 583
                       sportSedans80s));
 
 events.push(new Event("80s Sport Liftbacks", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2, 3], // 480 - 651
                       sportLiftbacks80s));
 
 events.push(new Event("Early 90s Hatchbacks", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2], // 429 - 511
                       hatchbacksEarly90s));
 
 events.push(new Event("Late 90s Hatchbacks", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       2, // 510 - 553
                       hatchbacksLate90s));
 
 events.push(new Event("Group A Rally Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 514 - 659
                       rallyGroupA));
 
 events.push(new Event("90s Japanese Sports Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 590 - 691
                       topJapanese90s));
 
 events.push(new Event("90s Supercars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [4, 5], // 753 - 869
                       supercars90s));
 
 events.push(new Event("90s Race Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [4, 5, 6], // 794 - 976
                       topRaceCars90s));
 
 events.push(new Event("00s World Rally Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 593 - 669
                       worldRallyCars00s));
 
 events.push(new Event("10s World Rally Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 598 - 607
                       worldRallyCars10s));
 
 events.push(new Event("The Fast and the Furious", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 543 - 646
                       fastAndFurious));
 
 events.push(new Event("Gran Turismo Starter Cars", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2], // 445 - 558
                       granTurismoStarters));
 
 events.push(new Event("Lakeside Diner Horizon", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [2, 3], // 533 - 664
                       lakesideDiner));
 
 events.push(new Event("Civic vs. Golf Showdown", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2, 3, 4], // 368 - 727
                       hondaCivics.concat(volkswagenGolfs)));
 
 events.push(new Event("Police Car Showdown", events.length, "",
-                      ["some road race"], 1,
+                      "random", 1,
                       [1, 2, 3, 4, 5, 6], // 103 - 913
                       policeCars));
 
@@ -8446,6 +8609,7 @@ events.push(new Event("Basic C Class",
 
 // Initialize state
 let state = {};
+let shortTracks = [];
 
 // Set default new game values
 let newName = "";
