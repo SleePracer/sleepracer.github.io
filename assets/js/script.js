@@ -487,9 +487,7 @@ class Race {
         let damageRatio = Math.max(0, Math.min(1, repairCost
                                                 / prizeFactor));
         let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
-        this.deltaDR = Math.ceil(gameSpeed[state.iGS]
-                               * damageFactor
-                               * classFactor);
+        this.deltaDR = Math.ceil(damageFactor * classFactor);
     }
 
     setPosition(value) {
@@ -1195,7 +1193,6 @@ function getStateString(s = state) {
     // Store state as compact as possible
     let compact = {
         n: s.name,
-        igs: s.iGS,
         t: {rs: 0,
             rc: 0,
             dt: 0,
@@ -1366,9 +1363,6 @@ function updateState() {
     // Only "Choose model" shown
     clearNewCarModel();
 
-    // Set game speed slider value
-    eGameSpeed.value = state.iGS;
-
     // Set all checkboxes
     eRoadSprints.checked = state.tracks.roadSprints;
     eRoadCircuits.checked = state.tracks.roadCircuits;
@@ -1408,7 +1402,6 @@ function setStateFromString(inputString) {
     let compact = parsed[1];
     state.version = thisVersion;
     state.name = compact.n;
-    state.iGS = compact.igs;
     state.tracks = {roadSprints: false,
                     roadCircuits: false,
                     dirtTrails: false,
@@ -1713,16 +1706,6 @@ function newCarModelSelect() {
 
 function changeNameButton() {
     state.name = prompt("Please enter your name: ");
-    updateState();
-}
-
-function gameSpeedInput() {
-    state.iGS = toPositiveInt(eGameSpeed.value);
-    updateState();
-}
-
-function gameSpeedDefaultButton() {
-    state.iGS = toPositiveInt(defaultState.iGS);
     updateState();
 }
 

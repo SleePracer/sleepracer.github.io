@@ -29,7 +29,6 @@ let eNewCarRow = document.getElementById("newCarRow");
 let eNewCarName = document.getElementById("newCarName");
 let eNewCarMake = document.getElementById("newCarMake");
 let eNewCarModel = document.getElementById("newCarModel");
-let eGameSpeed = document.getElementById("gameSpeed");
 let eRoadSprints = document.getElementById("roadSprintsCheck");
 let eRoadCircuits = document.getElementById("roadCircuitsCheck");
 let eDirtTrails = document.getElementById("dirtTrailsCheck");

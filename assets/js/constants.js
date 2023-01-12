@@ -7,7 +7,6 @@ const thisVersion = "0.1.0";
 const defaultState = {
     version: thisVersion,
     name: "",
-    iGS: 5,
     tracks: {roadSprints: true,
              roadCircuits: true,
              dirtTrails: true,
@@ -6551,18 +6550,6 @@ const allDirtChamps = [
     dirtChamp2,
     dirtChamp3,
     dirtChamp4];
-
-const gameSpeed = [
-    1.0,
-    1.5,
-    2.1,
-    2.8,
-    3.6,
-    4.5,
-    5.5,
-    6.6,
-    7.8,
-    9.1];
 
 const classPI = [
     100,
