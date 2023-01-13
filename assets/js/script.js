@@ -1309,30 +1309,30 @@ function updateState() {
 
     // Update track list
     shortTracks = [];
-    if (state.tracks.roadSprints) {
-        shortTracks = shortTracks.concat(roadSprints);
-    }
+//    if (state.tracks.roadSprints) {
+//        shortTracks = shortTracks.concat(roadSprints);
+//    }
     if (state.tracks.roadCircuits) {
         shortTracks = shortTracks.concat(roadCircuits);
     }
-    if (state.tracks.dirtTrails) {
-        shortTracks = shortTracks.concat(dirtTrails);
-    }
+//    if (state.tracks.dirtTrails) {
+//        shortTracks = shortTracks.concat(dirtTrails);
+//    }
     if (state.tracks.dirtScrambles) {
         shortTracks = shortTracks.concat(dirtScrambles);
     }
-    if (state.tracks.crossCountrySprints) {
-        shortTracks = shortTracks.concat(crossCountrySprints);
-    }
-    if (state.tracks.crossCountryCircuits) {
-        shortTracks = shortTracks.concat(crossCountryCircuits);
-    }
-    if (state.tracks.streetSprints) {
-        shortTracks = shortTracks.concat(streetSprints);
-    }
-    if (shortTracks.length === 0) {
-        shortTracks = JSON.parse(JSON.stringify(firstTracks));
-    }
+//    if (state.tracks.crossCountrySprints) {
+//        shortTracks = shortTracks.concat(crossCountrySprints);
+//    }
+//    if (state.tracks.crossCountryCircuits) {
+//        shortTracks = shortTracks.concat(crossCountryCircuits);
+//    }
+//    if (state.tracks.streetSprints) {
+//        shortTracks = shortTracks.concat(streetSprints);
+//    }
+//    if (shortTracks.length === 0) {
+//        shortTracks = JSON.parse(JSON.stringify(firstTracks));
+//    }
 
     // Show garage options if no cars
     if (state.cars.length === 0) {
@@ -1821,14 +1821,14 @@ function loadGameInput() {
 
 // Create all events
 events = [];
-events.push(new Event("Class Advancement Championship",
+/*events.push(new Event("Class Advancement Championship",
                       events.length,
                       "\n\nChampionship on five of the base tracks. "
                     + "Choose any list of cars. "
                     + "Get a podium position on the total points "
                     + "to advance to the next class!",
                       firstChamp,
-                      [1, 1, 1, 1, 1, 2]));
+                      [1, 1, 1, 1, 1, 2]));*/
 
 events.push(new Event("Road Class Advancement Championship",
                       events.length,
@@ -1853,14 +1853,14 @@ eventMap.get("Road Class Advancement Championship").roadChamp = true;
 eventMap.get("Dirt Class Advancement Championship").dirtChamp = true;
 
 // This will make finishing the championships increase iDR
-eventMap.get("Class Advancement Championship").levelUpEvent = true;
+//eventMap.get("Class Advancement Championship").levelUpEvent = true;
 eventMap.get("Road Class Advancement Championship").levelUpEvent = true;
 eventMap.get("Dirt Class Advancement Championship").levelUpEvent = true;
 
 events.push(new Event("Open Race", events.length,
                       "Single race on random track! Any car allowed!"));
 
-let info = "Single race on random track!";
+/*let info = "Single race on random track!";
 
 events.push(new Event("Vintage Roadsters", events.length, info,
                       "random", 1,
@@ -1980,7 +1980,7 @@ events.push(new Event("Civic vs. Golf Showdown", events.length, info,
 events.push(new Event("Police Car Showdown", events.length, info,
                       "random", 1,
                       [1, 2, 3, 4, 5, 6], // 103 - 913
-                      policeCars));
+                      policeCars));*/
 
 // Initialize state
 let state = {};
