@@ -2,23 +2,11 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.1.0";
+const thisVersion = "0.2.0";
 
 const defaultState = {
     version: thisVersion,
     name: "",
-    tracks: {roadSprints: true,
-             roadCircuits: true,
-             dirtTrails: true,
-             dirtScrambles: true,
-             crossCountrySprints: true,
-             crossCountryCircuits: true,
-             streetSprints: true},
-    hide: {autoshow: false,
-           carPass: false,
-           hotWheels: false,
-           welcome: true,
-           barnFind: false},
     dr: 100,
     iDR: 1,
     wins: 0,
@@ -32,477 +20,227 @@ const carList = [
     ["Acura", // 1
         {name: "Integra Type R", // 1
          pi: 596,
-         cost: 25000,
-         year: 2001,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 25000, // 25k
+         year: 2001}],
     ["Audi", // 2
         {name: "TT RS Coupé", // 1
          pi: 707,
-         cost: 66000,
-         year: 2010,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 66000, // 66k
+         year: 2010},
         {name: "Sport Quattro", // 2
          pi: 638,
-         cost: 175000,
-         year: 1983,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 175000, // 175k
+         year: 1983}],
     ["BMW", // 3
         {name: "M2 Coupé", // 1
          pi: 718,
-         cost: 69000,
-         year: 2016,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 69000, // 69k
+         year: 2016},
         {name: "M3", // 2
          pi: 583,
-         cost: 70000,
-         year: 1991,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 70000, // 70k
+         year: 1991}],
     ["Buick", // 4
         {name: "Regal GNX", // 1
          pi: 564,
-         cost: 130000,
-         year: 1987,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 130000, // 130k
+         year: 1987}],
     ["Chevrolet", // 5
         {name: "Impala Super Sport", // 1
          pi: 509,
-         cost: 20000,
-         year: 1996,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 20000, // 20k
+         year: 1996},
         {name: "Corvette ZR-1", // 2
          pi: 693,
-         cost: 45000,
-         year: 1995,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 45000, // 45k
+         year: 1995},
         {name: "Camaro Super Sport Coupe", // 3
          pi: 585,
-         cost: 110000,
-         year: 1969,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: true}],
+         cost: 110000, // 110k
+         year: 1969}],
     ["Dodge", // 6
         {name: "Challenger SRT Hellcat", // 1
          pi: 755,
-         cost: 75000,
-         year: 2015,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 75000, // 75k
+         year: 2015},
         {name: "Charger R/T", // 2
          pi: 548,
-         cost: 103000,
-         year: 1969,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 103000, // 103k
+         year: 1969}],
     ["Ferrari", // 7
         {name: "F355 Berlinetta", // 1
          pi: 717,
-         cost: 190000,
-         year: 1994,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 190000, // 190k
+         year: 1994}],
     ["Ford", // 8
         {name: "Mustang GT", // 1
          pi: 756,
-         cost: 40000,
-         year: 2018,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 40000, // 40k
+         year: 2018},
         {name: "Focus RS", // 2
          pi: 660,
-         cost: 25000,
-         year: 2009,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 25000, // 25k
+         year: 2009},
         {name: "SVT Cobra R", // 3
          pi: 539,
-         cost: 28000,
-         year: 1993,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 28000, // 28k
+         year: 1993},
         {name: "Sierra Cosworth RS500", // 4
          pi: 604,
-         cost: 66000,
-         year: 1987,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 66000, // 66k
+         year: 1987},
         {name: "Mustang Boss 302", // 5
          pi: 581,
-         cost: 230000,
-         year: 1969,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 230000, // 230k
+         year: 1969}],
     ["Honda", // 9
         {name: "Civic Type R", // 1
          pi: 727,
-         cost: 59000,
-         year: 2018,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 59000, // 59k
+         year: 2018},
         {name: "Civic Type R", // 2
          pi: 553,
-         cost: 25000,
-         year: 1997,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 25000, // 25k
+         year: 1997},
         {name: "NSX-R", // 3
          pi: 691,
-         cost: 90000,
-         year: 1992,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 90000, // 90k
+         year: 1992}],
     ["HSV", // 10
         {name: "Limited Edition Gen-F GTS Maloo", // 1
          pi: 742,
-         cost: 62000,
-         year: 2014,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 62000, // 62k
+         year: 2014}],
     ["Jaguar", // 11
         {name: "XKR-S", // 1
          pi: 756,
-         cost: 100000,
-         year: 2012,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 100000, // 100k
+         year: 2012}],
     ["Lotus", // 12
         {name: "Elise Series 1 Sport 190", // 1
          pi: 711,
-         cost: 81000,
-         year: 1999,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 81000, // 81k
+         year: 1999}],
     ["Mazda", // 13
         {name: "RX-7", // 1
          pi: 645,
-         cost: 35000,
-         year: 1997,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 35000, // 35k
+         year: 1997},
         {name: "MX-5 Miata", // 2
          pi: 445,
-         cost: 25000,
-         year: 1994,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 25000, // 25k
+         year: 1994},
         {name: "Savanna RX-7", // 3
          pi: 558,
-         cost: 25000,
-         year: 1990,
-         autoshow: false,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 25000, // 25k
+         year: 1990}],
     ["Mercedes-Benz", // 14
         {name: "C 63 AMG Coupé Black Series", // 1
          pi: 768,
-         cost: 150000,
-         year: 2012,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 150000, // 150k
+         year: 2012},
         {name: "190E 2.5-16 Evolution II", // 2
          pi: 579,
-         cost: 150000,
-         year: 1990,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 150000, // 150k
+         year: 1990}],
     ["Mini", // 15
-        {name: "John Cooper Works GP",
+        {name: "John Cooper Works GP", // 1
          pi: 719,
-         cost: 42000,
-         year: 2021,
-         autoshow: true,
-         carPass: true,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 42000, // 42k
+         year: 2021}],
     ["Mitsubishi", // 16
         {name: "Lancer Evolution VI GSR", // 1
          pi: 659,
-         cost: 28000,
-         year: 1999,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 28000, // 28k
+         year: 1999},
         {name: "GTO", // 2
          pi: 610,
-         cost: 20000,
-         year: 1997,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 20000, // 20k
+         year: 1997},
         {name: "Eclipse GSX", // 3
          pi: 543,
-         cost: 25000,
-         year: 1995,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 25000, // 25k
+         year: 1995}],
     ["Nissan", // 17
         {name: "370Z", // 1
          pi: 688,
-         cost: 40000,
-         year: 2010,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 40000, // 40k
+         year: 2010},
         {name: "Skyline GT-R V-Spec II", // 2
          pi: 657,
-         cost: 63000,
-         year: 2002,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 63000, // 63k
+         year: 2002},
         {name: "240SX SE", // 3
          pi: 445,
-         cost: 25000,
-         year: 1993,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 25000, // 25k
+         year: 1993},
         {name: "Fairlady Z 432", // 4
          pi: 482,
-         cost: 150000,
-         year: 1969,
-         autoshow: false,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 150000, // 150k
+         year: 1969}],
     ["Pontiac", // 18
         {name: "Firebird Trans AM", // 1
          pi: 418,
-         cost: 45000,
-         year: 1977,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 45000, // 45k
+         year: 1977}],
     ["Porsche", // 19
         {name: "Cayman GTS", // 1
          pi: 767,
-         cost: 80000,
-         year: 2015,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 80000, // 80k
+         year: 2015},
         {name: "944 Turbo", // 2
          pi: 651,
-         cost: 35000,
-         year: 1989,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 35000, // 35k
+         year: 1989},
         {name: "911 Turbo 3.3", // 3
          pi: 666,
-         cost: 150000,
-         year: 1982,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 150000, // 150k
+         year: 1982}],
     ["Renault", // 20
         {name: "Megane R.S.", // 1
          pi: 670,
-         cost: 37000,
-         year: 2018,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 37000, // 37k
+         year: 2018}],
     ["Subaru", // 21
         {name: "Impreza 22B-STI Version", // 1
          pi: 640,
-         cost: 110000,
-         year: 1998,
-         autoshow: false,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 110000, // 110k
+         year: 1998}],
     ["Toyota", // 22
         {name: "GR Supra", // 1
          pi: 731,
-         cost: 55000,
-         year: 2020,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 55000, // 55k
+         year: 2020},
         {name: "86", // 2
          pi: 579,
-         cost: 28800,
-         year: 2013,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 28800, // 28.8k
+         year: 2013},
         {name: "Supra RZ", // 3
          pi: 646,
-         cost: 38000,
-         year: 1998,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 38000, // 38k
+         year: 1998},
         {name: "Celica GT-Four ST205", // 4
          pi: 590,
-         cost: 20000,
-         year: 1994,
-         autoshow: false,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 20000, // 20k
+         year: 1994},
         {name: "Sprinter Trueno GT Apex", // 5
          pi: 480,
-         cost: 20000,
-         year: 1985,
-         autoshow: false,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 20000, // 20k
+         year: 1985}],
     ["Volkswagen", // 23
         {name: "Corrado VR6", // 1
          pi: 533,
-         cost: 20000,
-         year: 1995,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false},
+         cost: 20000, // 20k
+         year: 1995},
         {name: "Golf GTI 16V MK2", // 2
          pi: 429,
-         cost: 20000,
-         year: 1992,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}],
+         cost: 20000, // 20k
+         year: 1992}],
     ["Volvo", // 24
         {name: "242 Turbo Evolution", // 1
          pi: 548,
-         cost: 45000,
-         year: 1983,
-         autoshow: true,
-         carPass: false,
-         hotWheels: false,
-         welcome: false,
-         barnFind: false}]];
+         cost: 45000, // 45k
+         year: 1983}]];
 
 // Antique: more than 100 years old
 // Vintage: 40 - 100 years old

@@ -189,7 +189,7 @@ class Car {
         }
     }
 
-    toggleOptionsButtons(buttonDisplay) {
+    garageOptionsButtons(buttonDisplay) {
         this.getInButton.style.display = buttonDisplay;
         this.showUpgradeButton.style.display = buttonDisplay;
         this.sellButton.style.display = buttonDisplay;
@@ -244,8 +244,8 @@ class Car {
         this.row.cells[2].appendChild(this.costInput);
 
         // Hide all buttons
-        toggleOptions();
-        eToggleOptions.style.display = "none";
+        garageOptions();
+        eGarageOptions.style.display = "none";
 
         // Show the upgrade buttons
         this.toggleUpgradeButtons("inline");
@@ -306,8 +306,8 @@ class Car {
         this.toggleUpgradeButtons("none");
 
         // Show all other buttons and rows again
-        eToggleOptions.style.display = "block";
-        toggleOptions();
+        eGarageOptions.style.display = "block";
+        garageOptions();
     }
 
     doUpgrade() {
@@ -1193,18 +1193,6 @@ function getStateString(s = state) {
     // Store state as compact as possible
     let compact = {
         n: s.name,
-        t: {rs: 0,
-            rc: 0,
-            dt: 0,
-            ds: 0,
-            xs: 0,
-            xc: 0,
-            ss: 0},
-        h: {a: 0,
-            cp: 0,
-            hw: 0,
-            w: 0,
-            bf: 0},
         dr: s.dr,
         idr: s.iDR,
         w: s.wins,
@@ -1213,42 +1201,6 @@ function getStateString(s = state) {
         cc: s.cCar,
         c: carArgs};
 
-    if (s.tracks.roadSprints) {
-        compact.t.rs = 1;
-    }
-    if (s.tracks.roadCircuits) {
-        compact.t.rc = 1;
-    }
-    if (s.tracks.dirtTrails) {
-        compact.t.dt = 1;
-    }
-    if (s.tracks.dirtScrambles) {
-        compact.t.ds = 1;
-    }
-    if (s.tracks.crossCountrySprints) {
-        compact.t.xs = 1;
-    }
-    if (s.tracks.crossCountryCircuits) {
-        compact.t.xc = 1;
-    }
-    if (s.tracks.streetSprints) {
-        compact.t.ss = 1;
-    }
-    if (s.hide.autoshow) {
-        compact.h.a = 1;
-    }
-    if (s.hide.carPass) {
-        compact.h.cp = 1;
-    }
-    if (s.hide.hotWheels) {
-        compact.h.hw = 1;
-    }
-    if (s.hide.welcome) {
-        compact.h.w = 1;
-    }
-    if (s.hide.barnFind) {
-        compact.h.bf = 1;
-    }
     // Always return an array,
     // where array[0] is the version
     // and array[1] is the compact state
@@ -1309,34 +1261,16 @@ function updateState() {
 
     // Update track list
     shortTracks = [];
-//    if (state.tracks.roadSprints) {
-//        shortTracks = shortTracks.concat(roadSprints);
-//    }
     if (state.tracks.roadCircuits) {
         shortTracks = shortTracks.concat(roadCircuits);
     }
-//    if (state.tracks.dirtTrails) {
-//        shortTracks = shortTracks.concat(dirtTrails);
-//    }
     if (state.tracks.dirtScrambles) {
         shortTracks = shortTracks.concat(dirtScrambles);
     }
-//    if (state.tracks.crossCountrySprints) {
-//        shortTracks = shortTracks.concat(crossCountrySprints);
-//    }
-//    if (state.tracks.crossCountryCircuits) {
-//        shortTracks = shortTracks.concat(crossCountryCircuits);
-//    }
-//    if (state.tracks.streetSprints) {
-//        shortTracks = shortTracks.concat(streetSprints);
-//    }
-//    if (shortTracks.length === 0) {
-//        shortTracks = JSON.parse(JSON.stringify(firstTracks));
-//    }
 
     // Show garage options if no cars
     if (state.cars.length === 0) {
-        toggleOptions(true);
+        garageOptions(true);
     }
 
     // Clear make selector
@@ -1363,27 +1297,13 @@ function updateState() {
     // Only "Choose model" shown
     clearNewCarModel();
 
-    // Set all checkboxes
-    eRoadSprints.checked = state.tracks.roadSprints;
-    eRoadCircuits.checked = state.tracks.roadCircuits;
-    eDirtTrails.checked = state.tracks.dirtTrails;
-    eDirtScrambles.checked = state.tracks.dirtScrambles;
-    eCrossCountrySprints.checked = state.tracks.crossCountrySprints;
-    eCrossCountryCircuits.checked = state.tracks.crossCountryCircuits;
-    eStreetSprints.checked = state.tracks.streetSprints;
-    eAutoshow.checked = state.hide.autoshow;
-    eCarPass.checked = state.hide.carPass;
-    eHotWheels.checked = state.hide.hotWheels;
-    eWelcome.checked = state.hide.welcome;
-    eBarnFind.checked = state.hide.barnFind;
-
     // Store state in localStorage
     localStorage.setItem("state", getStateString());
 }
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.1.0"];
+    let validVersions = ["0.1.0", "0.2.0"];
 
     // Make sure parsed string is an array,
     // where array[0] is the version
@@ -1402,54 +1322,6 @@ function setStateFromString(inputString) {
     let compact = parsed[1];
     state.version = thisVersion;
     state.name = compact.n;
-    state.tracks = {roadSprints: false,
-                    roadCircuits: false,
-                    dirtTrails: false,
-                    dirtScrambles: false,
-                    crossCountrySprints: false,
-                    crossCountryCircuits: false,
-                    streetSprints: false};
-    if (compact.t.rs === 1) {
-        state.tracks.roadSprints = true;
-    }
-    if (compact.t.rc === 1) {
-        state.tracks.roadCircuits = true;
-    }
-    if (compact.t.dt === 1) {
-        state.tracks.dirtTrails = true;
-    }
-    if (compact.t.ds === 1) {
-        state.tracks.dirtScrambles = true;
-    }
-    if (compact.t.xs === 1) {
-        state.tracks.crossCountrySprints = true;
-    }
-    if (compact.t.xc === 1) {
-        state.tracks.crossCountryCircuits = true;
-    }
-    if (compact.t.ss === 1) {
-        state.tracks.streetSprints = true;
-    }
-    state.hide = {autoshow: false,
-                  carPass: false,
-                  hotWheels: false,
-                  welcome: false,
-                  barnFind: false};
-    if (compact.h.a === 1) {
-        state.hide.autoshow = true;
-    }
-    if (compact.h.cp === 1) {
-        state.hide.carPass = true;
-    }
-    if (compact.h.hw === 1) {
-        state.hide.hotWheels = true;
-    }
-    if (compact.h.w === 1) {
-        state.hide.welcome = true;
-    }
-    if (compact.h.bf === 1) {
-        state.hide.barnFind = true;
-    }
     state.dr = compact.dr;
     state.iDR = compact.idr;
     state.wins = compact.w;
@@ -1559,7 +1431,7 @@ function startGameButton() {
 
     // Since defaultState has no cars in garage,
     // options will always be shown, so hide them
-    toggleOptions();
+    garageOptions();
 
     // Set the start game inputs
     state.name = newName;
@@ -1581,22 +1453,22 @@ function startGameButton() {
 
 // Garage
 
-function toggleOptions(show = false) {
+function garageOptions(show = false) {
     // Show or hide based on current status
     let newDisplay = "none";
-    if (eToggleOptions.innerText === "Show options"
+    if (eGarageOptions.innerText === "Show options"
      || show) {
         newDisplay = "inline";
         eNewCarRow.style.display = "table-row";
-        eToggleOptions.innerText = "Hide options";
+        eGarageOptions.innerText = "Hide options";
     } else {
         eNewCarRow.style.display = "none";
-        eToggleOptions.innerText = "Show options";
+        eGarageOptions.innerText = "Show options";
     }
 
     // Change display for all buttons for all cars
     for (let iCar = 0; iCar < state.cars.length; iCar++) {
-        state.cars[iCar].toggleOptionsButtons(newDisplay);
+        state.cars[iCar].garageOptionsButtons(newDisplay);
     }
 }
 
@@ -1704,79 +1576,6 @@ function newCarModelSelect() {
 
 // Settings
 
-function changeNameButton() {
-    state.name = prompt("Please enter your name: ");
-    updateState();
-}
-
-function roadSprintsClick() {
-    state.tracks.roadSprints = eRoadSprints.checked;
-    updateState();
-}
-
-function roadCircuitsClick() {
-    state.tracks.roadCircuits = eRoadCircuits.checked;
-    updateState();
-}
-
-function dirtTrailsClick() {
-    state.tracks.dirtTrails = eDirtTrails.checked;
-    updateState();
-}
-
-function dirtScramblesClick() {
-    state.tracks.dirtScrambles = eDirtScrambles.checked;
-    updateState();
-}
-
-function crossCountrySprintsClick() {
-    state.tracks.crossCountrySprints = eCrossCountrySprints.checked;
-    updateState();
-}
-
-function crossCountryCircuitsClick() {
-    state.tracks.crossCountryCircuits = eCrossCountryCircuits.checked;
-    updateState();
-}
-
-function streetSprintsClick() {
-    state.tracks.streetSprints = eStreetSprints.checked;
-    updateState();
-}
-
-function autoshowClick() {
-    state.hide.autoshow = eAutoshow.checked;
-    updateState();
-}
-
-function carPassClick() {
-    state.hide.carPass = eCarPass.checked;
-    updateState();
-}
-
-function hotWheelsClick() {
-    state.hide.hotWheels = eHotWheels.checked;
-    updateState();
-}
-
-function welcomeClick() {
-    state.hide.welcome = eWelcome.checked;
-    updateState();
-}
-
-function barnFindClick() {
-    state.hide.barnFind = eBarnFind.checked;
-    updateState();
-}
-
-function resetGameButton() {
-    // Set state to default
-    localStorage.setItem("state", null);
-
-    // Force refresh to clear HTML
-    window.location.reload();
-}
-
 function saveGameButton() {
     let gameSave = getStateString();
     navigator.clipboard.writeText(gameSave);
@@ -1812,6 +1611,14 @@ function loadGameInput() {
     if (event.key === "Enter") {
         loadGameButton();
     }
+}
+
+function resetGameButton() {
+    // Set state to default
+    localStorage.setItem("state", null);
+
+    // Force refresh to clear HTML
+    window.location.reload();
 }
 
 

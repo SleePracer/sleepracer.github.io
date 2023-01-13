@@ -5,8 +5,6 @@
 layout: home
 ---
 
-<p>dev branch test</p>
-
 <script defer src="./assets/js/constants.js"></script>
 <script defer src="./assets/js/elements.js"></script>
 <script defer src="./assets/js/script.js"></script>
@@ -111,8 +109,8 @@ layout: home
     <td>PI</td>
     <td>Value</td>
     <td>
-      <button id="toggleOptionsButton"
-              onClick="toggleOptions()">
+      <button id="garageOptionsButton"
+              onClick="garageOptions()">
         Show options
       </button>
     </td>
@@ -145,108 +143,6 @@ layout: home
 </table>
 
 <h1>Settings</h1>
-<h2>Game settings</h2>
-When drawing random tracks for events, include:
-<div>
-  <input id="roadSprintsCheck"
-         type="checkbox"
-         onClick="roadSprintsClick()">
-  <label for="roadSprintsCheck">
-    Road Sprints
-  </label>
-</div>
-<div>
-  <input id="roadCircuitsCheck"
-         type="checkbox"
-         onClick="roadCircuitsClick()">
-  <label for="roadCircuitsCheck">
-    Road Circuits
-  </label>
-</div>
-<div>
-  <input id="dirtTrailsCheck"
-         type="checkbox"
-         onClick="dirtTrailsClick()">
-  <label for="dirtTrailsCheck">
-    Dirt Trails
-  </label>
-</div>
-<div>
-  <input id="dirtScramblesCheck"
-         type="checkbox"
-         onClick="dirtScramblesClick()">
-  <label for="dirtScramblesCheck">
-    Dirt Scrambles
-  </label>
-</div>
-<div>
-  <input id="crossCountrySprintsCheck"
-         type="checkbox"
-         onClick="crossCountrySprintsClick()">
-  <label for="crossCountrySprintsCheck">
-    Cross Country
-  </label>
-</div>
-<div>
-  <input id="crossCountryCircuitsCheck"
-         type="checkbox"
-         onClick="crossCountryCircuitsClick()">
-  <label for="crossCountryCircuitsCheck">
-    Cross Country Circuits
-  </label>
-</div>
-<div>
-  <input id="streetSprintsCheck"
-         type="checkbox"
-         onClick="streetSprintsClick()">
-  <label for="streetSprintsCheck">
-    Street Sprints
-  </label>
-</div>
-<br>
-When browsing for new cars, hide:
-<div>
-  <input id="autoshowCheck"
-         type="checkbox"
-         onClick="autoshowClick()">
-  <label for="autoshowCheck">
-    Cars not available from the Autoshow
-  </label>
-</div>
-<div>
-  <input id="carPassCheck"
-         type="checkbox"
-         onClick="carPassClick()">
-  <label for="carPassCheck">
-    Car Pass cars
-  </label>
-</div>
-<div>
-  <input id="hotWheelsCheck"
-         type="checkbox"
-         onClick="hotWheelsClick()">
-  <label for="hotWheelsCheck">
-    Hot Wheels DLC cars
-  </label>
-</div>
-<div>
-  <input id="welcomeCheck"
-         type="checkbox"
-         onClick="welcomeClick()">
-  <label for="welcomeCheck">
-    Welcome Pack cars
-  </label>
-</div>
-<div>
-  <input id="barnFindCheck"
-         type="checkbox"
-         onClick="barnFindClick()">
-  <label for="barnFindCheck">
-    Barn Find cars
-  </label>
-</div>
-<br>
-<h2>Save settings</h2>
 Save game:
 <div>
   <button onClick="saveGameButton()">Copy game data to clipboard</button>
