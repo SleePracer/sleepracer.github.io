@@ -383,12 +383,6 @@ class Race {
         this.finishButton.onclick = finishButtonClick;
         this.row.cells[3].appendChild(this.finishButton);
 
-        // Needs to be after this.row is finished
-        // since it resets those fields too
-        this.reset();
-    }
-
-    reset() {
         // Reset position and damage inputs
         this.position = 0;
         this.positionSelect.value = "0";
@@ -477,9 +471,13 @@ class Race {
         }
 
         // Calculate the deltaDR, messy but should be cool
+
+        // PI of the car
         let subClass = this.getSubClass(pi);
-        let baseDR = this.getBaseDR();
         let classFactor = subClass * Math.pow(10, iClass - 1);
+
+        // Damage from the race
+        let baseDR = this.getBaseDR();
         let prizeFactor = classPrize[iClass]
                         * (positionPrize[2]
                          + positionPrize[this.position]);
@@ -487,7 +485,10 @@ class Race {
         let damageRatio = Math.max(0, Math.min(1, repairCost
                                                 / prizeFactor));
         let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
-        this.deltaDR = Math.ceil(damageFactor * classFactor);
+
+        // the magic 5 is just game speed balancing
+        // adjust/refine if necessary
+        this.deltaDR = Math.ceil(5 * classFactor * damageFactor);
     }
 
     setPosition(value) {
@@ -524,12 +525,19 @@ class Race {
         // Update credits
         state.credits += this.deltaCredits;
 
+        // Remove interactive elements and display results
+        // Before depreciate of car, or will be wrong on reload
+        this.row.cells[1].removeChild(this.positionSelect);
+        this.row.cells[1].innerText = positionName[this.position];
+        this.row.cells[2].removeChild(this.damageInput);
+        this.row.cells[2].innerText = formatCredits(state.cars[state.cCar].repairCost(this.damage));
+        this.row.cells[3].removeChild(this.finishButton);
+        this.row.cells[3].innerText = formatCredits(this.deltaCredits);
+
         // Depreciate value of car
         state.cars[state.cCar].depreciate(this.damage);
 
         updateState();
-
-        this.reset();
     }
 }
 
@@ -541,12 +549,12 @@ class Event {
     constructor(name,
                 iEvent,
                 infoString,
-                raceNames = "random",
+                raceName = "Random track",
                 resultFactor = 1,
                 iClass = 0,
-                models = 0) {
+                cars = 0) {
         // Add to event map for the enter button
-        // Add to race map for race buttons to go via here
+        // Add to race map for race buttons to go via here (finish!)
         eventMap.set(name, this);
         raceMap.set(name, this);
 
@@ -554,29 +562,19 @@ class Event {
         this.name = name;
         this.iEvent = iEvent;
         this.infoString = infoString;
-        this.raceNames = JSON.parse(JSON.stringify(raceNames));
-        this.random = false;
-        if (raceNames === "random") {
-            this.random = true;
-        }
-        this.resultFactor = JSON.parse(JSON.stringify(resultFactor));
-        if (!(this.resultFactor instanceof Array)) {
-            this.resultFactor = [this.resultFactor];
-        }
+        this.raceName = raceName;
+        this.resultFactor = resultFactor;
         this.iClass = JSON.parse(JSON.stringify(iClass));
         if (!(this.iClass instanceof Array)) {
             this.iClass = [this.iClass];
         }
-        this.models = JSON.parse(JSON.stringify(models));
-        this.cRace = -1;
-        this.races = [];
-        this.playerPoints = 0;
-        this.drivatarPoints = [];
+        this.cars = JSON.parse(JSON.stringify(cars));
+        this.race = null;
+        this.entered = false;
+        this.finished = false;
 
         // Magic bools
         this.levelUpEvent = false;
-        this.roadChamp = false;
-        this.dirtChamp = false;
 
         // Add and populate new row in event table
         this.row = eEventsTB.insertRow(this.iEvent);
@@ -620,15 +618,15 @@ class Event {
         let cCar = state.cars[state.cCar];
         let garageOk = false;
         let carModelOk = false;
-        if (this.models === 0) {
+        if (this.cars === 0) {
             garageOk = true;
             carModelOk = true;
         } else {
             for (let iCar = 0; iCar < state.cars.length; iCar++) {
                 let iCarModel = state.cars[iCar].getModel();
-                for (let iModel = 0; iModel < this.models.length; iModel++) {
-                    if (iCarModel[0] === this.models[iModel][0]
-                     && iCarModel[1] === this.models[iModel][1]) {
+                for (let iModel = 0; iModel < this.cars.length; iModel++) {
+                    if (iCarModel[0] === this.cars[iModel][0]
+                     && iCarModel[1] === this.cars[iModel][1]) {
                         garageOk = true;
                         if (iCar === state.cCar) {
                             carModelOk = true;
@@ -658,21 +656,7 @@ class Event {
         // Check if ready for level up (if level up event)
         let levelUpOk = !this.levelUpEvent;
         if (iClassFromDR(state.dr) > state.iDR) {
-            if (this.roadChamp
-            && (state.tracks.roadSprints
-             || state.tracks.roadCircuits)) {
-                levelUpOk = true;
-            } else if (this.dirtChamp
-                   && (state.tracks.dirtTrails
-                    || state.tracks.dirtScrambles)) {
-                levelUpOk = true;
-            } else if (!(this.roadChamp || this.dirtChamp)
-                    && !(state.tracks.roadSprints
-                      || state.tracks.roadCircuits
-                      || state.tracks.dirtTrails
-                      || state.tracks.dirtScrambles)) {
-                levelUpOk = true;
-            }
+            levelUpOk = true;
         }
 
         if (playerOk
@@ -707,13 +691,13 @@ class Event {
                 }
             }
 
-            // Add eligible models
-            if (this.models !== 0 && this.models.length !== 0) {
+            // Add eligible car models
+            if (this.cars !== 0 && this.cars.length !== 0) {
                 allInfo += "\n\nEligible cars:\n";
-                for (let iModel = 0; iModel < this.models.length; iModel++) {
-                    allInfo += carList[this.models[iModel][0]][0] + " ";
-                    allInfo += carList[this.models[iModel][0]][this.models[iModel][1]].name + " (";
-                    allInfo += carList[this.models[iModel][0]][this.models[iModel][1]].year + ")\n";
+                for (let iModel = 0; iModel < this.cars.length; iModel++) {
+                    allInfo += carList[this.cars[iModel][0]][0] + " ";
+                    allInfo += carList[this.cars[iModel][0]][this.cars[iModel][1]].name + " (";
+                    allInfo += carList[this.cars[iModel][0]][this.cars[iModel][1]].year + ")\n";
                 }
             }
 
@@ -737,103 +721,41 @@ class Event {
     }
 
     enter() {
-        // What kind of event is this?
-        let single = false;
-        let championship = false;
-        if (this.roadChamp) {
-            let iChamp = Math.floor(Math.random() * allRoadChamps.length);
-            this.raceNames = allRoadChamps[iChamp];
-            championship = true;
-        } else if (this.dirtChamp) {
-            let iChamp = Math.floor(Math.random() * allDirtChamps.length);
-            this.raceNames = allDirtChamps[iChamp];
-            championship = true;
-        } else if (this.random) {
-            let iRace = Math.floor(Math.random() * shortTracks.length);
-            this.raceNames = [shortTracks[iRace]];
-            single = true;
-        } else if (this.raceNames.length === 1
-                && this.resultFactor.length === 1) {
-            single = true;
-        } else if (this.raceNames.length >= this.resultFactor.length - 1
-                && this.resultFactor.length > 1) {
-            championship = true;
-        }
-
-        // Something is wrong
-        if (!(single || championship)) {
-            return;
-        }
-
-        // Initialize championship points
-        this.playerPoints = 0;
-        this.drivatarPoints = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
         // Add progress to state
         if (state.cEvent === null) {
             // If not null, we're just loading progress
             state.cEvent = {
                 ie: this.iEvent,
-                p: [],
-                dp: JSON.parse(JSON.stringify(this.drivatarPoints))};
+                p: []};
             updateState();
         }
 
-        // Hide all other events
+        // Hide the event table
         eEventsT.style.display = "none";
 
         // Show the races table
         eRacesT.style.display = "table";
 
-        // Remove event races
-        this.races = [];
+        // Create the event race
+        this.race = new Race(this.raceName,
+                             0,
+                             this.resultFactor);
 
-        if (championship) {
-            // Create all event races
-            for (let iRace = 0; iRace < this.resultFactor.length - 1; iRace++) {
-                this.races.push(new Race(this.raceNames[iRace],
-                                         iRace,
-                                         this.resultFactor[iRace]));
-                this.races[iRace].row.style.display = "none";
-                this.races[iRace].positionSelect.id = this.name;
-                this.races[iRace].damageInput.id = this.name;
-                this.races[iRace].finishButton.id = this.name;
-            }
-
-            // Create the bonus collector
-            let iBonus = this.resultFactor.length - 1;
-            this.races.push(new Race("Championship Bonus",
-                                     iBonus,
-                                     this.resultFactor[iBonus]));
-            let bonus = this.races[iBonus];
-            bonus.row.style.display = "none";
-            bonus.positionSelect.id = this.name;
-            bonus.damageInput.id = this.name;
-            bonus.finishButton.id = this.name;
-            bonus.row.cells[1].removeChild(bonus.positionSelect);
-            bonus.row.cells[2].removeChild(bonus.damageInput);
-            bonus.setPosition(1);
-            bonus.setDamage(0);
-        } else if (single) {
-            // Create the event race
-            this.races.push(new Race(this.raceNames[0],
-                                     0,
-                                     this.resultFactor[0]));
-            this.races[0].positionSelect.id = this.name;
-            this.races[0].damageInput.id = this.name;
-            this.races[0].finishButton.id = this.name;
-        }
+        // Makes buttons go through this class
+        this.race.positionSelect.id = this.name;
+        this.race.damageInput.id = this.name;
+        this.race.finishButton.id = this.name;
 
         // Add the return from event button to a final row
-        this.returnRow = eRacesTB.insertRow(this.races.length);
+        this.returnRow = eRacesTB.insertRow(1);
         for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
             this.returnRow.insertCell();
         }
         this.returnRow.cells[3].appendChild(this.returnButton);
 
         // Show first race
-        this.cRace = 0;
-        this.races[this.cRace].row.style.display = "table-row";
+        this.entered = true;
+        this.race.row.style.display = "table-row";
     }
 
     returnToEvents() {
@@ -842,13 +764,12 @@ class Event {
         updateState();
 
         // Hide event races
-        this.cRace = -1;
-        for (let iRace = 0; iRace < this.races.length; iRace++) {
-            this.races[iRace].row.style.display = "none";
-        }
+        this.entered = false;
+        this.finished = false;
+        this.race.row.style.display = "none";
 
         // Remove event races
-        this.races = [];
+        this.race = null;
 
         // Remove return button and row
         this.returnButton.innerText = "Retire";
@@ -863,166 +784,72 @@ class Event {
     }
 
     setPosition(value) {
-        if (this.cRace >= 0
-         && this.cRace < this.races.length) {
-            this.races[this.cRace].setPosition(value);
+        // Needed?
+        if (this.entered && !this.finished) {
+            this.race.setPosition(value);
         }
     }
 
     setDamage(value) {
-        if (this.cRace >= 0
-         && this.cRace < this.races.length) {
-            this.races[this.cRace].setDamage(value);
+        // Needed?
+        if (this.entered && !this.finished) {
+            this.race.setDamage(value);
         }
-    }
-
-    displayResults(position, repairCost, credits) {
-        let thisRace = this.races[this.cRace];
-
-        // Remove interactive elements and display results
-        if (this.races.length === 1
-         || this.cRace !== this.races.length - 1) {
-            // These cells are not populated for bonus collection
-            thisRace.row.cells[1].removeChild(thisRace.positionSelect);
-            thisRace.row.cells[1].innerText = positionName[position];
-            thisRace.row.cells[2].removeChild(thisRace.damageInput);
-            thisRace.row.cells[2].innerText = formatCredits(repairCost);
-        }
-        thisRace.row.cells[3].removeChild(thisRace.finishButton);
-        thisRace.row.cells[3].innerText = formatCredits(credits);
-
-        if (this.races.length > 1) {
-            // Get current position in championship
-            let champPos = 1;
-            for (let d = 0; d < this.drivatarPoints.length; d++) {
-                if (this.playerPoints < this.drivatarPoints[d]) {
-                    champPos++;
-                }
-            }
-
-            // Set championship bonus to current championship position
-            this.races[this.races.length - 1].setPosition(champPos);
-
-            if (this.cRace < this.races.length - 2) {
-                // Normal race, update current position
-                this.returnRow.cells[0].innerText = "Total standings";
-                this.returnRow.cells[1].innerText = positionName[champPos];
-            } else if (this.cRace === this.races.length - 2){
-                // Bonus collector is next,
-                // so set current championship position in that row
-                // and clear return row
-                this.races[this.races.length - 1].row.cells[1].innerText = positionName[champPos];
-                this.returnRow.cells[0].innerText = "";
-                this.returnRow.cells[1].innerText = "";
-            }
-        }
-    }
-
-    showNext() {
-        // Show next race or return button
-        this.cRace++;
-        if (this.cRace < this.races.length) {
-            this.races[this.cRace].row.style.display = "table-row";
-        } else {
-            this.returnButton.innerText = "Return";
-        }
-    }
-
-    addArrays(a, b) {
-        // Stolen from stackoverflow idk
-        return a.map((e,i) => e + b[i]);
-    }
-
-    addDrivatarPoints(playerPosition) {
-        // Deep copy position points
-        let points = JSON.parse(JSON.stringify(positionPoints));
-
-        // Remove player position and null element
-        if (playerPosition === 0) {
-            points.splice(points.length - 1, 1);
-        } else {
-            points.splice(playerPosition, 1);
-        }
-        points.splice(0, 1);
-
-        // Randomize array in-place using Durstenfeld shuffle algorithm
-        for (let i = points.length - 1; i > 0; i--) {
-            let j = Math.floor(Math.random() * (i + 1));
-            let temp = points[i];
-            points[i] = points[j];
-            points[j] = temp;
-        }
-
-        // Add points to drivatars
-        this.drivatarPoints = this.addArrays(this.drivatarPoints, points);
-        state.cEvent.dp = JSON.parse(JSON.stringify(this.drivatarPoints));
     }
 
     finish() {
         // Sanity check
-        if (this.cRace >= 0
-         && this.cRace < this.races.length) {
-            let thisRace = this.races[this.cRace];
-
-            // Championship race
-            if (this.races.length > 1
-             && this.cRace < this.races.length - 1) {
-                this.playerPoints += positionPoints[thisRace.position];
-                this.addDrivatarPoints(thisRace.position);
-            }
-
-            let repairCost = state.cars[state.cCar].repairCost(thisRace.damage);
-            this.displayResults(thisRace.position,
-                                repairCost,
-                                thisRace.deltaCredits);
+        if (this.entered && !this.finished) {
+            let repairCost = state.cars[state.cCar].repairCost(this.race.damage);
 
             // Add progress to state
             state.cEvent.p.push([
-                thisRace.position,
+                this.race.position,
                 repairCost,
-                thisRace.deltaCredits]);
+                this.race.deltaCredits]);
             updateState();
 
-            // Save DR, this will be rolled back if just collecting bonus
-            let preDR = state.dr;
-            let preValue = state.cars[state.cCar].value;
-
             // Check if podium before finishing
-            let podium = thisRace.position < 4;
+            let podium = this.race.position < 4;
 
-            thisRace.finish();
+            this.race.finish();
+            this.finished = true;
 
-            this.showNext();
+            this.returnButton.innerText = "Return";
 
-            // Roll back DR if collecting bonus
-            if (this.races.length > 1
-             && this.cRace === this.races.length) {
-                state.dr = preDR;
-                state.cars[state.cCar].value = preValue;
-                state.cars[state.cCar].row.cells[2].innerHTML = formatCredits(preValue);
-
-                // Only level up with a podium
-                if (this.levelUpEvent && podium) {
-                    state.iDR++;
-                }
-
+            // Only level up with a podium
+            if (this.levelUpEvent && podium) {
+                state.iDR++;
                 updateState();
             }
+
         }
     }
 
-    load(aProgress, drivatarPoints) {
+    load(aProgress) {
         // This function should only be called when loading state
         // It only reloads the previous results
-        this.drivatarPoints = JSON.parse(JSON.stringify(drivatarPoints));
-        this.playerPoints += positionPoints[aProgress[0]];
+        // the event should have been entered before..?
+        // rethink this in task 65
 
-        this.displayResults(aProgress[0],
-                            aProgress[1],
-                            aProgress[2]);
+        // Remove interactive elements and display results
+        // This is done in race.finish but we don't call that on load!
+        this.race.row.cells[1].removeChild(this.race.positionSelect);
+                                                     // position
+        this.race.row.cells[1].innerText = positionName[aProgress[0]];
+        this.race.row.cells[2].removeChild(this.race.damageInput);
+                                                      // repairCost
+        this.race.row.cells[2].innerText = formatCredits(aProgress[1]);
+        this.race.row.cells[3].removeChild(this.race.finishButton);
+                                                      // deltaCredits
+        this.race.row.cells[3].innerText = formatCredits(aProgress[2]);
 
-        this.showNext();
+        // Show next race or return button
+        this.entered = true;
+        this.finished = true;
+        this.returnButton.innerText = "Return";
     }
+
 }
 
 // -----------------------------------------------------------------------
@@ -1167,12 +994,7 @@ function hasBuyableModel(make) {
     let foundModel = false;
     for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
         if (state.iDR >= iClassFromPI(carList[iMake][iModel].pi)
-         && state.credits >= carList[iMake][iModel].cost
-         && (carList[iMake][iModel].autoshow || !state.hide.autoshow)
-         && (!carList[iMake][iModel].carPass || !state.hide.carPass)
-         && (!carList[iMake][iModel].hotWheels || !state.hide.hotWheels)
-         && (!carList[iMake][iModel].welcome || !state.hide.welcome)
-         && (!carList[iMake][iModel].barnFind || !state.hide.barnFind)) {
+         && state.credits >= carList[iMake][iModel].cost) {
             foundModel = true;
         }
     }
@@ -1261,12 +1083,8 @@ function updateState() {
 
     // Update track list
     shortTracks = [];
-    if (state.tracks.roadCircuits) {
-        shortTracks = shortTracks.concat(roadCircuits);
-    }
-    if (state.tracks.dirtScrambles) {
-        shortTracks = shortTracks.concat(dirtScrambles);
-    }
+    shortTracks = shortTracks.concat(roadCircuits);
+    shortTracks = shortTracks.concat(dirtScrambles);
 
     // Show garage options if no cars
     if (state.cars.length === 0) {
@@ -1348,8 +1166,7 @@ function setStateFromString(inputString) {
 
         // Load previous results
         for (let iRace = 0; iRace < compact.ce.p.length; iRace++) {
-            events[compact.ce.ie].load(compact.ce.p[iRace],
-                                       compact.ce.dp);
+            events[compact.ce.ie].load(compact.ce.p[iRace]);
         }
     }
 
@@ -1393,7 +1210,7 @@ function startCarMakeSelect() {
         return;
     }
 
-    // Add all buyable models
+    // Add all buyable car models
     for (let iModel = 1; iModel < carList[startCarMake].length; iModel++) {
         if (carList[startCarMake][iModel].cost <= defaultState.credits) {
             let option = document.createElement("option");
@@ -1534,15 +1351,10 @@ function newCarMakeSelect() {
         return;
     }
 
-    // Add all buyable models
+    // Add all buyable car models
     for (let iModel = 1; iModel < carList[make].length; iModel++) {
         if (state.iDR >= iClassFromPI(carList[make][iModel].pi)
-         && state.credits >= carList[make][iModel].cost
-         && (carList[make][iModel].autoshow || !state.hide.autoshow)
-         && (!carList[make][iModel].carPass || !state.hide.carPass)
-         && (!carList[make][iModel].hotWheels || !state.hide.hotWheels)
-         && (!carList[make][iModel].welcome || !state.hide.welcome)
-         && (!carList[make][iModel].barnFind || !state.hide.barnFind)) {
+         && state.credits >= carList[make][iModel].cost) {
             let option = document.createElement("option");
             option.value = iModel;
             option.text = carList[make][iModel].name + " ("
@@ -1637,35 +1449,32 @@ events = [];
                       firstChamp,
                       [1, 1, 1, 1, 1, 2]));*/
 
-events.push(new Event("Road Class Advancement Championship",
+events.push(new Event("Road Class Advancement",
                       events.length,
-                      "\n\nChampionship on five sequential road tracks. "
+                      "\n\nNOT championship on five sequential road tracks. "
                     + "Choose any list of cars. "
                     + "Get a podium position on the total points "
                     + "to advance to the next class!",
-                      ["Race", "Race", "Race", "Race", "Race"],
-                      [1, 1, 1, 1, 1, 2]));
+                      endurances[1],
+                      2));
 
-events.push(new Event("Dirt Class Advancement Championship",
+events.push(new Event("Dirt Class Advancement",
                       events.length,
-                      "\n\nChampionship on five sequential dirt tracks. "
+                      "\n\nNOT championship on five sequential dirt tracks. "
                     + "Choose any list of cars. "
                     + "Get a podium position on the total points "
                     + "to advance to the next class!",
-                      ["Race", "Race", "Race", "Race", "Race"],
-                      [1, 1, 1, 1, 1, 2]));
-
-// This will make the championships pull a random championship tracklist
-eventMap.get("Road Class Advancement Championship").roadChamp = true;
-eventMap.get("Dirt Class Advancement Championship").dirtChamp = true;
+                      endurances[2],
+                      2));
 
 // This will make finishing the championships increase iDR
 //eventMap.get("Class Advancement Championship").levelUpEvent = true;
-eventMap.get("Road Class Advancement Championship").levelUpEvent = true;
-eventMap.get("Dirt Class Advancement Championship").levelUpEvent = true;
+eventMap.get("Road Class Advancement").levelUpEvent = true;
+eventMap.get("Dirt Class Advancement").levelUpEvent = true;
 
 events.push(new Event("Open Race", events.length,
-                      "Single race on random track! Any car allowed!"));
+                      "Single race on random track! Any car allowed!",
+                      "A race"));
 
 /*let info = "Single race on random track!";
 
