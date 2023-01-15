@@ -283,7 +283,7 @@ const carList = [
 //    [54, 18], // Lamborghini Diablo 1997 A763
 //    [63, 14], // McLaren F1 1993 S817
 
-const roadCircuitsBase = [
+const roadCircuits = [
     "Bahía de Plano",
     "Arch of Mulegé",
     "Los Jardines",
@@ -298,7 +298,7 @@ const roadCircuitsBase = [
     "Plaza",
     "Bola Ocho"];
 
-const dirtScramblesBase = [
+const dirtScrambles = [
     "River",
     "Mangrove",
     "Mulegé Town",
@@ -315,15 +315,6 @@ const endurances = [
     "The Gauntlet",
     "The Titan",
     "The Marathon"];
-
-let roadCircuits = [];
-for (let i = 0; i < roadCircuitsBase.length; i++) {
-    roadCircuits.push(roadCircuitsBase[i] + " Circuit");
-}
-let dirtScrambles = [];
-for (let i = 0; i < dirtScramblesBase.length; i++) {
-    dirtScrambles.push(dirtScramblesBase[i] + " Scramble");
-}
 
 const classPI = [
     100,
@@ -414,4 +405,3 @@ const positionName = [
     "10th",
     "11th",
     "12th"];
-
