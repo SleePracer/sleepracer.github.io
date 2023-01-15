@@ -1308,131 +1308,19 @@ events.push(new Event("DR Level Up: " + endurances[2],
                       2,
                       true));
 
-events.push(new Event("Open Race", events.length,
-                      "",
-                      "A race"));
+for (let t = 0; t < roadCircuits.length; t++) {
+    events.push(new Event(roadCircuits[t] + " Circuit",
+                          events.length,
+                          "Open road race!",
+                          roadCircuits[t] + " Circuit"));
+}
 
-/*let info = "Single race on random track!";
-
-events.push(new Event("Vintage Roadsters", events.length, info,
-                      "random", 1,
-                      [1, 2, 3], // 131 - 694
-                      vintageRoadsters));
-
-events.push(new Event("Vintage Race Cars", events.length, info,
-                      "random", 1,
-                      [2, 3, 4], // 514 - 714
-                      vintageRaceCars));
-
-events.push(new Event("Vintage Econoboxes", events.length, info,
-                      "random", 1,
-                      1, // 100
-                      vintageEconoboxes));
-
-events.push(new Event("Vintage Utility", events.length, info,
-                      "random", 1,
-                      [1, 2], // 100 - 544
-                      vintageUtility));
-
-events.push(new Event("60s Sports Cars", events.length, info,
-                      "random", 1,
-                      1, // 482 - 487
-                      sportsCars60s));
-
-events.push(new Event("70s Sports Cars", events.length, info,
-                      "random", 1,
-                      [1, 2], // 315 - 531
-                      sportsCars70s));
-
-events.push(new Event("70s Explorers", events.length, info,
-                      "random", 1,
-                      1, // 100 - 431
-                      explorers70s));
-
-events.push(new Event("70s Hatchbacks", events.length, info,
-                      "random", 1,
-                      1, // 281 - 428
-                      hatchbacks70s));
-
-events.push(new Event("80s Wedge Showdown", events.length, info,
-                      "random", 1,
-                      [1, 2, 3], // 464 - 629
-                      wedges80s));
-
-events.push(new Event("80s Sport Sedans", events.length, info,
-                      "random", 1,
-                      [2, 3], // 537 - 583
-                      sportSedans80s));
-
-events.push(new Event("80s Sport Liftbacks", events.length, info,
-                      "random", 1,
-                      [1, 2, 3], // 480 - 651
-                      sportLiftbacks80s));
-
-events.push(new Event("Early 90s Hatchbacks", events.length, info,
-                      "random", 1,
-                      [1, 2], // 429 - 511
-                      hatchbacksEarly90s));
-
-events.push(new Event("Late 90s Hatchbacks", events.length, info,
-                      "random", 1,
-                      2, // 510 - 553
-                      hatchbacksLate90s));
-
-events.push(new Event("Group A Rally Cars", events.length, info,
-                      "random", 1,
-                      [2, 3], // 514 - 659
-                      rallyGroupA));
-
-events.push(new Event("90s Japanese Sports Cars", events.length, info,
-                      "random", 1,
-                      [2, 3], // 590 - 691
-                      topJapanese90s));
-
-events.push(new Event("90s Supercars", events.length, info,
-                      "random", 1,
-                      [4, 5], // 753 - 869
-                      supercars90s));
-
-events.push(new Event("90s Race Cars", events.length, info,
-                      "random", 1,
-                      [4, 5, 6], // 794 - 976
-                      topRaceCars90s));
-
-events.push(new Event("00s World Rally Cars", events.length, info,
-                      "random", 1,
-                      [2, 3], // 593 - 669
-                      worldRallyCars00s));
-
-events.push(new Event("10s World Rally Cars", events.length, info,
-                      "random", 1,
-                      [2, 3], // 598 - 607
-                      worldRallyCars10s));
-
-events.push(new Event("The Fast and the Furious", events.length, info,
-                      "random", 1,
-                      [2, 3], // 543 - 646
-                      fastAndFurious));
-
-events.push(new Event("Gran Turismo Starter Cars", events.length, info,
-                      "random", 1,
-                      [1, 2], // 445 - 558
-                      granTurismoStarters));
-
-events.push(new Event("Lakeside Diner Horizon", events.length, info,
-                      "random", 1,
-                      [2, 3], // 533 - 664
-                      lakesideDiner));
-
-events.push(new Event("Civic vs. Golf Showdown", events.length, info,
-                      "random", 1,
-                      [1, 2, 3, 4], // 368 - 727
-                      hondaCivics.concat(volkswagenGolfs)));
-
-events.push(new Event("Police Car Showdown", events.length, info,
-                      "random", 1,
-                      [1, 2, 3, 4, 5, 6], // 103 - 913
-                      policeCars));*/
+for (let t = 0; t < dirtScrambles.length; t++) {
+    events.push(new Event(dirtScrambles[t] + " Scramble",
+                          events.length,
+                          "Open dirt race!",
+                          dirtScrambles[t] + " Scramble"));
+}
 
 // Initialize state
 let state = {};
