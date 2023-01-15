@@ -551,6 +551,7 @@ class Event {
                 infoString,
                 raceName = "Random track",
                 resultFactor = 1,
+                levelUp = false,
                 iClass = 0,
                 cars = 0) {
         // Add to event map for the enter button
@@ -564,6 +565,7 @@ class Event {
         this.infoString = infoString;
         this.raceName = raceName;
         this.resultFactor = resultFactor;
+        this.levelUpEvent = levelUp;
         this.iClass = JSON.parse(JSON.stringify(iClass));
         if (!(this.iClass instanceof Array)) {
             this.iClass = [this.iClass];
@@ -572,9 +574,6 @@ class Event {
         this.race = null;
         this.entered = false;
         this.finished = false;
-
-        // Magic bools
-        this.levelUpEvent = false;
 
         // Add and populate new row in event table
         this.row = eEventsTB.insertRow(this.iEvent);
@@ -679,7 +678,7 @@ class Event {
     showInfo() {
         if (this.infoButton.innerText === "Info") {
             // Add provided info
-            let allInfo = this.name + ": ";
+            let allInfo = this.name + ":\n\n";
             allInfo += this.infoString;
 
             // Add class
@@ -1292,40 +1291,25 @@ function resetGameButton() {
 
 // Create all events
 events = [];
-/*events.push(new Event("Class Advancement Championship",
-                      events.length,
-                      "\n\nChampionship on five of the base tracks. "
-                    + "Choose any list of cars. "
-                    + "Get a podium position on the total points "
-                    + "to advance to the next class!",
-                      firstChamp,
-                      [1, 1, 1, 1, 1, 2]));*/
 
-events.push(new Event("Road Class Advancement",
+events.push(new Event("DR Level Up: " + endurances[1],
                       events.length,
-                      "\n\nNOT championship on five sequential road tracks. "
-                    + "Choose any list of cars. "
-                    + "Get a podium position on the total points "
-                    + "to advance to the next class!",
+                      "Finish on the podium to advance " +
+                      "to the next class!",
                       endurances[1],
-                      2));
+                      2,
+                      true));
 
-events.push(new Event("Dirt Class Advancement",
+events.push(new Event("DR Level Up: " + endurances[2],
                       events.length,
-                      "\n\nNOT championship on five sequential dirt tracks. "
-                    + "Choose any list of cars. "
-                    + "Get a podium position on the total points "
-                    + "to advance to the next class!",
+                      "Finish on the podium to advance " +
+                      "to the next class!",
                       endurances[2],
-                      2));
-
-// This will make finishing the championships increase iDR
-//eventMap.get("Class Advancement Championship").levelUpEvent = true;
-eventMap.get("Road Class Advancement").levelUpEvent = true;
-eventMap.get("Dirt Class Advancement").levelUpEvent = true;
+                      2,
+                      true));
 
 events.push(new Event("Open Race", events.length,
-                      "Single race on random track! Any car allowed!",
+                      "",
                       "A race"));
 
 /*let info = "Single race on random track!";
