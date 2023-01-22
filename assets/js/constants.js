@@ -284,30 +284,30 @@ const carList = [
 //    [63, 14], // McLaren F1 1993 S817
 
 const roadCircuits = [
-    "Bahía de Plano",
-    "Arch of Mulegé",
-    "Los Jardines",
-    "Chihuahua",
-    "Tierra Próspera",
-    "Playa Azul",
-    "Lookout",
-    "Horizon Mexico",
-    "Emerald",
-    "Estadio",
-    "Cathedral",
-    "Plaza",
-    "Bola Ocho"];
+    {name: "Bahía de Plano", sharecode: "000 000 000"},
+    {name: "Arch of Mulegé", sharecode: "000 000 000"},
+    {name: "Los Jardines", sharecode: "000 000 000"},
+    {name: "Chihuahua", sharecode: "000 000 000"},
+    {name: "Tierra Próspera", sharecode: "000 000 000"},
+    {name: "Playa Azul", sharecode: "000 000 000"},
+    {name: "Lookout", sharecode: "000 000 000"},
+    {name: "Horizon Mexico", sharecode: "000 000 000"},
+    {name: "Emerald", sharecode: "000 000 000"},
+    {name: "Estadio", sharecode: "000 000 000"},
+    {name: "Cathedral", sharecode: "000 000 000"},
+    {name: "Plaza", sharecode: "000 000 000"},
+    {name: "Bola Ocho", sharecode: "000 000 000"}];
 
 const dirtScrambles = [
-    "River",
-    "Mangrove",
-    "Mulegé Town",
-    "San Juan",
-    "Horizon Baja",
-    "Teotihuacan",
-    "Caldera",
-    "La Selva",
-    "El Pípila"];
+    {name: "River", sharecode: "000 000 000"},
+    {name: "Mangrove", sharecode: "000 000 000"},
+    {name: "Mulegé Town", sharecode: "000 000 000"},
+    {name: "San Juan", sharecode: "000 000 000"},
+//    {name: "Horizon Baja", sharecode: "000 000 000"},
+    {name: "Teotihuacan", sharecode: "000 000 000"},
+    {name: "Caldera", sharecode: "000 000 000"},
+    {name: "La Selva", sharecode: "000 000 000"},
+    {name: "El Pípila", sharecode: "000 000 000"}];
 
 const endurances = [
     "The Goliath",

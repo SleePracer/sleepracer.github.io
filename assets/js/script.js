@@ -550,6 +550,7 @@ class Event {
                 iEvent,
                 infoString,
                 raceName = "Random track",
+                sharecode = "000 000 000",
                 resultFactor = 1,
                 levelUp = false,
                 iClass = 0,
@@ -564,6 +565,7 @@ class Event {
         this.iEvent = iEvent;
         this.infoString = infoString;
         this.raceName = raceName;
+        this.sharecode = sharecode;
         this.resultFactor = resultFactor;
         this.levelUpEvent = levelUp;
         this.iClass = JSON.parse(JSON.stringify(iClass));
@@ -681,6 +683,10 @@ class Event {
             let allInfo = this.name + ":\n\n";
             allInfo += this.infoString;
 
+            // Add sharecode
+            allInfo += "\n\n";
+            allInfo += "Sharecode: " + this.sharecode;
+
             // Add class
             if (this.iClass[0] !== 0) {
                 allInfo += "\n\n";
@@ -750,6 +756,7 @@ class Event {
         for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
             this.returnRow.insertCell();
         }
+        this.returnRow.cells[0].innerHTML = "Sharecode: " + this.sharecode;
         this.returnRow.cells[3].appendChild(this.returnButton);
 
         // Show first race
@@ -930,11 +937,6 @@ function updateState() {
     for (let iEvent = 0; iEvent < events.length; iEvent++) {
         events[iEvent].showOrHide();
     }
-
-    // Update track list
-    shortTracks = [];
-    shortTracks = shortTracks.concat(roadCircuits);
-    shortTracks = shortTracks.concat(dirtScrambles);
 
     // Show garage options if no cars
     if (state.cars.length === 0) {
@@ -1292,39 +1294,42 @@ function resetGameButton() {
 // Create all events
 events = [];
 
-events.push(new Event("DR Level Up: " + endurances[1],
+events.push(new Event("DR+: " + endurances[1],
                       events.length,
                       "Finish on the podium to advance " +
                       "to the next class!",
                       endurances[1],
+                      "000 000 000",
                       2,
                       true));
 
-events.push(new Event("DR Level Up: " + endurances[2],
+events.push(new Event("DR+: " + endurances[2],
                       events.length,
                       "Finish on the podium to advance " +
                       "to the next class!",
                       endurances[2],
+                      "000 000 000",
                       2,
                       true));
 
 for (let t = 0; t < roadCircuits.length; t++) {
-    events.push(new Event(roadCircuits[t] + " Circuit",
+    events.push(new Event(roadCircuits[t].name + " Circuit",
                           events.length,
                           "Open road race!",
-                          roadCircuits[t] + " Circuit"));
+                          roadCircuits[t].name + " Circuit",
+                          roadCircuits[t].sharecode));
 }
 
 for (let t = 0; t < dirtScrambles.length; t++) {
-    events.push(new Event(dirtScrambles[t] + " Scramble",
+    events.push(new Event(dirtScrambles[t].name + " Scramble",
                           events.length,
                           "Open dirt race!",
-                          dirtScrambles[t] + " Scramble"));
+                          dirtScrambles[t].name + " Scramble",
+                          dirtScrambles[t].sharecode));
 }
 
 // Initialize state
 let state = {};
-let shortTracks = [];
 
 // Set default new game values
 let newName = "";
