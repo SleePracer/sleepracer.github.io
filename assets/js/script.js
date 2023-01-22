@@ -553,7 +553,7 @@ class Event {
                 sharecode = "000 000 000",
                 resultFactor = 1,
                 levelUp = false,
-                iClass = 0,
+                pi = 0,
                 cars = 0) {
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here (finish!)
@@ -568,10 +568,7 @@ class Event {
         this.sharecode = sharecode;
         this.resultFactor = resultFactor;
         this.levelUpEvent = levelUp;
-        this.iClass = JSON.parse(JSON.stringify(iClass));
-        if (!(this.iClass instanceof Array)) {
-            this.iClass = [this.iClass];
-        }
+        this.pi = pi;
         this.cars = JSON.parse(JSON.stringify(cars));
         this.race = null;
         this.entered = false;
@@ -640,17 +637,15 @@ class Event {
         // Check if current car is of the correct class
         let playerOk = false;
         let carClassOk = false;
-        if (this.iClass[0] === 0) {
+        if (this.pi === 0) {
             playerOk = true;
             carClassOk = true;
         } else {
-            for (let c = 0; c < this.iClass.length; c++) {
-                if (this.iClass[c] <= state.iDR) {
-                    playerOk = true;
-                }
-                if (this.iClass[c] === iClassFromPI(cCar.pi)) {
-                    carClassOk = true;
-                }
+            if (state.iDR >= iClassFromPI(this.pi)) {
+                playerOk = true;
+            }
+            if (cCar.pi >= this.pi) {
+                carClassOk = true;
             }
         }
 
@@ -680,20 +675,17 @@ class Event {
     showInfo() {
         if (this.infoButton.innerText === "Info") {
             // Add provided info
-            let allInfo = this.name + ":\n\n";
+            let allInfo = this.name + ": ";
             allInfo += this.infoString;
 
             // Add sharecode
             allInfo += "\n\n";
             allInfo += "Sharecode: " + this.sharecode;
 
-            // Add class
-            if (this.iClass[0] !== 0) {
-                allInfo += "\n\n";
-                allInfo += "Class: " + classLetter[this.iClass[0]];
-                for (let c = 1; c < this.iClass.length; c++) {
-                    allInfo += ", " + classLetter[this.iClass[c]];
-                }
+            // Add any PI restriction
+            if (this.pi !== 0) {
+                allInfo += "\n";
+                allInfo += "Minimum PI: " + classLetter[iClassFromPI(this.pi)] + this.pi;
             }
 
             // Add eligible car models
