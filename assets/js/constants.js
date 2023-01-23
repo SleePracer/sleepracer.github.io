@@ -10,6 +10,9 @@ const defaultState = {
     dr: 100,
     iDR: 1,
     wins: 0,
+    road: false,
+    dirt: false,
+    next: [],
     credits: 20000,
     cEvent: null,
     cCar: -1,
@@ -284,30 +287,72 @@ const carList = [
 //    [63, 14], // McLaren F1 1993 S817
 
 const roadCircuits = [
-    {name: "Bahía de Plano", sharecode: "000 000 000"},
-    {name: "Arch of Mulegé", sharecode: "000 000 000"},
-    {name: "Los Jardines", sharecode: "000 000 000"},
-    {name: "Chihuahua", sharecode: "000 000 000"},
-    {name: "Tierra Próspera", sharecode: "000 000 000"},
-    {name: "Playa Azul", sharecode: "000 000 000"},
-    {name: "Lookout", sharecode: "000 000 000"},
-    {name: "Horizon Mexico", sharecode: "000 000 000"},
-    {name: "Emerald", sharecode: "000 000 000"},
-    {name: "Estadio", sharecode: "000 000 000"},
-    {name: "Cathedral", sharecode: "000 000 000"},
-    {name: "Plaza", sharecode: "000 000 000"},
-    {name: "Bola Ocho", sharecode: "000 000 000"}];
+    {name: "Bahía de Plano", // 0
+     sharecode: "000 000 000",
+     next: [7, 8, 11]},
+    {name: "Arch of Mulegé", // 1
+     sharecode: "000 000 000",
+     next: [7, 8, 9]},
+    {name: "Los Jardines", // 2
+     sharecode: "000 000 000",
+     next: [3, 4, 5]},
+    {name: "Chihuahua", // 3
+     sharecode: "000 000 000",
+     next: [2, 4, 6, 10, 12]},
+    {name: "Tierra Próspera", // 4
+     sharecode: "000 000 000",
+     next: [2, 3, 5, 9, 12]},
+    {name: "Playa Azul", // 5
+     sharecode: "000 000 000",
+     next: [2, 4, 9]},
+    {name: "Lookout", // 6
+     sharecode: "000 000 000",
+     next: [3, 10, 11, 12]},
+    {name: "Horizon Mexico", // 7
+     sharecode: "000 000 000",
+     next: [0, 1, 8, 9]},
+    {name: "Emerald", // 8
+     sharecode: "000 000 000",
+     next: [0, 1, 7]},
+    {name: "Estadio", // 9
+     sharecode: "000 000 000",
+     next: [1, 4, 5, 7, 10, 11, 12]},
+    {name: "Cathedral", // 10
+     sharecode: "000 000 000",
+     next: [3, 6, 9, 11, 12]},
+    {name: "Plaza", // 11
+     sharecode: "000 000 000",
+     next: [0, 6, 9, 10, 12]},
+    {name: "Bola Ocho", // 12
+     sharecode: "000 000 000",
+     next: [3, 4, 6, 9, 10, 11]}];
 
 const dirtScrambles = [
-    {name: "River", sharecode: "000 000 000"},
-    {name: "Mangrove", sharecode: "000 000 000"},
-    {name: "Mulegé Town", sharecode: "000 000 000"},
-    {name: "San Juan", sharecode: "000 000 000"},
-//    {name: "Horizon Baja", sharecode: "000 000 000"},
-    {name: "Teotihuacan", sharecode: "000 000 000"},
-    {name: "Caldera", sharecode: "000 000 000"},
-    {name: "La Selva", sharecode: "000 000 000"},
-    {name: "El Pípila", sharecode: "000 000 000"}];
+    {name: "River", // 0
+     sharecode: "000 000 000",
+     next: [2, 3, 6]},
+    {name: "Mangrove", // 1
+     sharecode: "000 000 000",
+     next: [4, 6, 7]},
+    {name: "Mulegé Town", // 2
+     sharecode: "000 000 000",
+     next: [0, 3, 5]},
+    {name: "San Juan", // 3
+     sharecode: "000 000 000",
+     next: [0, 2, 4, 5, 7]},
+//    "Horizon Baja",
+    {name: "Teotihuacan", // 4
+     sharecode: "000 000 000",
+     next: [1, 3, 6, 7]},
+    {name: "Caldera", // 5
+     sharecode: "000 000 000",
+     next: [2, 3, 7]},
+    {name: "La Selva", // 6
+     sharecode: "000 000 000",
+     next: [0, 1, 4]},
+    {name: "El Pípila", // 7
+     sharecode: "000 000 000",
+     next: [1, 3, 4, 5]}];
 
 const endurances = [
     "The Goliath",

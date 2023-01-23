@@ -144,6 +144,22 @@ layout: home
 </table>
 
 <h1>Settings</h1>
+<h2>Game settings</h2>
+Racing category:
+<div>
+  <input id="roadRadio"
+         type="radio"
+         name="category"
+         onClick="roadRadio()">
+  <label for="roadRadio">Road Circuits</label><br>
+  <input id="dirtRadio"
+         type="radio"
+         name="category"
+         onClick="dirtRadio()">
+  <label for="dirtRadio">Dirt Scrambles</label><br>
+</div>
+<br>
+<h2>Save settings</h2>
 Save game:
 <div>
   <button onClick="saveGameButton()">Copy game data to clipboard</button>

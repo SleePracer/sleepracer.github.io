@@ -34,4 +34,7 @@ let eNewCarName = document.getElementById("newCarName");
 let eNewCarMake = document.getElementById("newCarMake");
 let eNewCarModel = document.getElementById("newCarModel");
 
+let eRoadRadio = document.getElementById("roadRadio");
+let eDirtRadio = document.getElementById("dirtRadio");
+
 let eGameLoad = document.getElementById("gameLoad");

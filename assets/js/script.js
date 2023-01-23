@@ -553,6 +553,8 @@ class Event {
                 sharecode = "000 000 000",
                 resultFactor = 1,
                 levelUp = false,
+                road = false,
+                dirt = false,
                 pi = 0,
                 cars = 0) {
         // Add to event map for the enter button
@@ -568,6 +570,8 @@ class Event {
         this.sharecode = sharecode;
         this.resultFactor = resultFactor;
         this.levelUpEvent = levelUp;
+        this.roadEvent = road;
+        this.dirtEvent = dirt;
         this.pi = pi;
         this.cars = JSON.parse(JSON.stringify(cars));
         this.race = null;
@@ -655,8 +659,26 @@ class Event {
             levelUpOk = true;
         }
 
+        // Check if one of the next races
+        let nextOk = false;
+        if (state.next.includes(this.iEvent)) {
+            nextOk = true;
+        } else if (this.iEvent < roadStart) {
+            nextOk = true;
+        }
+
+        // Check that the category is correct
+        let categoryOk = false;
+        if (this.roadEvent && state.road) {
+            categoryOk = true;
+        } else if (this.dirtEvent && state.dirt) {
+            categoryOk = true;
+        }
+
         if (playerOk
          && garageOk
+         && nextOk
+         && categoryOk
          && levelUpOk) {
             // Show row, but only enter button if car ok
             this.row.style.display = "table-row";
@@ -757,6 +779,30 @@ class Event {
     }
 
     returnToEvents() {
+        // Get the three next tracks
+        // Before updating state
+        if (this.iEvent >= roadStart) {
+            // Normal event
+            if (this.iEvent < dirtStart) {
+                // Road
+                state.next = JSON.parse(JSON.stringify(
+                             roadCircuits[this.iEvent - roadStart].next));
+
+                // Stolen from stackoverflow
+                state.next = state.next.map(a => a + roadStart);
+            } else {
+                // Dirt
+                state.next = JSON.parse(JSON.stringify(
+                             dirtScrambles[this.iEvent - dirtStart].next));
+
+                // Stolen from stackoverflow
+                state.next = state.next.map(a => a + dirtStart);
+            }
+            next3Random();
+        } else {
+            state.next = [];
+        }
+
         // Clear progress from state
         state.cEvent = null;
         updateState();
@@ -867,10 +913,20 @@ function getStateString(s = state) {
         dr: s.dr,
         idr: s.iDR,
         w: s.wins,
+        r: 0,
+        d: 0,
+        x: s.next,
         m: s.credits,
         ce: s.cEvent,
         cc: s.cCar,
         c: carArgs};
+
+    if (s.road) {
+        compact.r = 1;
+    }
+    if (s.dirt) {
+        compact.d = 1;
+    }
 
     // Always return an array,
     // where array[0] is the version
@@ -889,6 +945,17 @@ function clearNewCarModel() {
     modelOption.value = 0;
     modelOption.text = carList[0][1];
     eNewCarModel.appendChild(modelOption);
+}
+
+function next3Random() {
+    // Randomize array in-place using Durstenfeld shuffle algorithm
+    for (let i = state.next.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let temp = state.next[i];
+        state.next[i] = state.next[j];
+        state.next[j] = temp;
+    }
+    state.next = state.next.slice(0, 3);
 }
 
 function updateState() {
@@ -924,6 +991,26 @@ function updateState() {
         eStateDRProgress.style.width = drToPercent(state.dr);
     }
     eStateDRProgress.style.backgroundColor = classColor[state.iDR];
+
+    // Check the boxes
+    eRoadRadio.checked = state.road;
+    eDirtRadio.checked = state.dirt;
+
+    // At the start of the game, or when switching between road/dirt
+    if (state.next.length === 0) {
+        if (state.road) {
+            state.next = Array.from(Array(roadCircuits.length).keys());
+            state.next = state.next.map(a => a + roadStart);
+            eEvents.style.display = "block";
+        } else if (state.dirt) {
+            state.next = Array.from(Array(dirtScrambles.length).keys());
+            state.next = state.next.map(a => a + dirtStart);
+            eEvents.style.display = "block";
+        } else {
+            eEvents.style.display = "none";
+        }
+        next3Random();
+    }
 
     // Only show events that should be
     for (let iEvent = 0; iEvent < events.length; iEvent++) {
@@ -987,6 +1074,9 @@ function setStateFromString(inputString) {
     state.dr = compact.dr;
     state.iDR = compact.idr;
     state.wins = compact.w;
+    state.road = (compact.r === 1);
+    state.dirt = (compact.d === 1);
+    state.next = compact.x;
     state.credits = compact.m;
     state.cEvent = compact.ce;
     state.cCar = compact.cc;
@@ -1234,6 +1324,20 @@ function newCarModelSelect() {
 // Settings
 // -----------------------------------------------------------------------
 
+function roadRadio() {
+    state.road = true;
+    state.dirt = false;
+    state.next = [];
+    updateState();
+}
+
+function dirtRadio() {
+    state.dirt = true;
+    state.road = false;
+    state.next = [];
+    updateState();
+}
+
 function saveGameButton() {
     let gameSave = getStateString();
     navigator.clipboard.writeText(gameSave);
@@ -1292,8 +1396,7 @@ events.push(new Event("DR+: " + endurances[1],
                       "to the next class!",
                       endurances[1],
                       "000 000 000",
-                      2,
-                      true));
+                      2, true, true, false));
 
 events.push(new Event("DR+: " + endurances[2],
                       events.length,
@@ -1301,23 +1404,26 @@ events.push(new Event("DR+: " + endurances[2],
                       "to the next class!",
                       endurances[2],
                       "000 000 000",
-                      2,
-                      true));
+                      2, true, false, true));
 
+let roadStart = events.length;
 for (let t = 0; t < roadCircuits.length; t++) {
     events.push(new Event(roadCircuits[t].name + " Circuit",
                           events.length,
                           "Open road race!",
                           roadCircuits[t].name + " Circuit",
-                          roadCircuits[t].sharecode));
+                          roadCircuits[t].sharecode,
+                          1, false, true, false));
 }
 
+let dirtStart = events.length;
 for (let t = 0; t < dirtScrambles.length; t++) {
     events.push(new Event(dirtScrambles[t].name + " Scramble",
                           events.length,
                           "Open dirt race!",
                           dirtScrambles[t].name + " Scramble",
-                          dirtScrambles[t].sharecode));
+                          dirtScrambles[t].sharecode,
+                          1, false, false, true));
 }
 
 // Initialize state
