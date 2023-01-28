@@ -4,9 +4,12 @@
 
 let eStart = document.getElementById("start");
 let eStartName = document.getElementById("startName");
+let eStartCarDiv = document.getElementById("startCarDiv");
+let eStartCarInfoDiv = document.getElementById("startCarInfoDiv");
+let eStartCarInfo = document.getElementById("startCarInfo");
+let eStartCarNameDiv = document.getElementById("startCarNameDiv");
 let eStartCarName = document.getElementById("startCarName");
-let eStartCarMake = document.getElementById("startCarMake");
-let eStartCarModel = document.getElementById("startCarModel");
+let eStartGameDiv = document.getElementById("startGameDiv");
 let eStartLoad = document.getElementById("startLoad");
 
 let eGame = document.getElementById("game");

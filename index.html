@@ -15,31 +15,75 @@ layout: home
 <div id="start" style="display: none">
 
 <h1>Start new game</h1>
-<p>You have 20000 credits to spend on your first car! It will determine your starting class: D, C or B.</p>
 <div>
+  <p>What is your name?</p>
   <input id="startName"
          type="text"
          placeholder="Player name"
          onkeyup=startNameInput()>
+  <button onClick="startNameButton()">OK</button>
 </div>
-<div>
+<div id="startCarDiv" style="display: none">
+  <br>
+  <p>Choose your rustbox:</p>
+  <div id="startCars">
+    <div class="startCar">
+      <div class="startCarImg">
+        <img src="./assets/png/mustang.png"></img>
+      </div>
+      <div>
+        <input id="mustangRadio"
+               type="radio"
+               name="startCar"
+               onClick="mustangRadio()">
+        <label for="mustangRadio">Ford SVT Cobra R</label><br>
+      </div>
+    </div>
+    <div class="startCar">
+      <div class="startCarImg">
+        <img src="./assets/png/eclipse.png"></img>
+      </div>
+      <div>
+        <input id="eclipseRadio"
+               type="radio"
+               name="startCar"
+               onClick="eclipseRadio()">
+        <label for="eclipseRadio">Mitsubishi Eclipse GSX</label><br>
+      </div>
+    </div>
+    <div class="startCar">
+      <div class="startCarImg">
+        <img src="./assets/png/corrado.png"></img>
+      </div>
+      <div>
+        <input id="corradoRadio"
+               type="radio"
+               name="startCar"
+               onClick="corradoRadio()">
+        <label for="corradoRadio">Volkswagen Corrado VR6</label><br>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="startCarInfoDiv" style="display: none">
+  <br>
+  <p id="startCarInfo" style="color: red"></p>
+  <button onClick="startCarInfoButton()">OK</button>
+</div>
+<div id="startCarNameDiv" style="display: none">
+  <br>
+  <p>Name your rustbox:</p>
   <input id="startCarName"
          type="text"
          placeholder="First Car Name"
-         onkeyup=startCarInput()>
+         onkeyup=startCarNameInput()>
+  <button onClick="startCarNameButton()">OK</button>
 </div>
-<div>
-<select id="startCarMake"
-        onchange="startCarMakeSelect()">
-</select>
-<div>
+<div id="startGameDiv" style="display: none">
+  <br>
+  <p>Ready to start?</p>
+  <button onClick="startGameButton()">Start game</button>
 </div>
-<select id="startCarModel"
-        onchange="startCarModelSelect()">
-</select>
-</div>
-<br>
-<button onClick="startGameButton()">Start game</button>
 <br>
 <br>
 <h1>Load game</h1>

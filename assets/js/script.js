@@ -1120,65 +1120,103 @@ function setStateFromString(inputString) {
 // Start
 // -----------------------------------------------------------------------
 
-function startNameInput() {
-    newName = eStartName.value;
-}
-
-function startCarInput() {
-    startCarName = eStartCarName.value;
-}
-
-function startCarMakeSelect() {
-    startCarMake = toPositiveInt(eStartCarMake.value);
-
-    // Clear model selector
-    while (eStartCarModel.options.length > 0) {
-        eStartCarModel.remove(0);
-    }
-
-    // Add "Choose model"
-    let modelOption = document.createElement("option");
-    modelOption.value = 0;
-    modelOption.text = carList[0][1];
-    eStartCarModel.appendChild(modelOption);
-
-    // Set "Choose model"
-    eStartCarModel.value = 0;
-    startCarModelSelect();
-
-    // "Choose manufacturer"
-    if (startCarMake === 0) {
+function startNameButton() {
+    // Check if the input fields are filled out
+    if (startName === "") {
         return;
     }
 
-    // Add all buyable car models
-    for (let iModel = 1; iModel < carList[startCarMake].length; iModel++) {
-        if (carList[startCarMake][iModel].cost <= defaultState.credits
-         && carList[startCarMake][iModel].buyable) {
-            let option = document.createElement("option");
-            option.value = iModel;
-            option.text = carList[startCarMake][iModel].name + " ("
-                        + carList[startCarMake][iModel].year + ", "
-                        + addClassToPI(carList[startCarMake][iModel].pi) + ", "
-                        + formatCredits(carList[startCarMake][iModel].cost) + ")";
-            eStartCarModel.appendChild(option);
-        }
-    }
+    // Show next field
+    eStartCarDiv.style.display = "block";
+}
 
-    // If only one model, set it as chosen
-    if (eStartCarModel.options.length === 2) {
-        eStartCarModel.value = eStartCarModel.options[1].value;
-        startCarModelSelect();
+function startNameInput() {
+    startName = eStartName.value;
+
+    // Actually enter input with Enter
+    if (event.key === "Enter") {
+        startNameButton();
     }
 }
 
-function startCarModelSelect() {
-    startCarModel = toPositiveInt(eStartCarModel.value);
+function mustangRadio() {
+    // Set values
+    startCarMake = 9;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    // Show info
+    eStartCarInfoDiv.style.display = "block";
+    eStartCarInfo.innerHTML = "Buy a "
+                            + carList[startCarMake][0] + " "
+                            + carList[startCarMake][startCarModel].name
+                            + ", add the livery "
+                            + "180 091 208"
+                            + ", and install a roll cage!";
+}
+
+function eclipseRadio() {
+    // Set values
+    startCarMake = 21;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    // Show info
+    eStartCarInfoDiv.style.display = "block";
+    eStartCarInfo.innerHTML = "Buy a "
+                            + carList[startCarMake][0] + " "
+                            + carList[startCarMake][startCarModel].name
+                            + ", add the livery "
+                            + "125 302 643"
+                            + ", and install a roll cage!";
+}
+
+function corradoRadio() {
+    // Set values
+    startCarMake = 29;
+    startCarModel = 1;
+    startCarPI = 537;
+
+    // Show info
+    eStartCarInfoDiv.style.display = "block";
+    eStartCarInfo.innerHTML = "Buy a "
+                            + carList[startCarMake][0] + " "
+                            + carList[startCarMake][startCarModel].name
+                            + ", add the livery "
+                            + "167 278 252"
+                            + ", and install a roll cage!";
+}
+
+function startCarInfoButton() {
+    // Hide this field
+    eStartCarInfoDiv.style.display = "none";
+
+    // Show next field
+    eStartCarNameDiv.style.display = "block";
+}
+
+function startCarNameButton() {
+    // Check if the input fields are filled out
+    if (startCarName === "") {
+        return;
+    }
+
+    // Show next field
+    eStartGameDiv.style.display = "block";
+}
+
+function startCarNameInput() {
+    startCarName = eStartCarName.value;
+
+    // Actually enter input with Enter
+    if (event.key === "Enter") {
+        startCarNameButton();
+    }
 }
 
 function startGameButton() {
     // Check if the input fields are filled out
-    if (newName === ""
+    if (startName === ""
      || startCarName === ""
      || startCarMake === 0
      || startCarModel === 0) {
@@ -1188,20 +1226,21 @@ function startGameButton() {
     // Start with default state
     setStateFromString(getStateString(defaultState));
 
-    // Since defaultState has no cars in garage,
-    // options will always be shown, so hide them
-    garageOptions();
-
     // Set the start game inputs
-    state.name = newName;
-    state.credits -= carList[startCarMake][startCarModel].cost;
-    let newClass = iClassFromPI(carList[startCarMake][startCarModel].pi);
-    state.dr = Math.pow(10, newClass + 1);
-    state.iDR = newClass;
+    state.name = startName;
+    state.iDR = 2; // C
+    state.dr = classDR[state.iDR] / 10;
     state.cars.push(new Car(startCarName,
                             startCarMake,
-                            startCarModel));
+                            startCarModel,
+                            startCarPI,
+                            startCarValue));
     state.cCar = 0;
+
+    // Since defaultState has no cars in garage,
+    // options will always be shown, so hide them
+    // Do this after pushing the first car! Or it's options will show!
+    garageOptions();
 
     // Show the actual game
     eStart.style.display = "none";
@@ -1440,38 +1479,13 @@ for (let t = 0; t < dirtScrambles.length; t++) {
 // Initialize state
 let state = {};
 
-// Set default new game values
-let newName = "";
+// Initialize start game variables
+let startName = "";
 let startCarName = "";
 let startCarMake = 0;
 let startCarModel = 0;
-
-// Add "Choose manufacturer" and "Choose model" to starting car selector
-let startBaseMakeOption = document.createElement("option");
-startBaseMakeOption.value = 0;
-startBaseMakeOption.text = carList[0][0];
-eStartCarMake.appendChild(startBaseMakeOption);
-let startBaseModelOption = document.createElement("option");
-startBaseModelOption.value = 0;
-startBaseModelOption.text = carList[0][1];
-eStartCarModel.appendChild(startBaseModelOption);
-
-// Add all initially buyable makes to starting car selector
-for (let iMake = 1; iMake < carList.length; iMake++) {
-    let buyable = false;
-    for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
-        if (carList[iMake][iModel].cost <= defaultState.credits
-         && carList[iMake][iModel].buyable) {
-            buyable = true;
-        }
-    }
-    if (buyable) {
-        let makeOption = document.createElement("option");
-        makeOption.value = iMake;
-        makeOption.text = carList[iMake][0];
-        eStartCarMake.appendChild(makeOption);
-    }
-}
+let startCarPI = 0;
+let startCarValue = 5000;
 
 // Go to start or game
 if (JSON.parse(localStorage.getItem("state")) === null) {

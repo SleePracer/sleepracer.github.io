@@ -13,7 +13,7 @@ const defaultState = {
     road: false,
     dirt: false,
     next: [],
-    credits: 20000,
+    credits: 0,
     cEvent: null,
     cCar: -1,
     cars: []};
