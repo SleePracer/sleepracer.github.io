@@ -205,7 +205,7 @@ class Car {
         // At 50% damage, repair costs should be
         // 25% of mean of value and cost
         let mean = (this.value + this.cost) / 2;
-        let repair = 0.25 * mean * damage / 100;
+        let repair = mean * damage / 200;
         return Math.floor(repair);
     }
 
@@ -218,10 +218,10 @@ class Car {
         // When damage is 50%
         // depreciate half of max
         this.value -= Math.floor(max
-                               * damage / (damage + 100));
+                               * damage / (damage + 50));
 
-        // Also depreciate 0.2% for mileage
-        this.value -= Math.floor(0.002 * this.value);
+        // Also depreciate 0.5% for mileage
+        this.value -= Math.floor(0.005 * this.value);
 
         // Update table
         this.row.cells[2].innerHTML = formatCredits(this.value);
@@ -453,8 +453,9 @@ class Race {
         // subClass will be [6, 10] depending on how far in the class pi is
         let subClass = Math.ceil((((pi - 1) % 100) + 1) / 20) + 5;
         if (iClass === 1) {
-            // D class needs special treatment
-            subClass = Math.ceil(pi / 100) + 5;
+            // D class should just be like C with subClass 5
+            // but classDR[D] is classDR[C] / 10
+            subClass = 50;
         } else if (iClass === 7) {
             // Always min out subClass for X
             subClass = 1;
@@ -472,23 +473,30 @@ class Race {
 
         // Calculate the deltaDR, messy but should be cool
 
-        // PI of the car
+        // PI of the car is a straight factor, more is better
         let subClass = this.getSubClass(pi);
-        let classFactor = subClass * Math.pow(10, iClass - 1);
+        let classFactor = subClass * classDR[iClass] / 1000;
 
-        // Damage from the race
-        let baseDR = this.getBaseDR();
+        // These are only used for damageRatio
         let prizeFactor = classPrize[iClass]
                         * (positionPrize[2]
                          + positionPrize[this.position]);
         let repairCost = state.cars[state.cCar].repairCost(this.damage);
-        let damageRatio = Math.max(0, Math.min(1, repairCost
-                                                / prizeFactor));
+
+        // damageRatio is in [0, 1]
+        let damageRatio = Math.max(0, Math.min(1,
+                          repairCost / prizeFactor));
+
+        // baseDR is in [-1, 4] depending on placement
+        let baseDR = this.getBaseDR();
+
+        // Damage from the race can remove a fair bit of DR
+        // Can only be negative if baseDR is <= 0
         let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
 
-        // the magic 5 is just game speed balancing
+        // the magic 4 is just game speed balancing
         // adjust/refine if necessary
-        this.deltaDR = Math.ceil(5 * classFactor * damageFactor);
+        this.deltaDR = Math.ceil(4 * classFactor * damageFactor);
     }
 
     setPosition(value) {
@@ -1012,7 +1020,7 @@ function updateState() {
         next3Random();
     }
 
-    // Only show events that should be
+    // Only show events that should be shown
     for (let iEvent = 0; iEvent < events.length; iEvent++) {
         events[iEvent].showOrHide();
     }
@@ -1044,6 +1052,7 @@ function updateState() {
     }
 
     // Only "Choose model" shown
+    // Models will be added when manufacturer is chosen
     clearNewCarModel();
 
     // Store state in localStorage
@@ -1144,7 +1153,8 @@ function startCarMakeSelect() {
 
     // Add all buyable car models
     for (let iModel = 1; iModel < carList[startCarMake].length; iModel++) {
-        if (carList[startCarMake][iModel].cost <= defaultState.credits) {
+        if (carList[startCarMake][iModel].cost <= defaultState.credits
+         && carList[startCarMake][iModel].buyable) {
             let option = document.createElement("option");
             option.value = iModel;
             option.text = carList[startCarMake][iModel].name + " ("
@@ -1288,7 +1298,8 @@ function newCarMakeSelect() {
     // Add all buyable car models
     for (let iModel = 1; iModel < carList[make].length; iModel++) {
         if (state.iDR >= iClassFromPI(carList[make][iModel].pi)
-         && state.credits >= carList[make][iModel].cost) {
+         && state.credits >= carList[make][iModel].cost
+         && carList[make][iModel].buyable) {
             let option = document.createElement("option");
             option.value = iModel;
             option.text = carList[make][iModel].name + " ("
@@ -1449,7 +1460,8 @@ eStartCarModel.appendChild(startBaseModelOption);
 for (let iMake = 1; iMake < carList.length; iMake++) {
     let buyable = false;
     for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
-        if (carList[iMake][iModel].cost <= defaultState.credits) {
+        if (carList[iMake][iModel].cost <= defaultState.credits
+         && carList[iMake][iModel].buyable) {
             buyable = true;
         }
     }
