@@ -341,6 +341,7 @@ class Car {
 
 class Race {
     constructor(name, iRace, resultFactor = 1) {
+
         // Add race to map
         raceMap.set(name, this);
 
@@ -557,31 +558,32 @@ class Event {
     constructor(name,
                 iEvent,
                 infoString,
-                raceName = "Random track",
-                sharecode = "000 000 000",
+                raceName,
+                sharecode,
+                category,
+                type,
                 resultFactor = 1,
-                levelUp = false,
-                road = false,
-                dirt = false,
                 pi = 0,
-                cars = 0) {
+                cars = []) {
+
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here (finish!)
         eventMap.set(name, this);
         raceMap.set(name, this);
 
-        // Event state variables
+        // Parameters
         this.name = name;
         this.iEvent = iEvent;
         this.infoString = infoString;
         this.raceName = raceName;
         this.sharecode = sharecode;
+        this.category = category;
+        this.type = type;
         this.resultFactor = resultFactor;
-        this.levelUpEvent = levelUp;
-        this.roadEvent = road;
-        this.dirtEvent = dirt;
         this.pi = pi;
         this.cars = JSON.parse(JSON.stringify(cars));
+
+        // Other state variables
         this.race = null;
         this.entered = false;
         this.finished = false;
@@ -620,15 +622,15 @@ class Event {
         // Hide everything if not in a car
         if (state.cCar === -1) {
             this.row.style.display = "none";
+            this.enterButton.style.display = "none";
             return;
         }
 
         // Check if any car in garage is included in model list for event
         // Also check if current car is included in model list for event
-        let cCar = state.cars[state.cCar];
         let garageOk = false;
         let carModelOk = false;
-        if (this.cars === 0) {
+        if (this.cars.length === 0) {
             garageOk = true;
             carModelOk = true;
         } else {
@@ -647,50 +649,60 @@ class Event {
         }
 
         // Check if current car is of the correct class
-        let playerOk = false;
+        let playerClassOk = false;
         let carClassOk = false;
         if (this.pi === 0) {
-            playerOk = true;
+            playerClassOk = true;
             carClassOk = true;
         } else {
             if (state.iDR >= iClassFromPI(this.pi)) {
-                playerOk = true;
+                playerClassOk = true;
             }
-            if (cCar.pi >= this.pi) {
+            if (state.cars[state.cCar].pi >= this.pi) {
                 carClassOk = true;
             }
         }
 
+        // Check if one of the next races
+        let nextEventOk = (this.type !== "norm");
+        if (state.next.includes(this.iEvent)) {
+            nextEventOk = true;
+        }
+
+        // Check that the category is correct
+        let categoryOk = (this.category === "both");
+        if ((this.category === "road") && state.road) {
+            categoryOk = true;
+        } else if ((this.category === "dirt") && state.dirt) {
+            categoryOk = true;
+        }
+
         // Check if ready for level up (if level up event)
-        let levelUpOk = !this.levelUpEvent;
+        let levelUpOk = (this.type !== "prog");
         if (iClassFromDR(state.dr) > state.iDR) {
             levelUpOk = true;
         }
 
-        // Check if one of the next races
-        let nextOk = false;
-        if (state.next.includes(this.iEvent)) {
-            nextOk = true;
-        } else if (this.iEvent < roadStart) {
-            nextOk = true;
+        // Check if special event ok (has it been completed?)
+        let specOk = (this.type !== "spec")
+        if (!specOk && !state.finished.includes(this.iEvent)) {
+            specOk = true;
         }
 
-        // Check that the category is correct
-        let categoryOk = false;
-        if (this.roadEvent && state.road) {
-            categoryOk = true;
-        } else if (this.dirtEvent && state.dirt) {
-            categoryOk = true;
-        }
+        // Check if showcase ok (has it been completed?)
+        let showOk = ((this.type === "show")
+                    && !state.finished.includes(this.iEvent));
 
-        if (playerOk
-         && garageOk
-         && nextOk
+        if ((garageOk || (state.iDR > iClassFromPI(this.pi)))
+         && playerClassOk
+         && nextEventOk
          && categoryOk
          && levelUpOk) {
+
             // Show row, but only enter button if car ok
             this.row.style.display = "table-row";
-            if (carModelOk && carClassOk) {
+            if ((carModelOk && carClassOk && specOk)
+              || showOk) {
                 this.enterButton.style.display = "inline";
             } else {
                 this.enterButton.style.display = "none";
@@ -710,21 +722,34 @@ class Event {
 
             // Add sharecode
             allInfo += "\n\n";
-            allInfo += "Sharecode: " + this.sharecode;
+            allInfo += "Event sharecode: " + this.sharecode;
 
-            // Add any PI restriction
-            if (this.pi !== 0) {
+            if (this.type === "spec") {
+                // Add PI restriction
                 allInfo += "\n";
-                allInfo += "Minimum PI: " + classLetter[iClassFromPI(this.pi)] + this.pi;
-            }
+                allInfo += "Minimum PI: ";
+                allInfo += classLetter[iClassFromPI(this.pi)] + this.pi;
 
-            // Add eligible car models
-            if (this.cars !== 0 && this.cars.length !== 0) {
+                // Add eligible car models
                 allInfo += "\n\nEligible cars:\n";
                 for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                    allInfo += carList[this.cars[iModel][0]][0] + " ";
-                    allInfo += carList[this.cars[iModel][0]][this.cars[iModel][1]].name + " (";
-                    allInfo += carList[this.cars[iModel][0]][this.cars[iModel][1]].year + ")\n";
+                    let makeList = carList[this.cars[iModel][0]];
+                    let modelObj = makeList[this.cars[iModel][1]];
+                    allInfo += makeList[0] + " ";
+                    allInfo += modelObj.name + "\n";
+                }
+            }
+
+            if (this.type === "show") {
+
+                // Add eligible car models
+                allInfo += "\n\nEligible cars:\n";
+                for (let iModel = 0; iModel < this.cars.length; iModel++) {
+                    let makeList = carList[this.cars[iModel][0]];
+                    let modelObj = makeList[this.cars[iModel][1]];
+                    allInfo += makeList[0] + " ";
+                    allInfo += modelObj.name + " (";
+                    allInfo += modelObj.sharecode + ")\n";
                 }
             }
 
@@ -811,6 +836,11 @@ class Event {
             state.next = [];
         }
 
+        // Mark non-repeatable events as finished
+        if (this.type === "show" || this.type === "spec") {
+            state.finished.push(this.iEvent);
+        }
+
         // Clear progress from state
         state.cEvent = null;
         updateState();
@@ -870,7 +900,7 @@ class Event {
             this.returnButton.innerText = "Return";
 
             // Only level up with a podium
-            if (this.levelUpEvent && podium) {
+            if (this.type === "prog" && podium) {
                 state.iDR++;
                 updateState();
             }
@@ -924,6 +954,7 @@ function getStateString(s = state) {
         r: 0,
         d: 0,
         x: s.next,
+        f: s.finished,
         m: s.credits,
         ce: s.cEvent,
         cc: s.cCar,
@@ -1086,6 +1117,7 @@ function setStateFromString(inputString) {
     state.road = (compact.r === 1);
     state.dirt = (compact.d === 1);
     state.next = compact.x;
+    state.finished = compact.f;
     state.credits = compact.m;
     state.cEvent = compact.ce;
     state.cCar = compact.cc;
@@ -1440,21 +1472,82 @@ function resetGameButton() {
 // Create all events
 events = [];
 
-events.push(new Event("DR+: " + endurances[1],
+events.push(new Event("Level up: " + endurances[1],
                       events.length,
                       "Finish on the podium to advance " +
                       "to the next class!",
                       endurances[1],
                       "000 000 000",
-                      2, true, true, false));
+                      "road", "prog", 2));
 
-events.push(new Event("DR+: " + endurances[2],
+events.push(new Event("Level up: " + endurances[2],
                       events.length,
                       "Finish on the podium to advance " +
                       "to the next class!",
                       endurances[2],
                       "000 000 000",
-                      2, true, false, true));
+                      "dirt", "prog", 2));
+
+events.push(new Event("Group A Touring",
+                      events.length,
+                      "Bring your favourite DTM legend " +
+                      "to this ultimate showdown!" +
+                      endurances[1],
+                      "000 000 000",
+                      "road", "spec", 1,
+                      610, [[3, 2], [9, 4], [19, 2]]));
+
+events.push(new Event("Group A Rally",
+                      events.length,
+                      "Bring your favourite WRC legend " +
+                      "to this ultimate showdown!" +
+                      endurances[2],
+                      "000 000 000",
+                      "dirt", "spec", 1,
+                      670, [[21, 1], [26, 1], [27, 4]]));
+
+events.push(new Event("Showcase: 60s Sports Cars",
+                      events.length,
+                      "It's Toyota vs. Nissan " +
+                      "hehe",
+                      "Horizon Mexico Circuit",
+                      "000 000 000",
+                      "both", "show", 1,
+                      600, [[22, 4], [27, 7]]));
+
+events.push(new Event("Showcase: Hatchback Folkrace",
+                      events.length,
+                      "Race-prepped vintage hatchbacks" +
+                      "on a dirt arena race?",
+                      "Horizon Baja Scramble",
+                      "000 000 000",
+                      "both", "show", 1,
+                      600, [[9, 5], [10, 4], [29, 3]]));
+
+events.push(new Event("Showcase: 80s Supercars",
+                      events.length,
+                      "",
+                      endurances[4],
+                      "000 000 000",
+                      "both", "show", 1,
+                      700, [[8, 3], [14, 2], [24, 3]]));
+
+events.push(new Event("Showcase: 70s Explorers",
+                      events.length,
+                      "",
+                      endurances[3],
+                      "000 000 000",
+                      "both", "show", 1,
+                      700, [[9, 6], [12, 1], [15, 1], [27, 6]]));
+
+events.push(new Event("Showcase: 90s Supercars",
+                      events.length,
+                      "Take a double lap around the Goliath " +
+                      "in your favourite 90s supercar!",
+                      endurances[0],
+                      "000 000 000",
+                      "both", "show", 1,
+                      800, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]]));
 
 let roadStart = events.length;
 for (let t = 0; t < roadCircuits.length; t++) {
@@ -1463,7 +1556,7 @@ for (let t = 0; t < roadCircuits.length; t++) {
                           "Open road race!",
                           roadCircuits[t].name + " Circuit",
                           roadCircuits[t].sharecode,
-                          1, false, true, false));
+                          "road", "norm"));
 }
 
 let dirtStart = events.length;
@@ -1473,7 +1566,7 @@ for (let t = 0; t < dirtScrambles.length; t++) {
                           "Open dirt race!",
                           dirtScrambles[t].name + " Scramble",
                           dirtScrambles[t].sharecode,
-                          1, false, false, true));
+                          "dirt", "norm"));
 }
 
 // Initialize state

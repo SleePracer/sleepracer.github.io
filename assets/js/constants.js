@@ -13,6 +13,7 @@ const defaultState = {
     road: false,
     dirt: false,
     next: [],
+    finished: [],
     credits: 0,
     cEvent: null,
     cCar: -1,
@@ -53,7 +54,8 @@ const carList = [
          pi: 805,
          cost: 0, // 1m 700k
          year: 1992,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Buick", // 5
         {name: "Regal GNX", // 1
          pi: 564,
@@ -97,12 +99,14 @@ const carList = [
          pi: 789,
          cost: 0, // 2m
          year: 1995,
-         buyable: false},
+         buyable: false,
+         sharecode: "000 000 000"},
         {name: "F40", // 3
          pi: 784,
          cost: 0, // 1m 200k
          year: 1987,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Ford", // 9
         {name: "Mustang GT", // 1
          pi: 756,
@@ -128,12 +132,14 @@ const carList = [
          pi: 369,
          cost: 0, // 25k
          year: 1981,
-         buyable: false},
+         buyable: false,
+         sharecode: "000 000 000"},
         {name: "Bronco", // 6
          pi: 421,
          cost: 0, // 38k
          year: 1975,
-         buyable: false},
+         buyable: false,
+         sharecode: "000 000 000"},
         {name: "Mustang Boss 302", // 7
          pi: 581,
          cost: 34000, // 230k
@@ -159,7 +165,8 @@ const carList = [
          pi: 368,
          cost: 0, // 25k
          year: 1974,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["HSV", // 11
         {name: "Limited Edition Gen-F GTS Maloo", // 1
          pi: 742,
@@ -171,7 +178,8 @@ const carList = [
          pi: 384,
          cost: 0, // 40k
          year: 1970,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Jaguar", // 13
         {name: "XKR-S", // 1
          pi: 756,
@@ -182,24 +190,28 @@ const carList = [
          pi: 786,
          cost: 0, // 350k
          year: 1993,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Lamborghini", // 14
         {name: "Diablo SV", // 1
          pi: 763,
          cost: 0, // 174k
          year: 1997,
-         buyable: false},
+         buyable: false,
+         sharecode: "000 000 000"},
         {name: "Countach LP5000 QV", // 2
          pi: 735,
          cost: 0, // 220k
          year: 1988,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Land Rover", // 15
         {name: "Series III", // 1
          pi: 100,
          cost: 0, // 20k
          year: 1972,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Lotus", // 16
         {name: "Elise Series 1 Sport 190", // 1
          pi: 711,
@@ -227,7 +239,8 @@ const carList = [
          pi: 817,
          cost: 0, // 15m
          year: 1993,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Mercedes-Benz", // 19
         {name: "C 63 AMG Coupé Black Series", // 1
          pi: 768,
@@ -281,7 +294,8 @@ const carList = [
          pi: 482,
          cost: 0, // 150k
          year: 1969,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Pontiac", // 23
         {name: "Firebird Trans AM", // 1
          pi: 418,
@@ -303,7 +317,8 @@ const carList = [
          pi: 764,
          cost: 0, // 2m
          year: 1987,
-         buyable: false},
+         buyable: false,
+         sharecode: "000 000 000"},
         {name: "911 Turbo 3.3", // 4
          pi: 666,
          cost: 86000, // 150k
@@ -351,12 +366,14 @@ const carList = [
          pi: 269,
          cost: 0, // 55k
          year: 1979,
-         buyable: false},
+         buyable: false,
+         sharecode: "000 000 000"},
         {name: "2000GT", // 7
          pi: 487,
          cost: 0, // 750k
          year: 1969,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Vauxhall", // 28
         {name: "Corsa VXR", // 1
          pi: 584,
@@ -378,7 +395,8 @@ const carList = [
          pi: 428,
          cost: 0, // 20k
          year: 1983,
-         buyable: false}],
+         buyable: false,
+         sharecode: "000 000 000"}],
     ["Volvo", // 30
         {name: "242 Turbo Evolution", // 1
          pi: 548,
