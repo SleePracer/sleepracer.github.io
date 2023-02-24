@@ -892,7 +892,8 @@ class Event {
             updateState();
 
             // Check if podium before finishing
-            let podium = this.race.position < 4;
+            let podium = (this.race.position > 0
+                       && this.race.position < 4);
 
             this.race.finish();
             this.finished = true;
@@ -1093,17 +1094,23 @@ function updateState() {
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
     let validVersions = ["0.1.0", "0.2.0"];
+    eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
     // where array[0] is the version
     // and array[1] is the actual state
     if (parsed.length !== 2) {
-        console.log("Input (" + inputString + ") is not a valid state!")
+        let errorString = "Input is not a valid state!";
+        console.log(inputString);
+        console.log(errorString);
+        eGameLoadError.innerHTML = errorString;
         return;
     }
     let version = parsed[0];
     if (!validVersions.includes(version)) {
-        console.log("Input version " + version + " is not valid!")
+        let errorString = "Game version " + version + " is not valid!";
+        console.log(errorString);
+        eGameLoadError.innerHTML = errorString;
         return;
     }
 
@@ -1441,6 +1448,9 @@ function loadGameButton() {
     }
 
     setStateFromString(gameData);
+    if (eGameLoadError.innerHTML !== "") {
+        return;
+    }
 
     // Reset input fields
     eStartLoad.value = "";

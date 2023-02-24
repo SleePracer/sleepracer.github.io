@@ -41,3 +41,4 @@ let eRoadRadio = document.getElementById("roadRadio");
 let eDirtRadio = document.getElementById("dirtRadio");
 
 let eGameLoad = document.getElementById("gameLoad");
+let eGameLoadError = document.getElementById("gameLoadError");
