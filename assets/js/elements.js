@@ -17,6 +17,7 @@ let eStateName = document.getElementById("stateName");
 let eStateCar = document.getElementById("stateCar");
 let eStateCredits = document.getElementById("stateCredits");
 let eStateDR = document.getElementById("stateDR");
+let eStateDRBar = document.getElementById("stateDRBar");
 let eStateDRProgress = document.getElementById("stateDRProgress");
 
 let eEvents = document.getElementById("eventsDiv");

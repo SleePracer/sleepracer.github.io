@@ -1023,7 +1023,10 @@ function updateState() {
 
     // Update driver rating progress bar
     eStateCredits.innerText = formatCredits(state.credits);
-    if (iClassFromDR(state.dr) > state.iDR) {
+    if (state.iDR > 4) {
+        eStateDR.innerHTML = "Game completed!";
+        eStateDRBar.style.display = "none";
+    } else if (iClassFromDR(state.dr) > state.iDR) {
         eStateDR.innerHTML = "DR: " + classLetter[state.iDR] + "+";
         eStateDRProgress.style.width = "100%";
     } else {
