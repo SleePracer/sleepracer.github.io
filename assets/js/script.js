@@ -228,8 +228,8 @@ class Car {
     }
 
     getIn() {
-        // Only allow getting into car if PI is equal to or lower than DR
-        if (iClassFromPI(this.pi) <= state.iDR) {
+        // Only allow getting into car if class <= lvl
+        if (piToClass(this.pi) <= state.lvl) {
             state.cCar = this.iCar;
         }
 
@@ -312,7 +312,7 @@ class Car {
 
     doUpgrade() {
         // Ask for confirmation if car PI is too high after upgrade
-        if (iClassFromPI(this.upgradePI) > state.iDR) {
+        if (piToClass(this.upgradePI) > state.lvl) {
             if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, are you sure you want to upgrade?")) {
                 return;
             } else if (state.cCar === this.iCar) {
@@ -393,16 +393,16 @@ class Race {
         // Update result variables
         if (state.cCar !== -1) {
             this.setDeltaCredits(state.cars[state.cCar].pi);
-            this.setDeltaDR(state.cars[state.cCar].pi);
+            this.setDeltaXP(state.cars[state.cCar].pi);
         } else {
             this.setDeltaCredits(classPI[0]);
-            this.setDeltaDR(classPI[0]);
+            this.setDeltaXP(classPI[0]);
         }
     }
 
     setDeltaCredits(pi) {
         // Prize depends on class, position and damage
-        this.deltaCredits = classPrize[iClassFromPI(pi)]
+        this.deltaCredits = classPrize[piToClass(pi)]
                           * positionPrize[this.position]
                           * this.resultFactor
                           - state.cars[state.cCar].repairCost(this.damage);
@@ -419,43 +419,43 @@ class Race {
         }
     }
 
-    getBaseDR() {
-        // Check for win streak in past 3 races and modify baseDR
-        let baseDR = positionDR[this.position];
+    getBaseXP() {
+        // Check for win streak in past 3 races and modify baseXP
+        let baseXP = positionXP[this.position];
         if (Math.floor(state.wins / 100) === 1) {
             // Previous race win
             if (this.position === 1
              || this.position === 2
              || this.position === 3) {
                 // This race podium
-                baseDR--;
+                baseXP--;
             }
         }
         if (this.position === 1) {
             // This race win
             if (Math.floor((state.wins % 100) / 10) === 1) {
                 // Second previous race win
-                baseDR--;
+                baseXP--;
             }
             if ((state.wins % 10) === 1) {
                 // Third previous race win
-                baseDR--;
+                baseXP--;
             }
         }
-        return baseDR;
+        return baseXP;
     }
 
     getSubClass(pi) {
         // Should this be a normal function?
         // Does not use any members, might be useful elsewhere
 
-        let iClass = iClassFromPI(pi);
+        let iClass = piToClass(pi);
 
         // subClass will be [6, 10] depending on how far in the class pi is
         let subClass = Math.ceil((((pi - 1) % 100) + 1) / 20) + 5;
         if (iClass === 1) {
             // D class should just be like C with subClass 5
-            // but classDR[D] is classDR[C] / 10
+            // but classXP[D] is classXP[C] / 10
             subClass = 50;
         } else if (iClass === 7) {
             // Always min out subClass for X
@@ -464,19 +464,19 @@ class Race {
         return subClass;
     }
 
-    setDeltaDR(pi) {
-        let iClass = iClassFromPI(pi);
+    setDeltaXP(pi) {
+        let iClass = piToClass(pi);
         if (iClass === 0) {
             // Set to 0 for invalid class
-            this.deltaDR = 0;
+            this.deltaXP = 0;
             return;
         }
 
-        // Calculate the deltaDR, messy but should be cool
+        // Calculate the deltaXP, messy but should be cool
 
         // PI of the car is a straight factor, more is better
         let subClass = this.getSubClass(pi);
-        let classFactor = subClass * classDR[iClass] / 1000;
+        let classFactor = subClass * classXP[iClass] / 1000;
 
         // These are only used for damageRatio
         let prizeFactor = classPrize[iClass]
@@ -488,40 +488,40 @@ class Race {
         let damageRatio = Math.max(0, Math.min(1,
                           repairCost / prizeFactor));
 
-        // baseDR is in [-1, 4] depending on placement
-        let baseDR = this.getBaseDR();
+        // baseXP is in [-1, 4] depending on placement
+        let baseXP = this.getBaseXP();
 
-        // Damage from the race can remove a fair bit of DR
-        // Can only be negative if baseDR is <= 0
-        let damageFactor = baseDR - (1 + baseDR / 2) * damageRatio / 2;
+        // Damage from the race can remove a fair bit of XP
+        // Can only be negative if baseXP is <= 0
+        let damageFactor = baseXP - (1 + baseXP / 2) * damageRatio / 2;
 
         // the magic 4 is just game speed balancing
         // adjust/refine if necessary
-        this.deltaDR = Math.ceil(4 * classFactor * damageFactor);
+        this.deltaXP = Math.ceil(4 * classFactor * damageFactor);
     }
 
     setPosition(value) {
         this.position = toInt(value);
 
         this.setDeltaCredits(state.cars[state.cCar].pi);
-        this.setDeltaDR(state.cars[state.cCar].pi);
+        this.setDeltaXP(state.cars[state.cCar].pi);
     }
 
     setDamage(value) {
         this.damage = toPositiveInt(value);
 
         this.setDeltaCredits(state.cars[state.cCar].pi);
-        this.setDeltaDR(state.cars[state.cCar].pi);
+        this.setDeltaXP(state.cars[state.cCar].pi);
     }
 
     finish() {
-        // Update DR
-        state.dr += this.deltaDR;
+        // Update XP
+        state.xp += this.deltaXP;
 
         // This check should probably be done in a setter
         // Later, when state is a class?
-        if (state.dr < classDR[0]) {
-            state.dr = classDR[0];
+        if (state.xp < classXP[0]) {
+            state.xp = classXP[0];
         }
 
         // Update win streak history
@@ -655,7 +655,7 @@ class Event {
             playerClassOk = true;
             carClassOk = true;
         } else {
-            if (state.iDR >= iClassFromPI(this.pi)) {
+            if (state.lvl >= piToClass(this.pi)) {
                 playerClassOk = true;
             }
             if (state.cars[state.cCar].pi >= this.pi) {
@@ -679,7 +679,7 @@ class Event {
 
         // Check if ready for level up (if level up event)
         let levelUpOk = (this.type !== "prog");
-        if (iClassFromDR(state.dr) > state.iDR) {
+        if (xpToClass(state.xp) > state.lvl) {
             levelUpOk = true;
         }
 
@@ -693,7 +693,7 @@ class Event {
         let showOk = ((this.type === "show")
                     && !state.finished.includes(this.iEvent));
 
-        if ((garageOk || (state.iDR > iClassFromPI(this.pi)))
+        if ((garageOk || (state.lvl > piToClass(this.pi)))
          && playerClassOk
          && nextEventOk
          && categoryOk
@@ -728,7 +728,7 @@ class Event {
                 // Add PI restriction
                 allInfo += "\n";
                 allInfo += "Minimum PI: ";
-                allInfo += classLetter[iClassFromPI(this.pi)] + this.pi;
+                allInfo += classLetter[piToClass(this.pi)] + this.pi;
 
                 // Add eligible car models
                 allInfo += "\n\nEligible cars:\n";
@@ -902,7 +902,7 @@ class Event {
 
             // Only level up with a podium
             if (this.type === "prog" && podium) {
-                state.iDR++;
+                state.lvl++;
                 updateState();
             }
 
@@ -949,8 +949,8 @@ function getStateString(s = state) {
     // Store state as compact as possible
     let compact = {
         n: s.name,
-        dr: s.dr,
-        idr: s.iDR,
+        xp: s.xp,
+        l: s.lvl,
         w: s.wins,
         r: 0,
         d: 0,
@@ -1023,17 +1023,17 @@ function updateState() {
 
     // Update driver rating progress bar
     eStateCredits.innerText = formatCredits(state.credits);
-    if (state.iDR > 4) {
-        eStateDR.innerHTML = "Game completed!";
-        eStateDRBar.style.display = "none";
-    } else if (iClassFromDR(state.dr) > state.iDR) {
-        eStateDR.innerHTML = "DR: " + classLetter[state.iDR] + "+";
-        eStateDRProgress.style.width = "100%";
+    if (state.lvl > 4) {
+        eStateLvl.innerHTML = "Game completed!";
+        eStateXPBar.style.display = "none";
+    } else if (xpToClass(state.xp) > state.lvl) {
+        eStateLvl.innerHTML = "Class: " + classLetter[state.lvl] + "+";
+        eStateXPProgress.style.width = "100%";
     } else {
-        eStateDR.innerHTML = "DR: " + classLetter[state.iDR];
-        eStateDRProgress.style.width = drToPercent(state.dr);
+        eStateLvl.innerHTML = "Class: " + classLetter[state.lvl];
+        eStateXPProgress.style.width = xpToPercent(state.xp);
     }
-    eStateDRProgress.style.backgroundColor = classColor[state.iDR];
+    eStateXPProgress.style.backgroundColor = classColor[state.lvl];
 
     // Check the boxes
     eRoadRadio.checked = state.road;
@@ -1121,8 +1121,8 @@ function setStateFromString(inputString) {
     let compact = parsed[1];
     state.version = thisVersion;
     state.name = compact.n;
-    state.dr = compact.dr;
-    state.iDR = compact.idr;
+    state.xp = compact.xp;
+    state.lvl = compact.l;
     state.wins = compact.w;
     state.road = (compact.r === 1);
     state.dirt = (compact.d === 1);
@@ -1270,8 +1270,8 @@ function startGameButton() {
 
     // Set the start game inputs
     state.name = startName;
-    state.iDR = 2; // C
-    state.dr = classDR[state.iDR] / 10;
+    state.lvl = 2; // C
+    state.xp = classXP[state.lvl] / 10;
     state.cars.push(new Car(startCarName,
                             startCarMake,
                             startCarModel,
@@ -1330,7 +1330,7 @@ function addCar() {
     let newCost = carList[newMake][newModel].cost;
 
     // Ask for confirmation if new car PI is too high
-    if (iClassFromPI(newPI) > state.iDR) {
+    if (piToClass(newPI) > state.lvl) {
         if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
             return;
         }
@@ -1343,7 +1343,7 @@ function addCar() {
     state.credits -= newCost;
 
     // Set to current car if possible
-    if (iClassFromPI(newPI) <= state.iDR) {
+    if (piToClass(newPI) <= state.lvl) {
         state.cCar = state.cars.length - 1;
     }
 
@@ -1378,7 +1378,7 @@ function newCarMakeSelect() {
 
     // Add all buyable car models
     for (let iModel = 1; iModel < carList[make].length; iModel++) {
-        if (state.iDR >= iClassFromPI(carList[make][iModel].pi)
+        if (state.lvl >= piToClass(carList[make][iModel].pi)
          && state.credits >= carList[make][iModel].cost
          && carList[make][iModel].buyable) {
             let option = document.createElement("option");
@@ -1501,25 +1501,25 @@ events.push(new Event("Level up: " + endurances[2],
                       "000 000 000",
                       "dirt", "prog", 2));
 
-events.push(new Event("Group A Touring",
+events.push(new Event("Group A Touring Colossus",
                       events.length,
                       "Bring your favourite DTM legend " +
-                      "to this ultimate showdown!" +
+                      "to this ultimate showdown!",
                       endurances[1],
                       "000 000 000",
                       "road", "spec", 1,
                       610, [[3, 2], [9, 4], [19, 2]]));
 
-events.push(new Event("Group A Rally",
+events.push(new Event("Group A Rally Goliath",
                       events.length,
                       "Bring your favourite WRC legend " +
-                      "to this ultimate showdown!" +
+                      "to this ultimate showdown!",
                       endurances[2],
                       "000 000 000",
                       "dirt", "spec", 1,
                       670, [[21, 1], [26, 1], [27, 4]]));
 
-events.push(new Event("Showcase: 60s Sports Cars",
+events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       events.length,
                       "It's Toyota vs. Nissan " +
                       "hehe",
@@ -1528,7 +1528,7 @@ events.push(new Event("Showcase: 60s Sports Cars",
                       "both", "show", 1,
                       600, [[22, 4], [27, 7]]));
 
-events.push(new Event("Showcase: Hatchback Folkrace",
+events.push(new Event("Showcase: Vintage Hatchbacks",
                       events.length,
                       "Race-prepped vintage hatchbacks" +
                       "on a dirt arena race?",
@@ -1545,7 +1545,7 @@ events.push(new Event("Showcase: 80s Supercars",
                       "both", "show", 1,
                       700, [[8, 3], [14, 2], [24, 3]]));
 
-events.push(new Event("Showcase: 70s Explorers",
+events.push(new Event("Showcase: Vintage Explorers",
                       events.length,
                       "",
                       endurances[3],

@@ -7,8 +7,8 @@ const thisVersion = "0.2.0";
 const defaultState = {
     version: thisVersion,
     name: "",
-    dr: 100,
-    iDR: 1,
+    xp: 1,
+    lvl: 1,
     wins: 0,
     road: false,
     dirt: false,
@@ -540,7 +540,7 @@ const classPrize = [
     40,
     50];
 
-const classDR = [
+const classXP = [
     Math.pow(10, 0),
     Math.pow(10, 3),
     Math.pow(10, 4),
@@ -580,7 +580,7 @@ const positionPrize = [
     100,
     0, 0, 0, 0, 0, 0];
 
-const positionDR = [
+const positionXP = [
     -1,
     4,
     3,

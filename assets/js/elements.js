@@ -16,9 +16,9 @@ let eGame = document.getElementById("game");
 let eStateName = document.getElementById("stateName");
 let eStateCar = document.getElementById("stateCar");
 let eStateCredits = document.getElementById("stateCredits");
-let eStateDR = document.getElementById("stateDR");
-let eStateDRBar = document.getElementById("stateDRBar");
-let eStateDRProgress = document.getElementById("stateDRProgress");
+let eStateLvl = document.getElementById("stateLvl");
+let eStateXPBar = document.getElementById("stateXPBar");
+let eStateXPProgress = document.getElementById("stateXPProgress");
 
 let eEvents = document.getElementById("eventsDiv");
 let eEventsT = document.getElementById("eventsTable");
