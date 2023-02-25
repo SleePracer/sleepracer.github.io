@@ -21,7 +21,9 @@ let eStateXPBar = document.getElementById("stateXPBar");
 let eStateXPProgress = document.getElementById("stateXPProgress");
 
 let eEvents = document.getElementById("eventsDiv");
-let eEventsT = document.getElementById("eventsTable");
+let eEventTables = document.getElementById("eventTables");
+let eSpecsT = document.getElementById("specsTable");
+let eSpecsTB = document.getElementById("specsTableBody");
 let eEventsTH = document.getElementById("eventsTableHead");
 let eEventsTB = document.getElementById("eventsTableBody");
 

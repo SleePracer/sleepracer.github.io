@@ -123,16 +123,29 @@ layout: home
 <div id="eventsDiv"
      style="display: block">
   <h1>Events</h1>
-  <table id="eventsTable"
-         class="events">
-    <thead id="eventsTableHead"
-           style="display:none">
-      <td>Name</td>
-      <td></td>
-    </thead>
-    <tbody id="eventsTableBody">
-    </tbody>
-  </table>
+  <div id="eventTables">
+    <div id="specsTable">
+      <h2>Special events</h2>
+      <table class="events">
+        <thead style="display:none">
+          <td>Name</td>
+          <td>Buttons</td>
+        </thead>
+        <tbody id="specsTableBody">
+        </tbody>
+      </table>
+    </div>
+    <h2>Normal events</h2>
+    <table class="events">
+      <thead id="eventsTableHead"
+             style="display:none">
+        <td>Name</td>
+        <td>Buttons</td>
+      </thead>
+      <tbody id="eventsTableBody">
+      </tbody>
+    </table>
+  </div>
   <table id="racesTable"
          class="races">
     <thead id="racesTableHead">

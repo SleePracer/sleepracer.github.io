@@ -589,9 +589,19 @@ class Event {
         this.finished = false;
 
         // Add and populate new row in event table
-        this.row = eEventsTB.insertRow(this.iEvent);
-        for (let cell = 0; cell < eEventsTH.rows[0].cells.length; cell++) {
-            this.row.insertCell();
+        let nCells = eEventsTH.rows[0].cells.length;
+        if (this.type !== "norm") {
+            let iRow = eSpecsTB.rows.length;
+            this.row = eSpecsTB.insertRow(iRow);
+            for (let cell = 0; cell < nCells; cell++) {
+                this.row.insertCell();
+            }
+        } else {
+            let iRow = eEventsTB.rows.length;
+            this.row = eEventsTB.insertRow(iRow);
+            for (let cell = 0; cell < nCells; cell++) {
+                this.row.insertCell();
+            }
         }
         this.row.cells[0].innerText = this.name;
 
@@ -698,6 +708,9 @@ class Event {
          && nextEventOk
          && categoryOk
          && levelUpOk) {
+            if (this.type !== "norm") {
+                eSpecsT.style.display = "block";
+            }
 
             // Show row, but only enter button if car ok
             this.row.style.display = "table-row";
@@ -783,7 +796,7 @@ class Event {
         }
 
         // Hide the event table
-        eEventsT.style.display = "none";
+        eEventTables.style.display = "none";
 
         // Show the races table
         eRacesT.style.display = "table";
@@ -862,7 +875,7 @@ class Event {
         eRacesT.style.display = "none";
 
         // Show all the events again
-        eEventsT.style.display = "table";
+        eEventTables.style.display = "block";
     }
 
     setPosition(value) {
@@ -1056,6 +1069,7 @@ function updateState() {
     }
 
     // Only show events that should be shown
+    eSpecsT.style.display = "none";
     for (let iEvent = 0; iEvent < events.length; iEvent++) {
         events[iEvent].showOrHide();
     }
