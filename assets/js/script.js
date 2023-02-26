@@ -626,6 +626,16 @@ class Event {
         this.returnButton.id = this.name;
         this.returnButton.onclick = returnEventButtonClick;
         this.returnButton.innerText = "Retire";
+
+        if (this.type === "show" || this.type === "spec") {
+            let iRow = eCompletedTB.rows.length;
+            this.completedRow = eCompletedTB.insertRow(iRow);
+            for (let cell = 0; cell < nCells; cell++) {
+                this.completedRow.insertCell();
+            }
+            this.completedRow.cells[0].innerText = this.name;
+            this.completedRow.style.display = "none";
+        }
     }
 
     showOrHide() {
@@ -695,30 +705,46 @@ class Event {
 
         // Check if special event ok (has it been completed?)
         let specOk = (this.type !== "spec")
-        if (!specOk && !state.finished.includes(this.iEvent)) {
+        if (!specOk && !state.completed.includes(this.iEvent)) {
             specOk = true;
         }
 
         // Check if showcase ok (has it been completed?)
         let showOk = ((this.type === "show")
-                    && !state.finished.includes(this.iEvent));
+                    && !state.completed.includes(this.iEvent));
 
         if ((garageOk || (state.lvl > piToClass(this.pi)))
          && playerClassOk
          && nextEventOk
          && categoryOk
          && levelUpOk) {
-            if (this.type !== "norm") {
-                eSpecsT.style.display = "block";
-            }
+            if (state.completed.includes(this.iEvent)) {
+                if (state.show) {
+                    eCompletedT.style.display = "block";
+                }
+                this.completedRow.style.display = "table-row";
+                this.row.style.display = "none";
 
-            // Show row, but only enter button if car ok
-            this.row.style.display = "table-row";
-            if ((carModelOk && carClassOk && specOk)
-              || showOk) {
-                this.enterButton.style.display = "inline";
+                if (state.completed.includes(this.iEvent)) {
+                    this.completedRow.cells[1].appendChild(this.infoButton);
+                }
             } else {
-                this.enterButton.style.display = "none";
+
+                if (this.type !== "norm") {
+                    eSpecsT.style.display = "block";
+                }
+
+                // Show row, but only enter button if car ok
+                this.row.style.display = "table-row";
+                if (this.type === "show" || this.type === "spec") {
+                    this.completedRow.style.display = "none";
+                }
+                if ((carModelOk && carClassOk && specOk)
+                  || showOk) {
+                    this.enterButton.style.display = "inline";
+                } else {
+                    this.enterButton.style.display = "none";
+                }
             }
         } else {
             this.row.style.display = "none";
@@ -767,7 +793,11 @@ class Event {
             }
 
             // Replace name with info
-            this.row.cells[0].innerText = allInfo;
+            if (state.completed.includes(this.iEvent)) {
+                this.completedRow.cells[0].innerText = allInfo;
+            } else {
+                this.row.cells[0].innerText = allInfo;
+            }
 
             // Repurpose info button to close info
             this.infoButton.innerText = "Hide info";
@@ -776,7 +806,11 @@ class Event {
             this.enterButton.style.display = "none";
         } else {
             // Switch back to name
-            this.row.cells[0].innerText = this.name;
+            if (state.completed.includes(this.iEvent)) {
+                this.completedRow.cells[0].innerText = this.name;
+            } else {
+                this.row.cells[0].innerText = this.name;
+            }
 
             // Return info button back to it's original state
             this.infoButton.innerText = "Info";
@@ -851,7 +885,8 @@ class Event {
 
         // Mark non-repeatable events as finished
         if (this.type === "show" || this.type === "spec") {
-            state.finished.push(this.iEvent);
+            state.completed.push(this.iEvent);
+            this.completedRow.cells[1].appendChild(this.infoButton);
         }
 
         // Clear progress from state
@@ -968,7 +1003,8 @@ function getStateString(s = state) {
         r: 0,
         d: 0,
         x: s.next,
-        f: s.finished,
+        s: 0,
+        f: s.completed,
         m: s.credits,
         ce: s.cEvent,
         cc: s.cCar,
@@ -979,6 +1015,9 @@ function getStateString(s = state) {
     }
     if (s.dirt) {
         compact.d = 1;
+    }
+    if (s.show) {
+        compact.s = 1;
     }
 
     // Always return an array,
@@ -1051,6 +1090,7 @@ function updateState() {
     // Check the boxes
     eRoadRadio.checked = state.road;
     eDirtRadio.checked = state.dirt;
+    eShowCompleted.checked = state.show;
 
     // At the start of the game, or when switching between road/dirt
     if (state.next.length === 0) {
@@ -1070,6 +1110,7 @@ function updateState() {
 
     // Only show events that should be shown
     eSpecsT.style.display = "none";
+    eCompletedT.style.display = "none";
     for (let iEvent = 0; iEvent < events.length; iEvent++) {
         events[iEvent].showOrHide();
     }
@@ -1141,7 +1182,8 @@ function setStateFromString(inputString) {
     state.road = (compact.r === 1);
     state.dirt = (compact.d === 1);
     state.next = compact.x;
-    state.finished = compact.f;
+    state.show = (compact.s === 1);
+    state.completed = compact.f;
     state.credits = compact.m;
     state.cEvent = compact.ce;
     state.cCar = compact.cc;
@@ -1441,6 +1483,11 @@ function dirtRadio() {
     state.dirt = true;
     state.road = false;
     state.next = [];
+    updateState();
+}
+
+function showCompleted() {
+    state.show = eShowCompleted.checked;
     updateState();
 }
 

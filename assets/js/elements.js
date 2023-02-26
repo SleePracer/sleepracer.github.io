@@ -26,6 +26,8 @@ let eSpecsT = document.getElementById("specsTable");
 let eSpecsTB = document.getElementById("specsTableBody");
 let eEventsTH = document.getElementById("eventsTableHead");
 let eEventsTB = document.getElementById("eventsTableBody");
+let eCompletedT = document.getElementById("completedTable");
+let eCompletedTB = document.getElementById("completedTableBody");
 
 let eRacesT = document.getElementById("racesTable");
 let eRacesTH = document.getElementById("racesTableHead");
@@ -42,6 +44,7 @@ let eNewCarModel = document.getElementById("newCarModel");
 
 let eRoadRadio = document.getElementById("roadRadio");
 let eDirtRadio = document.getElementById("dirtRadio");
+let eShowCompleted = document.getElementById("showCompleted");
 
 let eGameLoad = document.getElementById("gameLoad");
 let eGameLoadError = document.getElementById("gameLoadError");

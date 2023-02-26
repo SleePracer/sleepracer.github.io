@@ -127,7 +127,7 @@ layout: home
     <div id="specsTable">
       <h2>Special events</h2>
       <table class="events">
-        <thead style="display:none">
+        <thead style="display: none">
           <td>Name</td>
           <td>Buttons</td>
         </thead>
@@ -138,13 +138,24 @@ layout: home
     <h2>Normal events</h2>
     <table class="events">
       <thead id="eventsTableHead"
-             style="display:none">
+             style="display: none">
         <td>Name</td>
         <td>Buttons</td>
       </thead>
       <tbody id="eventsTableBody">
       </tbody>
     </table>
+    <div id="completedTable">
+      <h2>Completed events</h2>
+      <table class="events">
+        <thead style="display: none">
+          <td>Name</td>
+          <td>Buttons</td>
+        </thead>
+        <tbody id="completedTableBody">
+        </tbody>
+      </table>
+    </div>
   </div>
   <table id="racesTable"
          class="races">
@@ -213,6 +224,13 @@ Racing category:
          name="category"
          onClick="dirtRadio()">
   <label for="dirtRadio">Dirt Scrambles</label><br>
+</div>
+<br>
+<div>
+  <input id="showCompleted"
+         type="checkbox"
+         onClick="showCompleted()">
+  <label for="showCompleted">Show completed events</label>
 </div>
 <br>
 <h2>Save settings</h2>
