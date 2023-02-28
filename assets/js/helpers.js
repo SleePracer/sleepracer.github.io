@@ -85,12 +85,12 @@ function xpToColor(xp) {
     return classColor[xpToClass(xp)];
 }
 
-function formatCredits(credits) {
-    if (credits >= 0) {
-        return "€" + credits.toLocaleString('fr');
+function moneyToString(money) {
+    if (money >= 0) {
+        return "€" + money.toLocaleString('fr');
     } else {
-        credits *= -1;
-        return "-€" + credits.toLocaleString('fr');
+        money *= -1;
+        return "-€" + money.toLocaleString('fr');
     }
 }
 
@@ -103,7 +103,7 @@ function hasBuyableModel(make) {
     let foundModel = false;
     for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
         if (state.lvl >= piToClass(carList[iMake][iModel].pi)
-         && state.credits >= carList[iMake][iModel].cost
+         && state.money >= carList[iMake][iModel].cost
          && carList[iMake][iModel].buyable) {
             foundModel = true;
         }

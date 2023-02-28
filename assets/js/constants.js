@@ -15,7 +15,7 @@ const defaultState = {
     next: [],
     show: false,
     completed: [],
-    credits: 0,
+    money: 0,
     cEvent: null,
     cCar: -1,
     cars: []};

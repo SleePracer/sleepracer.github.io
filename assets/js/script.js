@@ -118,7 +118,7 @@ class Car {
                                     + carList[this.make][this.model].year
                                     + ")";
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
-        this.row.cells[2].innerHTML = formatCredits(this.value);
+        this.row.cells[2].innerHTML = moneyToString(this.value);
 
         // Create and add the options buttons
 
@@ -224,7 +224,7 @@ class Car {
         this.value -= Math.floor(0.005 * this.value);
 
         // Update table
-        this.row.cells[2].innerHTML = formatCredits(this.value);
+        this.row.cells[2].innerHTML = moneyToString(this.value);
     }
 
     getIn() {
@@ -253,12 +253,12 @@ class Car {
 
     sell() {
         // Ask for confirmation before selling
-        if (!window.confirm("Sale price is: " + formatCredits(this.value) + ", are you sure you want to sell?")) {
+        if (!window.confirm("Sale price is: " + moneyToString(this.value) + ", are you sure you want to sell?")) {
             return;
         }
 
-        // Add back sale price to credits
-        state.credits += this.value;
+        // Add back sale price to money
+        state.money += this.value;
 
         // Change current car index if necessary
         if (this.iCar === state.cCar) {
@@ -300,7 +300,7 @@ class Car {
 
         // Re-add the state information to the table
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
-        this.row.cells[2].innerHTML = formatCredits(this.value);
+        this.row.cells[2].innerHTML = moneyToString(this.value);
 
         // Hide the upgrade buttons
         this.toggleUpgradeButtons("none");
@@ -323,7 +323,7 @@ class Car {
         // Update state variables
         this.pi = this.upgradePI;
         this.value += Math.floor(0.5 * this.upgradeCost);
-        state.credits -= this.upgradeCost;
+        state.money -= this.upgradeCost;
 
         this.exitUpgrade();
 
@@ -392,28 +392,28 @@ class Race {
 
         // Update result variables
         if (state.cCar !== -1) {
-            this.setDeltaCredits(state.cars[state.cCar].pi);
+            this.setDeltaMoney(state.cars[state.cCar].pi);
             this.setDeltaXP(state.cars[state.cCar].pi);
         } else {
-            this.setDeltaCredits(classPI[0]);
+            this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
         }
     }
 
-    setDeltaCredits(pi) {
+    setDeltaMoney(pi) {
         // Prize depends on class, position and damage
-        this.deltaCredits = classPrize[piToClass(pi)]
+        this.deltaMoney = classPrize[piToClass(pi)]
                           * positionPrize[this.position]
                           * this.resultFactor
                           - state.cars[state.cCar].repairCost(this.damage);
 
         // Set button text depending on prize
-        if (this.deltaCredits > 0) {
+        if (this.deltaMoney > 0) {
             this.finishButton.innerText = "Finish! "
-                                        + formatCredits(this.deltaCredits);
-        } else if (this.deltaCredits < 0) {
+                                        + moneyToString(this.deltaMoney);
+        } else if (this.deltaMoney < 0) {
             this.finishButton.innerText = "Finish! "
-                                        + formatCredits(this.deltaCredits);
+                                        + moneyToString(this.deltaMoney);
         } else {
             this.finishButton.innerText = "Finish!";
         }
@@ -503,14 +503,14 @@ class Race {
     setPosition(value) {
         this.position = toInt(value);
 
-        this.setDeltaCredits(state.cars[state.cCar].pi);
+        this.setDeltaMoney(state.cars[state.cCar].pi);
         this.setDeltaXP(state.cars[state.cCar].pi);
     }
 
     setDamage(value) {
         this.damage = toPositiveInt(value);
 
-        this.setDeltaCredits(state.cars[state.cCar].pi);
+        this.setDeltaMoney(state.cars[state.cCar].pi);
         this.setDeltaXP(state.cars[state.cCar].pi);
     }
 
@@ -531,17 +531,17 @@ class Race {
             state.wins += 100;
         }
 
-        // Update credits
-        state.credits += this.deltaCredits;
+        // Update money
+        state.money += this.deltaMoney;
 
         // Remove interactive elements and display results
         // Before depreciate of car, or will be wrong on reload
         this.row.cells[1].removeChild(this.positionSelect);
         this.row.cells[1].innerText = positionName[this.position];
         this.row.cells[2].removeChild(this.damageInput);
-        this.row.cells[2].innerText = formatCredits(state.cars[state.cCar].repairCost(this.damage));
+        this.row.cells[2].innerText = moneyToString(state.cars[state.cCar].repairCost(this.damage));
         this.row.cells[3].removeChild(this.finishButton);
-        this.row.cells[3].innerText = formatCredits(this.deltaCredits);
+        this.row.cells[3].innerText = moneyToString(this.deltaMoney);
 
         // Depreciate value of car
         state.cars[state.cCar].depreciate(this.damage);
@@ -936,7 +936,7 @@ class Event {
             state.cEvent.p.push([
                 this.race.position,
                 repairCost,
-                this.race.deltaCredits]);
+                this.race.deltaMoney]);
             updateState();
 
             // Check if podium before finishing
@@ -970,10 +970,10 @@ class Event {
         this.race.row.cells[1].innerText = positionName[aProgress[0]];
         this.race.row.cells[2].removeChild(this.race.damageInput);
                                                       // repairCost
-        this.race.row.cells[2].innerText = formatCredits(aProgress[1]);
+        this.race.row.cells[2].innerText = moneyToString(aProgress[1]);
         this.race.row.cells[3].removeChild(this.race.finishButton);
-                                                      // deltaCredits
-        this.race.row.cells[3].innerText = formatCredits(aProgress[2]);
+                                                      // deltaMoney
+        this.race.row.cells[3].innerText = moneyToString(aProgress[2]);
 
         // Show next race or return button
         this.entered = true;
@@ -1005,7 +1005,7 @@ function getStateString(s = state) {
         x: s.next,
         s: 0,
         f: s.completed,
-        m: s.credits,
+        m: s.money,
         ce: s.cEvent,
         cc: s.cCar,
         c: carArgs};
@@ -1074,7 +1074,7 @@ function updateState() {
     }
 
     // Update driver rating progress bar
-    eStateCredits.innerText = formatCredits(state.credits);
+    eStateMoney.innerText = moneyToString(state.money);
     if (state.lvl > 4) {
         eStateLvl.innerHTML = "Game completed!";
         eStateXPBar.style.display = "none";
@@ -1184,7 +1184,7 @@ function setStateFromString(inputString) {
     state.next = compact.x;
     state.show = (compact.s === 1);
     state.completed = compact.f;
-    state.credits = compact.m;
+    state.money = compact.m;
     state.cEvent = compact.ce;
     state.cCar = compact.cc;
 
@@ -1396,7 +1396,7 @@ function addCar() {
     state.cars.push(new Car(newName,
                             newMake,
                             newModel));
-    state.credits -= newCost;
+    state.money -= newCost;
 
     // Set to current car if possible
     if (piToClass(newPI) <= state.lvl) {
@@ -1435,7 +1435,7 @@ function newCarMakeSelect() {
     // Add all buyable car models
     for (let iModel = 1; iModel < carList[make].length; iModel++) {
         if (state.lvl >= piToClass(carList[make][iModel].pi)
-         && state.credits >= carList[make][iModel].cost
+         && state.money >= carList[make][iModel].cost
          && carList[make][iModel].buyable) {
             let option = document.createElement("option");
             option.value = iModel;
@@ -1465,7 +1465,7 @@ function newCarModelSelect() {
 
     // Show PI and cost
     eNewCarRow.cells[1].innerHTML = addClassToPI(carList[make][model].pi);
-    eNewCarRow.cells[2].innerHTML = formatCredits(carList[make][model].cost);
+    eNewCarRow.cells[2].innerHTML = moneyToString(carList[make][model].cost);
 }
 
 // -----------------------------------------------------------------------
@@ -1568,7 +1568,7 @@ events.push(new Event("Group A Touring Colossus",
                       "to this ultimate showdown!",
                       endurances[1],
                       "000 000 000",
-                      "road", "spec", 1,
+                      "both", "spec", 1,
                       610, [[3, 2], [9, 4], [19, 2]]));
 
 events.push(new Event("Group A Rally Goliath",
@@ -1577,7 +1577,7 @@ events.push(new Event("Group A Rally Goliath",
                       "to this ultimate showdown!",
                       endurances[2],
                       "000 000 000",
-                      "dirt", "spec", 1,
+                      "both", "spec", 1,
                       670, [[21, 1], [26, 1], [27, 4]]));
 
 events.push(new Event("Showcase: Fairlady vs. 2000GT",
