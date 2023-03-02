@@ -782,7 +782,7 @@ class Event {
             if (this.type === "show") {
 
                 // Add eligible car models
-                allInfo += "\n\nEligible cars:\n";
+                allInfo += "\n\nBorrow one of:\n";
                 for (let iModel = 0; iModel < this.cars.length; iModel++) {
                     let makeList = carList[this.cars[iModel][0]];
                     let modelObj = makeList[this.cars[iModel][1]];
@@ -859,37 +859,41 @@ class Event {
     }
 
     returnToEvents() {
-        // Get the three next tracks
-        // Before updating state
-        if (this.finished
-         && this.iEvent >= roadStart
-         && this.iEvent < dirtStart) {
 
-            // Road
-            state.next = JSON.parse(JSON.stringify(
-                         roadCircuits[this.iEvent - roadStart].next));
+        // Do some things only if finished
+        if (this.finished) {
 
-            // Stolen from stackoverflow
-            state.next = state.next.map(a => a + roadStart);
-            next3Random();
-        } else if (this.finished
-                && this.iEvent >= dirtStart) {
+            // Get the three next tracks
+            // Before updating state
+            if (this.iEvent >= roadStart
+             && this.iEvent < dirtStart) {
 
-            // Dirt
-            state.next = JSON.parse(JSON.stringify(
-                         dirtScrambles[this.iEvent - dirtStart].next));
+                // Road
+                state.next = JSON.parse(JSON.stringify(
+                             roadCircuits[this.iEvent - roadStart].next));
 
-            // Stolen from stackoverflow
-            state.next = state.next.map(a => a + dirtStart);
-            next3Random();
-        } else if (this.finished) {
-            state.next = [];
-        }
+                // Stolen from stackoverflow
+                state.next = state.next.map(a => a + roadStart);
+                next3Random();
+            } else if (this.iEvent >= dirtStart) {
 
-        // Mark non-repeatable events as finished
-        if (this.type === "show" || this.type === "spec") {
-            state.completed.push(this.iEvent);
-            this.completedRow.cells[1].appendChild(this.infoButton);
+                // Dirt
+                state.next = JSON.parse(JSON.stringify(
+                             dirtScrambles[this.iEvent - dirtStart].next));
+
+                // Stolen from stackoverflow
+                state.next = state.next.map(a => a + dirtStart);
+                next3Random();
+            } else {
+                state.next = [];
+            }
+
+            // Mark non-repeatable events as finished
+            if (this.type === "show" || this.type === "spec") {
+                state.completed.push(this.iEvent);
+                this.completedRow.cells[1].appendChild(this.infoButton);
+            }
+
         }
 
         // Clear progress from state
@@ -976,7 +980,7 @@ class Event {
         this.race.row.cells[3].innerText = moneyToString(aProgress[2]);
 
         // Show next race or return button
-        this.entered = true;
+//        this.entered = true; // probably not needed?
         this.finished = true;
     }
 
@@ -1545,7 +1549,7 @@ function resetGameButton() {
 // Create all events
 events = [];
 
-events.push(new Event("Level up: " + endurances[1],
+events.push(new Event("Class advancement: " + endurances[1],
                       events.length,
                       "Finish on the podium to advance " +
                       "to the next class!",
@@ -1553,7 +1557,7 @@ events.push(new Event("Level up: " + endurances[1],
                       "000 000 000",
                       "road", "prog", 2));
 
-events.push(new Event("Level up: " + endurances[2],
+events.push(new Event("Class advancement: " + endurances[2],
                       events.length,
                       "Finish on the podium to advance " +
                       "to the next class!",
@@ -1563,8 +1567,8 @@ events.push(new Event("Level up: " + endurances[2],
 
 events.push(new Event("Group A Touring Colossus",
                       events.length,
-                      "Bring your favourite DTM legend " +
-                      "to this ultimate showdown!",
+                      "Bring your DTM legend " +
+                      "to this ultimate road racing showdown!",
                       endurances[1],
                       "000 000 000",
                       "both", "spec", 1,
@@ -1572,51 +1576,69 @@ events.push(new Event("Group A Touring Colossus",
 
 events.push(new Event("Group A Rally Goliath",
                       events.length,
-                      "Bring your favourite WRC legend " +
-                      "to this ultimate showdown!",
+                      "Bring your WRC legend " +
+                      "to this ultimate rally showdown!",
                       endurances[2],
                       "000 000 000",
                       "both", "spec", 1,
                       670, [[21, 1], [26, 1], [27, 4]]));
 
-events.push(new Event("Showcase: Fairlady vs. 2000GT",
-                      events.length,
-                      "It's Toyota vs. Nissan " +
-                      "hehe",
-                      "Horizon Mexico Circuit",
-                      "000 000 000",
-                      "both", "show", 1,
-                      600, [[22, 4], [27, 7]]));
-
 events.push(new Event("Showcase: Vintage Hatchbacks",
                       events.length,
-                      "Race-prepped vintage hatchbacks" +
-                      "on a dirt arena race?",
-                      "Horizon Baja Scramble",
+                      "A folkrace event on the Horizon Baja Scramble! " +
+                      "The Horizon Festival will lend you one of these " +
+                      "old beat up, race prepped cars for the event. " +
+                      "Prize money will only be given out for podium " +
+                      "placements, so don't hesitate to get dirty!",
+                      "Horizon Baja Scramble 7L",
                       "000 000 000",
                       "both", "show", 1,
                       600, [[9, 5], [10, 4], [29, 3]]));
 
-events.push(new Event("Showcase: 80s Supercars",
+events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       events.length,
-                      "",
-                      endurances[4],
+                      "A showcase race on the Horizon Mexico Circuit! " +
+                      "The Horizon Festival will lend you one of these " +
+                      "pristine stock cars for the event, " +
+                      "try not to damage it too much! " +
+                      "Prize money will be given out to all placements " +
+                      "for this event.",
+                      "Horizon Mexico Circuit 7L",
                       "000 000 000",
                       "both", "show", 1,
-                      700, [[8, 3], [14, 2], [24, 3]]));
+                      600, [[22, 4], [27, 7]]));
 
 events.push(new Event("Showcase: Vintage Explorers",
                       events.length,
-                      "",
+                      "Explore the Mexican countryside in your choice " +
+                      "of old 4x4 offroaders, " +
+                      "courtesy of the Horizon Festival!",
                       endurances[3],
                       "000 000 000",
                       "both", "show", 1,
                       700, [[9, 6], [12, 1], [15, 1], [27, 6]]));
 
+events.push(new Event("Showcase: 80s Supercars",
+                      events.length,
+                      "A top secret invitation to test drive these " +
+                      "80s dream supercars! " +
+                      "Take them out in the middle of the night to " +
+                      "avoid any attention. " +
+                      "Also, try to avoid damaging these " +
+                      "expensive poster cars!",
+                      endurances[4],
+                      "000 000 000",
+                      "both", "show", 1,
+                      700, [[8, 3], [14, 2], [24, 3]]));
+
 events.push(new Event("Showcase: 90s Supercars",
                       events.length,
-                      "Take a double lap around the Goliath " +
-                      "in your favourite 90s supercar!",
+                      "Take a lap around the Goliath " +
+                      "in your favourite 90s supercar, " +
+                      "courtesy of the Horizon Festival! " +
+                      "Prize money will be given out to all placements " +
+                      "for this event, so be extra careful " +
+                      "with these priceless supercars.",
                       endurances[0],
                       "000 000 000",
                       "both", "show", 1,
@@ -1626,7 +1648,7 @@ let roadStart = events.length;
 for (let t = 0; t < roadCircuits.length; t++) {
     events.push(new Event(roadCircuits[t].name + " Circuit",
                           events.length,
-                          "Open road race!",
+                          "Finish in the top half to get prize money!",
                           roadCircuits[t].name + " Circuit",
                           roadCircuits[t].sharecode,
                           "road", "norm"));
@@ -1636,7 +1658,7 @@ let dirtStart = events.length;
 for (let t = 0; t < dirtScrambles.length; t++) {
     events.push(new Event(dirtScrambles[t].name + " Scramble",
                           events.length,
-                          "Open dirt race!",
+                          "Finish in the top half to get prize money!",
                           dirtScrambles[t].name + " Scramble",
                           dirtScrambles[t].sharecode,
                           "dirt", "norm"));

@@ -296,7 +296,7 @@ const carList = [
          cost: 0, // 150k
          year: 1969,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "Stock"}],
     ["Pontiac", // 23
         {name: "Firebird Trans AM", // 1
          pi: 418,
@@ -374,7 +374,7 @@ const carList = [
          cost: 0, // 750k
          year: 1969,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "Stock"}],
     ["Vauxhall", // 28
         {name: "Corsa VXR", // 1
          pi: 584,
