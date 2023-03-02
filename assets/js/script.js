@@ -343,7 +343,7 @@ class Race {
     constructor(name, iRace, resultFactor = 1) {
 
         // Add race to map
-        raceMap.set(name, this);
+        raceMap.set(name + " R", this);
 
         // Race state variables
         this.name = name;
@@ -359,7 +359,7 @@ class Race {
 
         // Create and add the position selector
         this.positionSelect = document.createElement("select");
-        this.positionSelect.id = this.name;
+        this.positionSelect.id = this.name + " R";
         this.positionSelect.onchange = positionSelectChange;
         for (let pos = 0; pos < positionName.length; pos++) {
             let option = document.createElement("option");
@@ -371,7 +371,7 @@ class Race {
 
         // Create and add the damage input
         this.damageInput = document.createElement("input");
-        this.damageInput.id = this.name;
+        this.damageInput.id = this.name + " R";
         this.damageInput.type = "number";
         this.damageInput.style.width = "100%";
         this.damageInput.placeholder = "Damage %";
@@ -380,7 +380,7 @@ class Race {
 
         // Create and add the finish button
         this.finishButton = document.createElement("button");
-        this.finishButton.id = this.name;
+        this.finishButton.id = this.name + " R";
         this.finishButton.onclick = finishButtonClick;
         this.row.cells[3].appendChild(this.finishButton);
 
@@ -568,8 +568,8 @@ class Event {
 
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here (finish!)
-        eventMap.set(name, this);
-        raceMap.set(name, this);
+        eventMap.set(name + " E", this);
+        raceMap.set(name + " E", this);
 
         // Parameters
         this.name = name;
@@ -607,14 +607,14 @@ class Event {
 
         // Create and add the info button
         this.infoButton = document.createElement("button");
-        this.infoButton.id = this.name;
+        this.infoButton.id = this.name + " E";
         this.infoButton.onclick = infoButtonClick;
         this.infoButton.innerText = "Info";
         this.row.cells[1].appendChild(this.infoButton);
 
         // Create and add the enter event button
         this.enterButton = document.createElement("button");
-        this.enterButton.id = this.name;
+        this.enterButton.id = this.name + " E";
         this.enterButton.onclick = enterEventButtonClick;
         this.enterButton.innerText = "Enter";
         this.enterButton.className = "margin";
@@ -623,9 +623,9 @@ class Event {
         // Create the return from event button
         // It will be added to the races table later
         this.returnButton = document.createElement("button");
-        this.returnButton.id = this.name;
+        this.returnButton.id = this.name + " E";
         this.returnButton.onclick = returnEventButtonClick;
-        this.returnButton.innerText = "Retire";
+        this.returnButton.innerText = "Return";
 
         if (this.type === "show" || this.type === "spec") {
             let iRow = eCompletedTB.rows.length;
@@ -841,9 +841,9 @@ class Event {
                              this.resultFactor);
 
         // Makes buttons go through this class
-        this.race.positionSelect.id = this.name;
-        this.race.damageInput.id = this.name;
-        this.race.finishButton.id = this.name;
+        this.race.positionSelect.id = this.name + " E";
+        this.race.damageInput.id = this.name + " E";
+        this.race.finishButton.id = this.name + " E";
 
         // Add the return from event button to a final row
         this.returnRow = eRacesTB.insertRow(1);
@@ -861,25 +861,28 @@ class Event {
     returnToEvents() {
         // Get the three next tracks
         // Before updating state
-        if (this.iEvent >= roadStart) {
-            // Normal event
-            if (this.iEvent < dirtStart) {
-                // Road
-                state.next = JSON.parse(JSON.stringify(
-                             roadCircuits[this.iEvent - roadStart].next));
+        if (this.finished
+         && this.iEvent >= roadStart
+         && this.iEvent < dirtStart) {
 
-                // Stolen from stackoverflow
-                state.next = state.next.map(a => a + roadStart);
-            } else {
-                // Dirt
-                state.next = JSON.parse(JSON.stringify(
-                             dirtScrambles[this.iEvent - dirtStart].next));
+            // Road
+            state.next = JSON.parse(JSON.stringify(
+                         roadCircuits[this.iEvent - roadStart].next));
 
-                // Stolen from stackoverflow
-                state.next = state.next.map(a => a + dirtStart);
-            }
+            // Stolen from stackoverflow
+            state.next = state.next.map(a => a + roadStart);
             next3Random();
-        } else {
+        } else if (this.finished
+                && this.iEvent >= dirtStart) {
+
+            // Dirt
+            state.next = JSON.parse(JSON.stringify(
+                         dirtScrambles[this.iEvent - dirtStart].next));
+
+            // Stolen from stackoverflow
+            state.next = state.next.map(a => a + dirtStart);
+            next3Random();
+        } else if (this.finished) {
             state.next = [];
         }
 
@@ -902,7 +905,6 @@ class Event {
         this.race = null;
 
         // Remove return button and row
-        this.returnButton.innerText = "Retire";
         this.returnRow.cells[3].removeChild(this.returnButton);
         this.returnRow.style.display = "none";
 
@@ -946,8 +948,6 @@ class Event {
             this.race.finish();
             this.finished = true;
 
-            this.returnButton.innerText = "Return";
-
             // Only level up with a podium
             if (this.type === "prog" && podium) {
                 state.lvl++;
@@ -978,7 +978,6 @@ class Event {
         // Show next race or return button
         this.entered = true;
         this.finished = true;
-        this.returnButton.innerText = "Return";
     }
 
 }
