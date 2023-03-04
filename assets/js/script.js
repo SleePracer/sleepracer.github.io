@@ -340,18 +340,17 @@ class Car {
 // -----------------------------------------------------------------------
 
 class Race {
-    constructor(name, iRace, resultFactor = 1) {
+    constructor(name, prizeType) {
 
         // Add race to map
         raceMap.set(name + " R", this);
 
         // Race state variables
         this.name = name;
-        this.iRace = iRace;
-        this.resultFactor = resultFactor;
+        this.prizeType = prizeType;
 
         // Add and populate new row
-        this.row = eRacesTB.insertRow(this.iRace);
+        this.row = eRacesTB.insertRow(0);
         for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
             this.row.insertCell();
         }
@@ -400,12 +399,38 @@ class Race {
         }
     }
 
+    getPrize(position, pi) {
+        let factor = 1;
+        if (this.prizeType === "double") {
+            factor = 2;
+        }
+
+        if (this.prizeType === "normal" || this.prizeType === "double") {
+            if (piToClass(pi) === 1 || piToClass(pi) === 2) {
+                return factor * positionPrize.normal.C[position]
+            } else if (piToClass(pi) === 3) {
+                return factor * positionPrize.normal.B[position]
+            } else if (piToClass(pi) === 4) {
+                return factor * positionPrize.normal.A[position]
+            }
+        } else if (this.prizeType === "podium") {
+            return positionPrize.podium[position]
+        } else if (this.prizeType === "all") {
+            if (piToClass(pi) === 1 || piToClass(pi) === 2) {
+                return positionPrize.all.C[position]
+            } else if (piToClass(pi) === 4) {
+                return positionPrize.all.A[position]
+            }
+        }
+
+        // Something's wrong
+        return 0;
+    }
+
     setDeltaMoney(pi) {
         // Prize depends on class, position and damage
-        this.deltaMoney = classPrize[piToClass(pi)]
-                          * positionPrize[this.position]
-                          * this.resultFactor
-                          - state.cars[state.cCar].repairCost(this.damage);
+        this.deltaMoney = this.getPrize(this.position, pi)
+                        - state.cars[state.cCar].repairCost(this.damage);
 
         // Set button text depending on prize
         if (this.deltaMoney > 0) {
@@ -479,9 +504,8 @@ class Race {
         let classFactor = subClass * classXP[iClass] / 1000;
 
         // These are only used for damageRatio
-        let prizeFactor = classPrize[iClass]
-                        * (positionPrize[2]
-                         + positionPrize[this.position]);
+        let prizeFactor = this.getPrize(2, pi)
+                        + this.getPrize(this.position, pi);
         let repairCost = state.cars[state.cCar].repairCost(this.damage);
 
         // damageRatio is in [0, 1]
@@ -561,8 +585,8 @@ class Event {
                 raceName,
                 sharecode,
                 category,
-                type,
-                resultFactor = 1,
+                eventType,
+                prizeType,
                 pi = 0,
                 cars = []) {
 
@@ -578,8 +602,8 @@ class Event {
         this.raceName = raceName;
         this.sharecode = sharecode;
         this.category = category;
-        this.type = type;
-        this.resultFactor = resultFactor;
+        this.eventType = eventType;
+        this.prizeType = prizeType;
         this.pi = pi;
         this.cars = JSON.parse(JSON.stringify(cars));
 
@@ -590,7 +614,7 @@ class Event {
 
         // Add and populate new row in event table
         let nCells = eEventsTH.rows[0].cells.length;
-        if (this.type !== "norm") {
+        if (this.eventType !== "norm") {
             let iRow = eSpecsTB.rows.length;
             this.row = eSpecsTB.insertRow(iRow);
             for (let cell = 0; cell < nCells; cell++) {
@@ -627,7 +651,7 @@ class Event {
         this.returnButton.onclick = returnEventButtonClick;
         this.returnButton.innerText = "Return";
 
-        if (this.type === "show" || this.type === "spec") {
+        if (this.eventType === "show" || this.eventType === "spec") {
             let iRow = eCompletedTB.rows.length;
             this.completedRow = eCompletedTB.insertRow(iRow);
             for (let cell = 0; cell < nCells; cell++) {
@@ -684,7 +708,7 @@ class Event {
         }
 
         // Check if one of the next races
-        let nextEventOk = (this.type !== "norm");
+        let nextEventOk = (this.eventType !== "norm");
         if (state.next.includes(this.iEvent)) {
             nextEventOk = true;
         }
@@ -698,19 +722,19 @@ class Event {
         }
 
         // Check if ready for level up (if level up event)
-        let levelUpOk = (this.type !== "prog");
+        let levelUpOk = (this.eventType !== "prog");
         if (xpToClass(state.xp) > state.lvl) {
             levelUpOk = true;
         }
 
         // Check if special event ok (has it been completed?)
-        let specOk = (this.type !== "spec")
+        let specOk = (this.eventType !== "spec")
         if (!specOk && !state.completed.includes(this.iEvent)) {
             specOk = true;
         }
 
         // Check if showcase ok (has it been completed?)
-        let showOk = ((this.type === "show")
+        let showOk = ((this.eventType === "show")
                     && !state.completed.includes(this.iEvent));
 
         if ((garageOk || (state.lvl > piToClass(this.pi)))
@@ -730,13 +754,13 @@ class Event {
                 }
             } else {
 
-                if (this.type !== "norm") {
+                if (this.eventType !== "norm") {
                     eSpecsT.style.display = "block";
                 }
 
                 // Show row, but only enter button if car ok
                 this.row.style.display = "table-row";
-                if (this.type === "show" || this.type === "spec") {
+                if (this.eventType === "show" || this.eventType === "spec") {
                     this.completedRow.style.display = "none";
                 }
                 if ((carModelOk && carClassOk && specOk)
@@ -763,7 +787,7 @@ class Event {
             allInfo += "\n\n";
             allInfo += "Event sharecode: " + this.sharecode;
 
-            if (this.type === "spec") {
+            if (this.eventType === "spec") {
                 // Add PI restriction
                 allInfo += "\n";
                 allInfo += "Minimum PI: ";
@@ -779,7 +803,7 @@ class Event {
                 }
             }
 
-            if (this.type === "show") {
+            if (this.eventType === "show") {
 
                 // Add eligible car models
                 allInfo += "\n\nBorrow one of:\n";
@@ -836,9 +860,7 @@ class Event {
         eRacesT.style.display = "table";
 
         // Create the event race
-        this.race = new Race(this.raceName,
-                             0,
-                             this.resultFactor);
+        this.race = new Race(this.raceName, this.prizeType);
 
         // Makes buttons go through this class
         this.race.positionSelect.id = this.name + " E";
@@ -889,7 +911,7 @@ class Event {
             }
 
             // Mark non-repeatable events as finished
-            if (this.type === "show" || this.type === "spec") {
+            if (this.eventType === "show" || this.eventType === "spec") {
                 state.completed.push(this.iEvent);
                 this.completedRow.cells[1].appendChild(this.infoButton);
             }
@@ -953,7 +975,7 @@ class Event {
             this.finished = true;
 
             // Only level up with a podium
-            if (this.type === "prog" && podium) {
+            if (this.eventType === "prog" && podium) {
                 state.lvl++;
                 updateState();
             }
@@ -1555,7 +1577,7 @@ events.push(new Event("Class advancement: " + endurances[1],
                       "to the next class!",
                       endurances[1],
                       "000 000 000",
-                      "road", "prog", 2));
+                      "road", "prog", "double"));
 
 events.push(new Event("Class advancement: " + endurances[2],
                       events.length,
@@ -1563,7 +1585,7 @@ events.push(new Event("Class advancement: " + endurances[2],
                       "to the next class!",
                       endurances[2],
                       "000 000 000",
-                      "dirt", "prog", 2));
+                      "dirt", "prog", "double"));
 
 events.push(new Event("Group A Touring Colossus",
                       events.length,
@@ -1571,7 +1593,7 @@ events.push(new Event("Group A Touring Colossus",
                       "to this ultimate road racing showdown!",
                       endurances[1],
                       "000 000 000",
-                      "both", "spec", 1,
+                      "both", "spec", "double",
                       610, [[3, 2], [9, 4], [19, 2]]));
 
 events.push(new Event("Group A Rally Goliath",
@@ -1580,7 +1602,7 @@ events.push(new Event("Group A Rally Goliath",
                       "to this ultimate rally showdown!",
                       endurances[2],
                       "000 000 000",
-                      "both", "spec", 1,
+                      "both", "spec", "double",
                       670, [[21, 1], [26, 1], [27, 4]]));
 
 events.push(new Event("Showcase: Vintage Hatchbacks",
@@ -1592,7 +1614,7 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "placements, so don't hesitate to get dirty!",
                       "Horizon Baja Scramble 7L",
                       "000 000 000",
-                      "both", "show", 1,
+                      "both", "show", "podium",
                       600, [[9, 5], [10, 4], [29, 3]]));
 
 events.push(new Event("Showcase: Fairlady vs. 2000GT",
@@ -1605,7 +1627,7 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       "for this event.",
                       "Horizon Mexico Circuit 7L",
                       "000 000 000",
-                      "both", "show", 1,
+                      "both", "show", "all",
                       600, [[22, 4], [27, 7]]));
 
 events.push(new Event("Showcase: Vintage Explorers",
@@ -1615,7 +1637,7 @@ events.push(new Event("Showcase: Vintage Explorers",
                       "courtesy of the Horizon Festival!",
                       endurances[3],
                       "000 000 000",
-                      "both", "show", 1,
+                      "both", "show", "normal",
                       700, [[9, 6], [12, 1], [15, 1], [27, 6]]));
 
 events.push(new Event("Showcase: 80s Supercars",
@@ -1628,7 +1650,7 @@ events.push(new Event("Showcase: 80s Supercars",
                       "expensive poster cars!",
                       endurances[4],
                       "000 000 000",
-                      "both", "show", 1,
+                      "both", "show", "normal",
                       700, [[8, 3], [14, 2], [24, 3]]));
 
 events.push(new Event("Showcase: 90s Supercars",
@@ -1641,7 +1663,7 @@ events.push(new Event("Showcase: 90s Supercars",
                       "with these priceless supercars.",
                       endurances[0],
                       "000 000 000",
-                      "both", "show", 1,
+                      "both", "show", "all",
                       800, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]]));
 
 let roadStart = events.length;
@@ -1651,7 +1673,7 @@ for (let t = 0; t < roadCircuits.length; t++) {
                           "Finish in the top half to get prize money!",
                           roadCircuits[t].name + " Circuit",
                           roadCircuits[t].sharecode,
-                          "road", "norm"));
+                          "road", "norm", "normal"));
 }
 
 let dirtStart = events.length;
@@ -1661,7 +1683,7 @@ for (let t = 0; t < dirtScrambles.length; t++) {
                           "Finish in the top half to get prize money!",
                           dirtScrambles[t].name + " Scramble",
                           dirtScrambles[t].sharecode,
-                          "dirt", "norm"));
+                          "dirt", "norm", "normal"));
 }
 
 // Initialize state
