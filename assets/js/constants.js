@@ -531,16 +531,6 @@ const classPI = [
     998,
     999];
 
-const classXP = [
-    Math.pow(10, 0),
-    Math.pow(10, 3),
-    Math.pow(10, 4),
-    Math.pow(10, 5),
-    Math.pow(10, 6),
-    Math.pow(10, 7),
-    Math.pow(10, 8),
-    Math.pow(10, 8)];
-
 const classLetter = [
     "Invalid!",
     "D",
@@ -560,6 +550,26 @@ const classColor = [
     "#9d56ff",
     "#3460fc",
     "#67b648"];
+
+const classXP = [
+    Math.pow(10, 0),
+    Math.pow(10, 3),
+    Math.pow(10, 4),
+    Math.pow(10, 5),
+    Math.pow(10, 6),
+    Math.pow(10, 7),
+    Math.pow(10, 8),
+    Math.pow(10, 8)];
+
+const classGameSpeed = [
+    0,
+    8,
+    8,
+    6,
+    4,
+    0,
+    0,
+    0];
 
 const positionXP = [
     -1,
@@ -641,17 +651,17 @@ const positionPrize = {
             1000,
             500],
         A: [0, // A and S
+            40000,
+            32000,
+            28000,
+            24000,
             20000,
             16000,
-            14000,
             12000,
             10000,
             8000,
             6000,
-            5000,
             4000,
-            3000,
-            2000,
-            1000],
+            2000],
     },
 };

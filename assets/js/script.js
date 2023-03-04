@@ -340,7 +340,7 @@ class Car {
 // -----------------------------------------------------------------------
 
 class Race {
-    constructor(name, prizeType) {
+    constructor(name, prizeType, loanCar) {
 
         // Add race to map
         raceMap.set(name + " R", this);
@@ -348,6 +348,7 @@ class Race {
         // Race state variables
         this.name = name;
         this.prizeType = prizeType;
+        this.loanCar = loanCar;
 
         // Add and populate new row
         this.row = eRacesTB.insertRow(0);
@@ -390,7 +391,10 @@ class Race {
         this.damageInput.value = "";
 
         // Update result variables
-        if (state.cCar !== -1) {
+        if (this.loanCar !== "none") {
+            this.setDeltaMoney(loanCars.get(this.loanCar).pi);
+            this.setDeltaXP(loanCars.get(this.loanCar).pi);
+        } else if (state.cCar !== -1) {
             this.setDeltaMoney(state.cars[state.cCar].pi);
             this.setDeltaXP(state.cars[state.cCar].pi);
         } else {
@@ -418,7 +422,7 @@ class Race {
         } else if (this.prizeType === "all") {
             if (piToClass(pi) === 1 || piToClass(pi) === 2) {
                 return positionPrize.all.C[position]
-            } else if (piToClass(pi) === 4) {
+            } else if (piToClass(pi) === 4 || piToClass(pi) === 5) {
                 return positionPrize.all.A[position]
             }
         }
@@ -428,9 +432,15 @@ class Race {
     }
 
     setDeltaMoney(pi) {
-        // Prize depends on class, position and damage
-        this.deltaMoney = this.getPrize(this.position, pi)
-                        - state.cars[state.cCar].repairCost(this.damage);
+        if (this.loanCar !== "none") {
+            this.deltaMoney = this.getPrize(this.position, pi)
+                            - Math.floor(this.damage
+                                       * loanCars.get(this.loanCar).rep);
+        } else {
+            this.deltaMoney = this.getPrize(this.position, pi)
+                            - state.cars[state.cCar].repairCost(this.damage);
+        }
+
 
         // Set button text depending on prize
         if (this.deltaMoney > 0) {
@@ -496,17 +506,27 @@ class Race {
             this.deltaXP = 0;
             return;
         }
+        if (this.loanCar !== "none") {
+            iClass = state.lvl;
+        }
 
         // Calculate the deltaXP, messy but should be cool
 
         // PI of the car is a straight factor, more is better
         let subClass = this.getSubClass(pi);
+        if (this.loanCar !== "none") {
+            subClass = this.getSubClass(classPI[iClass]);
+        }
         let classFactor = subClass * classXP[iClass] / 1000;
 
         // These are only used for damageRatio
         let prizeFactor = this.getPrize(2, pi)
                         + this.getPrize(this.position, pi);
         let repairCost = state.cars[state.cCar].repairCost(this.damage);
+        if (this.loanCar !== "none") {
+            repairCost = Math.floor(this.damage
+                                  * loanCars.get(this.loanCar).rep);
+        }
 
         // damageRatio is in [0, 1]
         let damageRatio = Math.max(0, Math.min(1,
@@ -521,21 +541,39 @@ class Race {
 
         // the magic 4 is just game speed balancing
         // adjust/refine if necessary
-        this.deltaXP = Math.ceil(4 * classFactor * damageFactor);
+        this.deltaXP = Math.ceil(classGameSpeed[iClass]
+                               * classFactor
+                               * damageFactor);
     }
 
     setPosition(value) {
         this.position = toInt(value);
 
-        this.setDeltaMoney(state.cars[state.cCar].pi);
-        this.setDeltaXP(state.cars[state.cCar].pi);
+        if (this.loanCar !== "none") {
+            this.setDeltaMoney(loanCars.get(this.loanCar).pi);
+            this.setDeltaXP(loanCars.get(this.loanCar).pi);
+        } else if (state.cCar !== -1) {
+            this.setDeltaMoney(state.cars[state.cCar].pi);
+            this.setDeltaXP(state.cars[state.cCar].pi);
+        } else {
+            this.setDeltaMoney(classPI[0]);
+            this.setDeltaXP(classPI[0]);
+        }
     }
 
     setDamage(value) {
         this.damage = toPositiveInt(value);
 
-        this.setDeltaMoney(state.cars[state.cCar].pi);
-        this.setDeltaXP(state.cars[state.cCar].pi);
+        if (this.loanCar !== "none") {
+            this.setDeltaMoney(loanCars.get(this.loanCar).pi);
+            this.setDeltaXP(loanCars.get(this.loanCar).pi);
+        } else if (state.cCar !== -1) {
+            this.setDeltaMoney(state.cars[state.cCar].pi);
+            this.setDeltaXP(state.cars[state.cCar].pi);
+        } else {
+            this.setDeltaMoney(classPI[0]);
+            this.setDeltaXP(classPI[0]);
+        }
     }
 
     finish() {
@@ -563,12 +601,18 @@ class Race {
         this.row.cells[1].removeChild(this.positionSelect);
         this.row.cells[1].innerText = positionName[this.position];
         this.row.cells[2].removeChild(this.damageInput);
-        this.row.cells[2].innerText = moneyToString(state.cars[state.cCar].repairCost(this.damage));
+        if (this.loanCar !== "none") {
+            this.row.cells[2].innerText = moneyToString(Math.floor(this.damage * loanCars.get(this.loanCar).rep));
+        } else {
+            this.row.cells[2].innerText = moneyToString(state.cars[state.cCar].repairCost(this.damage));
+        }
         this.row.cells[3].removeChild(this.finishButton);
         this.row.cells[3].innerText = moneyToString(this.deltaMoney);
 
         // Depreciate value of car
-        state.cars[state.cCar].depreciate(this.damage);
+        if (this.loanCar === "none") {
+            state.cars[state.cCar].depreciate(this.damage);
+        }
 
         updateState();
     }
@@ -585,10 +629,11 @@ class Event {
                 raceName,
                 sharecode,
                 category,
-                eventType,
-                prizeType,
+                eventType = "norm",
+                prizeType = "normal",
                 pi = 0,
-                cars = []) {
+                cars = [],
+                loanCar = "none") {
 
         // Add to event map for the enter button
         // Add to race map for race buttons to go via here (finish!)
@@ -606,6 +651,7 @@ class Event {
         this.prizeType = prizeType;
         this.pi = pi;
         this.cars = JSON.parse(JSON.stringify(cars));
+        this.loanCar = loanCar;
 
         // Other state variables
         this.race = null;
@@ -860,7 +906,7 @@ class Event {
         eRacesT.style.display = "table";
 
         // Create the event race
-        this.race = new Race(this.raceName, this.prizeType);
+        this.race = new Race(this.raceName, this.prizeType, this.loanCar);
 
         // Makes buttons go through this class
         this.race.positionSelect.id = this.name + " E";
@@ -959,6 +1005,10 @@ class Event {
         // Sanity check
         if (this.entered && !this.finished) {
             let repairCost = state.cars[state.cCar].repairCost(this.race.damage);
+            if (this.loanCar !== "none") {
+                repairCost = Math.floor(this.race.damage
+                                      * loanCars.get(this.loanCar).rep);
+            }
 
             // Add progress to state
             state.cEvent.p.push([
@@ -1002,7 +1052,7 @@ class Event {
         this.race.row.cells[3].innerText = moneyToString(aProgress[2]);
 
         // Show next race or return button
-//        this.entered = true; // probably not needed?
+//        this.entered = true; // probably not needed? since we enter() before load()ing
         this.finished = true;
     }
 
@@ -1615,7 +1665,8 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "Horizon Baja Scramble 7L",
                       "000 000 000",
                       "both", "show", "podium",
-                      600, [[9, 5], [10, 4], [29, 3]]));
+                      600, [[9, 5], [10, 4], [29, 3]],
+                      "vintageHatch"));
 
 events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       events.length,
@@ -1628,7 +1679,8 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       "Horizon Mexico Circuit 7L",
                       "000 000 000",
                       "both", "show", "all",
-                      600, [[22, 4], [27, 7]]));
+                      600, [[22, 4], [27, 7]],
+                      "vintageSport"));
 
 events.push(new Event("Showcase: Vintage Explorers",
                       events.length,
@@ -1638,7 +1690,8 @@ events.push(new Event("Showcase: Vintage Explorers",
                       endurances[3],
                       "000 000 000",
                       "both", "show", "normal",
-                      700, [[9, 6], [12, 1], [15, 1], [27, 6]]));
+                      700, [[9, 6], [12, 1], [15, 1], [27, 6]],
+                      "vintageExplorer"));
 
 events.push(new Event("Showcase: 80s Supercars",
                       events.length,
@@ -1650,8 +1703,9 @@ events.push(new Event("Showcase: 80s Supercars",
                       "expensive poster cars!",
                       endurances[4],
                       "000 000 000",
-                      "both", "show", "normal",
-                      700, [[8, 3], [14, 2], [24, 3]]));
+                      "both", "show", "double",
+                      700, [[8, 3], [14, 2], [24, 3]],
+                      "80Super"));
 
 events.push(new Event("Showcase: 90s Supercars",
                       events.length,
@@ -1664,7 +1718,8 @@ events.push(new Event("Showcase: 90s Supercars",
                       endurances[0],
                       "000 000 000",
                       "both", "show", "all",
-                      800, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]]));
+                      800, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]],
+                      "90Super"));
 
 let roadStart = events.length;
 for (let t = 0; t < roadCircuits.length; t++) {
@@ -1673,7 +1728,7 @@ for (let t = 0; t < roadCircuits.length; t++) {
                           "Finish in the top half to get prize money!",
                           roadCircuits[t].name + " Circuit",
                           roadCircuits[t].sharecode,
-                          "road", "norm", "normal"));
+                          "road"));
 }
 
 let dirtStart = events.length;
@@ -1683,8 +1738,15 @@ for (let t = 0; t < dirtScrambles.length; t++) {
                           "Finish in the top half to get prize money!",
                           dirtScrambles[t].name + " Scramble",
                           dirtScrambles[t].sharecode,
-                          "dirt", "norm", "normal"));
+                          "dirt"));
 }
+
+let loanCars = new Map();
+loanCars.set("vintageSport", {pi: 500, rep: 50000 / 200});
+loanCars.set("vintageHatch", {pi: 500, rep: 10000 / 200});
+loanCars.set("vintageExplorer", {pi: 500, rep: 20000 / 200});
+loanCars.set("80Super", {pi: 800, rep: 120000 / 200});
+loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize state
 let state = {};
