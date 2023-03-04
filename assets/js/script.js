@@ -311,9 +311,15 @@ class Car {
     }
 
     doUpgrade() {
+        // Return if entering higher cost than money available
+        if (this.upgradeCost > state.money) {
+            window.confirm("You can't afford this " + moneyToString(this.upgradeCost) + " upgrade! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
+            return;
+        }
+
         // Ask for confirmation if car PI is too high after upgrade
         if (piToClass(this.upgradePI) > state.lvl) {
-            if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, are you sure you want to upgrade?")) {
+            if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, as you are currently limited to " + classLetter[state.lvl] + " class racing. Are you sure you want to upgrade?")) {
                 return;
             } else if (state.cCar === this.iCar) {
                 state.cCar = -1;
@@ -562,7 +568,7 @@ class Race {
     }
 
     setDamage(value) {
-        this.damage = toPositiveInt(value);
+        this.damage = Math.min(100, toPositiveInt(value));
 
         if (this.loanCar !== "none") {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
