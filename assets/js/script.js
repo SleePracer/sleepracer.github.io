@@ -1672,7 +1672,7 @@ events.push(new Event("Class advancement: " + endurances[2],
                       "000 000 000",
                       "dirt", "prog", "double"));
 
-events.push(new Event("Group A Touring Colossus",
+events.push(new Event("Group A Touring: " + endurances[1],
                       events.length,
                       "Bring your DTM legend " +
                       "to this ultimate road racing showdown!",
@@ -1681,7 +1681,7 @@ events.push(new Event("Group A Touring Colossus",
                       "both", "spec", "double",
                       610, [[3, 2], [9, 4], [19, 2]]));
 
-events.push(new Event("Group A Rally Goliath",
+events.push(new Event("Group A Rally: " + endurances[2],
                       events.length,
                       "Bring your WRC legend " +
                       "to this ultimate rally showdown!",
