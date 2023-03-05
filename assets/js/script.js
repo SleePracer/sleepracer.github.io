@@ -744,6 +744,16 @@ class Event {
             }
         }
 
+        // For special events, let garage be ok when outleveled
+        if (this.eventType === "spec" && state.lvl > piToClass(this.pi)) {
+            garageOk = true;
+        }
+
+        // For showcase events, garage is always true
+        if (this.eventType === "show") {
+            garageOk = true;
+        }
+
         // Check if current car is of the correct class
         let playerClassOk = false;
         let carClassOk = false;
@@ -757,6 +767,18 @@ class Event {
             if (state.cars[state.cCar].pi >= this.pi) {
                 carClassOk = true;
             }
+        }
+
+        if (this.loanCar === "vintageHatch") {
+            playerClassOk = state.xp > 5000;
+        } else if (this.loanCar === "vintageSport") {
+            playerClassOk = state.lvl > 2;
+        } else if (this.loanCar === "vintageExplorer") {
+            playerClassOk = state.xp > 50000;
+        } else if (this.loanCar === "80Super") {
+            playerClassOk = state.lvl > 3;
+        } else if (this.loanCar === "90Super") {
+            playerClassOk = state.xp > 500000;
         }
 
         // Check if one of the next races
@@ -789,7 +811,7 @@ class Event {
         let showOk = ((this.eventType === "show")
                     && !state.completed.includes(this.iEvent));
 
-        if ((garageOk || (state.lvl > piToClass(this.pi)))
+        if (garageOk
          && playerClassOk
          && nextEventOk
          && categoryOk
@@ -1282,6 +1304,13 @@ function setStateFromString(inputString) {
             "none"));
     }
 
+    // Make sure we can't enter too high car class
+    if (state.cCar !== -1) {
+        if (piToClass(state.cars[state.cCar].pi) > state.lvl) {
+            state.cCar = -1;
+        }
+    }
+
     // Enter event if in progress
     if (compact.ce !== null) {
         events[compact.ce.ie].enter();
@@ -1671,7 +1700,7 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "Horizon Baja Scramble 7L",
                       "000 000 000",
                       "both", "show", "podium",
-                      600, [[9, 5], [10, 4], [29, 3]],
+                      0, [[9, 5], [10, 4], [29, 3]],
                       "vintageHatch"));
 
 events.push(new Event("Showcase: Fairlady vs. 2000GT",
@@ -1685,7 +1714,7 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       "Horizon Mexico Circuit 7L",
                       "000 000 000",
                       "both", "show", "all",
-                      600, [[22, 4], [27, 7]],
+                      0, [[22, 4], [27, 7]],
                       "vintageSport"));
 
 events.push(new Event("Showcase: Vintage Explorers",
@@ -1696,7 +1725,7 @@ events.push(new Event("Showcase: Vintage Explorers",
                       endurances[3],
                       "000 000 000",
                       "both", "show", "normal",
-                      700, [[9, 6], [12, 1], [15, 1], [27, 6]],
+                      0, [[9, 6], [12, 1], [15, 1], [27, 6]],
                       "vintageExplorer"));
 
 events.push(new Event("Showcase: 80s Supercars",
@@ -1710,7 +1739,7 @@ events.push(new Event("Showcase: 80s Supercars",
                       endurances[4],
                       "000 000 000",
                       "both", "show", "double",
-                      700, [[8, 3], [14, 2], [24, 3]],
+                      0, [[8, 3], [14, 2], [24, 3]],
                       "80Super"));
 
 events.push(new Event("Showcase: 90s Supercars",
@@ -1724,7 +1753,7 @@ events.push(new Event("Showcase: 90s Supercars",
                       endurances[0],
                       "000 000 000",
                       "both", "show", "all",
-                      800, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]],
+                      0, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]],
                       "90Super"));
 
 let roadStart = events.length;
@@ -1748,10 +1777,10 @@ for (let t = 0; t < dirtScrambles.length; t++) {
 }
 
 let loanCars = new Map();
-loanCars.set("vintageSport", {pi: 500, rep: 50000 / 200});
-loanCars.set("vintageHatch", {pi: 500, rep: 10000 / 200});
-loanCars.set("vintageExplorer", {pi: 500, rep: 20000 / 200});
-loanCars.set("80Super", {pi: 800, rep: 120000 / 200});
+loanCars.set("vintageHatch", {pi: 490, rep: 10000 / 200});
+loanCars.set("vintageSport", {pi: 480, rep: 50000 / 200});
+loanCars.set("vintageExplorer", {pi: 450, rep: 20000 / 200});
+loanCars.set("80Super", {pi: 780, rep: 120000 / 200});
 loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize state
