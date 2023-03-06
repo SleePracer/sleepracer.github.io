@@ -30,6 +30,7 @@ If you encounter any issues or have any questions, get in touch on [youtube](htt
 
 * Drive to your destination instead of fast traveling.
 Bring some purpose back to the open world and get yourself immersed!
+    * Going Horizon Solo (offline) can make this more interesting!
 * Only change cars at your player house or festival sites.
 * Hide as many UI elements you are comfortable with (in particular skills/notifications).
     * Note that "Lap Time and Position" is needed to see your car damage!

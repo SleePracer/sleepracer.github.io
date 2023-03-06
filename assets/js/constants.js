@@ -20,6 +20,75 @@ const defaultState = {
     cCar: -1,
     cars: []};
 
+/*
+Classic Muscle
+Classic Rally
+GT Cars
+Hot Hatch
+Modern Muscle
+Modern Sports Cars
+Retro Hot Hatch
+Retro Muscle
+Retro Rally
+Retro Saloons
+Retro Sports Cars
+Retro Supercars
+Super Hot Hatch
+Super Saloons
+Vans and Utility
+
+        {name: "Corrado VR6", // 1
+        {name: "Integra Type R", // 1
+        {name: "TT RS Coupé", // 1
+        {name: "Avant RS2", // 2
+        {name: "M2 Coupé", // 1
+        {name: "M3", // 2
+        {name: "Regal GNX", // 1
+        {name: "Impala Super Sport", // 1
+        {name: "Corvette ZR-1", // 2
+        {name: "Camaro Super Sport Coupe", // 3
+        {name: "Challenger SRT Hellcat", // 1
+        {name: "Charger R/T", // 2
+        {name: "F355 Berlinetta", // 1
+        {name: "Mustang GT", // 1
+        {name: "Focus RS", // 2
+        {name: "SVT Cobra R", // 3
+        {name: "Sierra Cosworth RS500", // 4
+        {name: "Mustang Boss 302", // 7
+        {name: "Civic Type R", // 1
+        {name: "Civic Type R", // 2
+        {name: "NSX-R", // 3
+        {name: "Limited Edition Gen-F GTS Maloo", // 1
+        {name: "XKR-S", // 1
+        {name: "Elise Series 1 Sport 190", // 1
+        {name: "RX-7", // 1
+        {name: "MX-5 Miata", // 2
+        {name: "Savanna RX-7", // 3
+        {name: "C 63 AMG Coupé Black Series", // 1
+        {name: "190E 2.5-16 Evolution II", // 2
+        {name: "John Cooper Works GP", // 1
+        {name: "Lancer Evolution VI GSR", // 1
+        {name: "GTO", // 2
+        {name: "Eclipse GSX", // 3
+        {name: "370Z", // 1
+        {name: "Skyline GT-R V-Spec II", // 2
+        {name: "240SX SE", // 3
+        {name: "Firebird Trans AM", // 1
+        {name: "Cayman GTS", // 1
+        {name: "944 Turbo", // 2
+        {name: "911 Turbo 3.3", // 4
+        {name: "Megane R.S.", // 1
+        {name: "Impreza 22B-STI Version", // 1
+        {name: "GR Supra", // 1
+        {name: "86", // 2
+        {name: "Supra RZ", // 3
+        {name: "Celica GT-Four ST205", // 4
+        {name: "Sprinter Trueno GT Apex", // 5
+        {name: "Corsa VXR", // 1
+        {name: "Golf GTI 16V MK2", // 2
+        {name: "242 Turbo Evolution", // 1
+*/
+
 const carList = [
     ["Choose manufacturer", "Choose model"],
     ["Acura", // 1
@@ -56,7 +125,7 @@ const carList = [
          cost: 0, // 1m 700k
          year: 1992,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "934 682 185"}],
     ["Buick", // 5
         {name: "Regal GNX", // 1
          pi: 564,
@@ -101,13 +170,13 @@ const carList = [
          cost: 0, // 2m
          year: 1995,
          buyable: false,
-         sharecode: "000 000 000"},
+         sharecode: "139 425 209"},
         {name: "F40", // 3
          pi: 784,
          cost: 0, // 1m 200k
          year: 1987,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "158 350 366"}],
     ["Ford", // 9
         {name: "Mustang GT", // 1
          pi: 756,
@@ -134,13 +203,13 @@ const carList = [
          cost: 0, // 25k
          year: 1981,
          buyable: false,
-         sharecode: "000 000 000"},
+         sharecode: "337 396 243"},
         {name: "Bronco", // 6
          pi: 421,
          cost: 0, // 38k
          year: 1975,
          buyable: false,
-         sharecode: "000 000 000"},
+         sharecode: "152 201 597"},
         {name: "Mustang Boss 302", // 7
          pi: 581,
          cost: 34000, // 230k
@@ -167,7 +236,7 @@ const carList = [
          cost: 0, // 25k
          year: 1974,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "768 988 417"}],
     ["HSV", // 11
         {name: "Limited Edition Gen-F GTS Maloo", // 1
          pi: 742,
@@ -180,7 +249,7 @@ const carList = [
          cost: 0, // 40k
          year: 1970,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "432 785 346"}],
     ["Jaguar", // 13
         {name: "XKR-S", // 1
          pi: 756,
@@ -192,27 +261,27 @@ const carList = [
          cost: 0, // 350k
          year: 1993,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "734 670 250"}],
     ["Lamborghini", // 14
         {name: "Diablo SV", // 1
          pi: 763,
          cost: 0, // 174k
          year: 1997,
          buyable: false,
-         sharecode: "000 000 000"},
+         sharecode: "676 750 822"},
         {name: "Countach LP5000 QV", // 2
          pi: 735,
          cost: 0, // 220k
          year: 1988,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "715 133 482"}],
     ["Land Rover", // 15
         {name: "Series III", // 1
          pi: 100,
          cost: 0, // 20k
          year: 1972,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "741 498 791"}],
     ["Lotus", // 16
         {name: "Elise Series 1 Sport 190", // 1
          pi: 711,
@@ -241,7 +310,7 @@ const carList = [
          cost: 0, // 15m
          year: 1993,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "179 587 003"}],
     ["Mercedes-Benz", // 19
         {name: "C 63 AMG Coupé Black Series", // 1
          pi: 768,
@@ -319,7 +388,7 @@ const carList = [
          cost: 0, // 2m
          year: 1987,
          buyable: false,
-         sharecode: "000 000 000"},
+         sharecode: "138 366 112"},
         {name: "911 Turbo 3.3", // 4
          pi: 666,
          cost: 86000, // 150k
@@ -368,7 +437,7 @@ const carList = [
          cost: 0, // 55k
          year: 1979,
          buyable: false,
-         sharecode: "000 000 000"},
+         sharecode: "659 489 904"},
         {name: "2000GT", // 7
          pi: 487,
          cost: 0, // 750k
@@ -397,7 +466,7 @@ const carList = [
          cost: 0, // 20k
          year: 1983,
          buyable: false,
-         sharecode: "000 000 000"}],
+         sharecode: "125 978 062"}],
     ["Volvo", // 30
         {name: "242 Turbo Evolution", // 1
          pi: 548,
@@ -448,70 +517,70 @@ const carList = [
 
 const roadCircuits = [
     {name: "Bahía de Plano", // 0
-     sharecode: "000 000 000",
+     sharecode: "174 149 397",
      next: [7, 8, 11]},
     {name: "Arch of Mulegé", // 1
-     sharecode: "000 000 000",
+     sharecode: "198 555 229",
      next: [7, 8, 9]},
     {name: "Los Jardines", // 2
-     sharecode: "000 000 000",
+     sharecode: "184 187 485",
      next: [3, 4, 5]},
     {name: "Chihuahua", // 3
-     sharecode: "000 000 000",
+     sharecode: "136 078 938",
      next: [2, 4, 6, 10, 12]},
     {name: "Tierra Próspera", // 4
-     sharecode: "000 000 000",
+     sharecode: "130 808 076",
      next: [2, 3, 5, 9, 12]},
     {name: "Playa Azul", // 5
-     sharecode: "000 000 000",
+     sharecode: "150 442 354",
      next: [2, 4, 9]},
     {name: "Lookout", // 6
-     sharecode: "000 000 000",
+     sharecode: "438 034 248",
      next: [3, 10, 11, 12]},
     {name: "Horizon Mexico", // 7
-     sharecode: "000 000 000",
+     sharecode: "699 786 287",
      next: [0, 1, 8, 9]},
     {name: "Emerald", // 8
-     sharecode: "000 000 000",
+     sharecode: "919 021 268",
      next: [0, 1, 7]},
     {name: "Estadio", // 9
-     sharecode: "000 000 000",
+     sharecode: "121 779 947",
      next: [1, 4, 5, 7, 10, 11, 12]},
     {name: "Cathedral", // 10
-     sharecode: "000 000 000",
+     sharecode: "141 193 063",
      next: [3, 6, 9, 11, 12]},
     {name: "Plaza", // 11
-     sharecode: "000 000 000",
+     sharecode: "115 934 463",
      next: [0, 6, 9, 10, 12]},
     {name: "Bola Ocho", // 12
-     sharecode: "000 000 000",
+     sharecode: "833 236 086",
      next: [3, 4, 6, 9, 10, 11]}];
 
 const dirtScrambles = [
     {name: "River", // 0
-     sharecode: "000 000 000",
+     sharecode: "484 606 232",
      next: [2, 3, 6]},
     {name: "Mangrove", // 1
-     sharecode: "000 000 000",
+     sharecode: "948 466 700",
      next: [4, 6, 7]},
     {name: "Mulegé Town", // 2
-     sharecode: "000 000 000",
+     sharecode: "124 178 785",
      next: [0, 3, 5]},
     {name: "San Juan", // 3
-     sharecode: "000 000 000",
+     sharecode: "906 146 632",
      next: [0, 2, 4, 5, 7]},
 //    "Horizon Baja",
-    {name: "Teotihuacan", // 4
-     sharecode: "000 000 000",
+    {name: "Teotihuacán", // 4
+     sharecode: "158 795 834",
      next: [1, 3, 6, 7]},
     {name: "Caldera", // 5
-     sharecode: "000 000 000",
+     sharecode: "154 507 944",
      next: [2, 3, 7]},
     {name: "La Selva", // 6
-     sharecode: "000 000 000",
+     sharecode: "835 943 619",
      next: [0, 1, 4]},
     {name: "El Pípila", // 7
-     sharecode: "000 000 000",
+     sharecode: "172 245 033",
      next: [1, 3, 4, 5]}];
 
 const endurances = [

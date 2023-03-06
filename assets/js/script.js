@@ -1661,7 +1661,7 @@ events.push(new Event("Class advancement: " + endurances[1],
                       "Finish on the podium to advance " +
                       "to the next class!",
                       endurances[1],
-                      "000 000 000",
+                      "758 144 003",
                       "road", "prog", "double"));
 
 events.push(new Event("Class advancement: " + endurances[2],
@@ -1669,7 +1669,7 @@ events.push(new Event("Class advancement: " + endurances[2],
                       "Finish on the podium to advance " +
                       "to the next class!",
                       endurances[2],
-                      "000 000 000",
+                      "138 474 369",
                       "dirt", "prog", "double"));
 
 events.push(new Event("Group A Touring: " + endurances[1],
@@ -1677,7 +1677,7 @@ events.push(new Event("Group A Touring: " + endurances[1],
                       "Bring your DTM legend " +
                       "to this ultimate road racing showdown!",
                       endurances[1],
-                      "000 000 000",
+                      "129 938 789",
                       "both", "spec", "double",
                       610, [[3, 2], [9, 4], [19, 2]]));
 
@@ -1686,7 +1686,7 @@ events.push(new Event("Group A Rally: " + endurances[2],
                       "Bring your WRC legend " +
                       "to this ultimate rally showdown!",
                       endurances[2],
-                      "000 000 000",
+                      "158 394 027",
                       "both", "spec", "double",
                       670, [[21, 1], [26, 1], [27, 4]]));
 
@@ -1698,7 +1698,7 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "Prize money will only be given out for podium " +
                       "placements, so don't hesitate to get dirty!",
                       "Horizon Baja Scramble 7L",
-                      "000 000 000",
+                      "777 763 883",
                       "both", "show", "podium",
                       0, [[9, 5], [10, 4], [29, 3]],
                       "vintageHatch"));
@@ -1712,7 +1712,7 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       "Prize money will be given out to all placements " +
                       "for this event.",
                       "Horizon Mexico Circuit 7L",
-                      "000 000 000",
+                      "167 470 581",
                       "both", "show", "all",
                       0, [[22, 4], [27, 7]],
                       "vintageSport"));
@@ -1723,7 +1723,7 @@ events.push(new Event("Showcase: Vintage Explorers",
                       "of old 4x4 offroaders, " +
                       "courtesy of the Horizon Festival!",
                       endurances[3],
-                      "000 000 000",
+                      "100 217 642",
                       "both", "show", "normal",
                       0, [[9, 6], [12, 1], [15, 1], [27, 6]],
                       "vintageExplorer"));
@@ -1737,7 +1737,7 @@ events.push(new Event("Showcase: 80s Supercars",
                       "Also, try to avoid damaging these " +
                       "expensive poster cars!",
                       endurances[4],
-                      "000 000 000",
+                      "117 745 327",
                       "both", "show", "double",
                       0, [[8, 3], [14, 2], [24, 3]],
                       "80Super"));
@@ -1751,7 +1751,7 @@ events.push(new Event("Showcase: 90s Supercars",
                       "for this event, so be extra careful " +
                       "with these priceless supercars.",
                       endurances[0],
-                      "000 000 000",
+                      "112 324 287",
                       "both", "show", "all",
                       0, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]],
                       "90Super"));
