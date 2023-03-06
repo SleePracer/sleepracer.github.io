@@ -24,6 +24,7 @@ If you encounter any issues or have any questions, get in touch on [youtube](htt
 * Your Class is the maximum class of cars you're allowed to race.
     * It will increase as you progress, starting with C and ending with A!
 * No restarts or rewinds, let whatever happens happen!
+    * Not winning is ok in Career Mode, although a few events require podium finishes to progress!
 
 
 # Recommendations (can do's)
@@ -45,6 +46,9 @@ This will help you get invested in your playthrough and your cars!
 
 * Dynamic difficulty, changing with race results. The difficulty is currently set at about 10% higher than Unbeatable for all events.
     * If this is too high for you, but you want to play career mode, and don't want to wait for me to fix this, hit me up for help on how to modify the blueprint rules yourself!
+    * Note that in Career Mode, you're not meant to win all races! Rather, you're meant to finish somewhere in the top half, and not take too much damage.
+* Custom routes.
+    * I'd love to expand beyond the Forza Horizon 5 base game maps at some point, contact me if you're interested in having your tracks in Career Mode!
 * Further balancing, many aspects have not been playtested at all.
 * Blueprint rules could possibly end the event prematurely as a DNF if enough damage is taken.
 * Change livery button in garage?

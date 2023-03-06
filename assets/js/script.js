@@ -472,6 +472,7 @@ class Race {
                 baseXP--;
             }
         }
+/*
         if (this.position === 1) {
             // This race win
             if (Math.floor((state.wins % 100) / 10) === 1) {
@@ -483,6 +484,7 @@ class Race {
                 baseXP--;
             }
         }
+*/
         return baseXP;
     }
 
