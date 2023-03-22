@@ -5,6 +5,7 @@
 layout: home
 ---
 
+<!-- Includes -->
 <script defer src="./assets/js/constants.js"></script>
 <script defer src="./assets/js/elements.js"></script>
 <script defer src="./assets/js/helpers.js"></script>
@@ -13,247 +14,259 @@ layout: home
 
 <!-- Start screen -->
 <div id="start" style="display: none">
-
-<h1>Read the rules</h1>
-<a href="/rules/">They can be found here.</a>
-<br>
-<br>
-<h1>Start new game</h1>
-<div>
-  <p>What is your name?</p>
-  <input id="startName"
-         type="text"
-         placeholder="Player name"
-         onkeyup=startNameInput()>
-  <button onClick="startNameButton()">OK</button>
-</div>
-<div id="startCarDiv" style="display: none">
+  <h1>Read the rules</h1>
+  <a href="/rules/">They can be found here.</a>
   <br>
-  <p>Choose your rustbox:</p>
-  <div id="startCars">
-    <div class="startCar">
-      <div class="startCarImg">
-        <img src="./assets/png/mustang.png"></img>
+  <br>
+  <h1>Start new game</h1>
+  <div>
+    <p>What is your name?</p>
+    <input id="startName"
+           type="text"
+           placeholder="Player name"
+           onkeyup=startNameInput()>
+    <button onClick="startNameButton()">OK</button>
+  </div>
+  <div id="startCarDiv" style="display: none">
+    <br>
+    <p>Choose your rustbox:</p>
+    <div id="startCars">
+      <div class="startCar">
+        <div class="startCarImg">
+          <img src="./assets/png/mustang.png"></img>
+        </div>
+        <div>
+          <input id="mustangRadio"
+                 type="radio"
+                 name="startCar"
+                 onClick="mustangRadio()">
+          <label for="mustangRadio">Ford SVT Cobra R</label><br>
+        </div>
       </div>
-      <div>
-        <input id="mustangRadio"
-               type="radio"
-               name="startCar"
-               onClick="mustangRadio()">
-        <label for="mustangRadio">Ford SVT Cobra R</label><br>
+      <div class="startCar">
+        <div class="startCarImg">
+          <img src="./assets/png/eclipse.png"></img>
+        </div>
+        <div>
+          <input id="eclipseRadio"
+                 type="radio"
+                 name="startCar"
+                 onClick="eclipseRadio()">
+          <label for="eclipseRadio">Mitsubishi Eclipse GSX</label><br>
+        </div>
       </div>
-    </div>
-    <div class="startCar">
-      <div class="startCarImg">
-        <img src="./assets/png/eclipse.png"></img>
-      </div>
-      <div>
-        <input id="eclipseRadio"
-               type="radio"
-               name="startCar"
-               onClick="eclipseRadio()">
-        <label for="eclipseRadio">Mitsubishi Eclipse GSX</label><br>
-      </div>
-    </div>
-    <div class="startCar">
-      <div class="startCarImg">
-        <img src="./assets/png/corrado.png"></img>
-      </div>
-      <div>
-        <input id="corradoRadio"
-               type="radio"
-               name="startCar"
-               onClick="corradoRadio()">
-        <label for="corradoRadio">Volkswagen Corrado VR6</label><br>
+      <div class="startCar">
+        <div class="startCarImg">
+          <img src="./assets/png/corrado.png"></img>
+        </div>
+        <div>
+          <input id="corradoRadio"
+                 type="radio"
+                 name="startCar"
+                 onClick="corradoRadio()">
+          <label for="corradoRadio">Volkswagen Corrado VR6</label><br>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div id="startCarInfoDiv" style="display: none">
+  <div id="startCarInfoDiv" style="display: none">
+    <br>
+    <p id="startCarInfo" style="color: red"></p>
+    <button onClick="startCarInfoButton()">OK</button>
+  </div>
+  <div id="startCarNameDiv" style="display: none">
+    <br>
+    <p>Name your rustbox:</p>
+    <input id="startCarName"
+           type="text"
+           placeholder="First Car Name"
+           onkeyup=startCarNameInput()>
+    <button onClick="startCarNameButton()">OK</button>
+  </div>
+  <div id="startGameDiv" style="display: none">
+    <br>
+    <p>Ready to start?</p>
+    <button onClick="startGameButton()">Start game</button>
+  </div>
   <br>
-  <p id="startCarInfo" style="color: red"></p>
-  <button onClick="startCarInfoButton()">OK</button>
-</div>
-<div id="startCarNameDiv" style="display: none">
   <br>
-  <p>Name your rustbox:</p>
-  <input id="startCarName"
-         type="text"
-         placeholder="First Car Name"
-         onkeyup=startCarNameInput()>
-  <button onClick="startCarNameButton()">OK</button>
-</div>
-<div id="startGameDiv" style="display: none">
-  <br>
-  <p>Ready to start?</p>
-  <button onClick="startGameButton()">Start game</button>
-</div>
-<br>
-<br>
-<h1>Load game</h1>
-<div>
-  <input id="startLoad"
-         placeholder="Paste game data here"
-         onkeyup=loadGameInput()>
-  <button onClick="loadGameButton()">Load game</button>
-</div>
-
+  <h1>Load game</h1>
+  <div>
+    <input id="startLoad"
+           placeholder="Paste game data here"
+           onkeyup=loadGameInput()>
+    <button onClick="loadGameButton()">Load game</button>
+  </div>
 </div>
 
 <!-- The actual game -->
 <div id="game" style="display: none">
 
-<!-- Header -->
-<table class="state">
-  <thead>
-    <td id="stateName">Name</td>
-    <td id="stateCar">Car</td>
-    <td id="stateMoney"
-        align="right">
-    </td>
-    <td>
-      <div id="stateLvlDiv">
-        <div id="stateLvl">Class: </div>
-        <div id="stateXPBar"
-             align="left">
-          <div id="stateXPProgress"></div>
+  <!-- Header -->
+  <table class="state">
+    <thead>
+      <td id="stateName">Name</td>
+      <td id="stateCar">Car</td>
+      <td id="stateMoney"
+          align="right">
+      </td>
+      <td>
+        <div id="stateLvlDiv">
+          <div id="stateLvl">Class: </div>
+          <div id="stateXPBar"
+               align="left">
+            <div id="stateXPProgress"></div>
+          </div>
         </div>
-      </div>
-    </td>
-  </thead>
-</table>
+      </td>
+    </thead>
+  </table>
 
-<div id="eventsDiv"
-     style="display: block">
-  <h1>Events</h1>
-  <div id="eventTables">
-    <div id="specsTable">
-      <h2>Special events</h2>
+  <!-- News -->
+  <div id="news">
+    <h1>News</h1>
+    <a href="/news/">Introducing the "News" page!</a>
+    <button onClick="newsOk()">
+      Ok
+    </button>
+    <br>
+    <br>
+  </div>
+
+  <!-- Events -->
+  <div id="eventsDiv"
+       style="display: block">
+    <h1>Events</h1>
+    <div id="eventTables">
+      <div id="specsTable">
+        <h2>Special events</h2>
+        <table class="events">
+          <thead style="display: none">
+            <td>Name</td>
+            <td>Buttons</td>
+          </thead>
+          <tbody id="specsTableBody">
+          </tbody>
+        </table>
+      </div>
+      <h2>Normal events</h2>
       <table class="events">
-        <thead style="display: none">
+        <thead id="eventsTableHead"
+               style="display: none">
           <td>Name</td>
           <td>Buttons</td>
         </thead>
-        <tbody id="specsTableBody">
+        <tbody id="eventsTableBody">
         </tbody>
       </table>
+      <div id="completedTable">
+        <h2>Completed events</h2>
+        <table class="events">
+          <thead style="display: none">
+            <td>Name</td>
+            <td>Buttons</td>
+          </thead>
+          <tbody id="completedTableBody">
+          </tbody>
+        </table>
+      </div>
     </div>
-    <h2>Normal events</h2>
-    <table class="events">
-      <thead id="eventsTableHead"
-             style="display: none">
-        <td>Name</td>
-        <td>Buttons</td>
+    <table id="racesTable"
+           class="races">
+      <thead id="racesTableHead">
+        <td>Race</td>
+        <td>Position</td>
+        <td>Damage</td>
+        <td>Total</td>
       </thead>
-      <tbody id="eventsTableBody">
+      <tbody id="racesTableBody">
       </tbody>
     </table>
-    <div id="completedTable">
-      <h2>Completed events</h2>
-      <table class="events">
-        <thead style="display: none">
-          <td>Name</td>
-          <td>Buttons</td>
-        </thead>
-        <tbody id="completedTableBody">
-        </tbody>
-      </table>
-    </div>
   </div>
-  <table id="racesTable"
-         class="races">
-    <thead id="racesTableHead">
-      <td>Race</td>
-      <td>Position</td>
-      <td>Damage</td>
-      <td>Total</td>
-    </thead>
-    <tbody id="racesTableBody">
-    </tbody>
-  </table>
-</div>
 
-<h1>Garage</h1>
-<table class="garage">
-  <thead id="garageTableHead">
-    <td>Name</td>
-    <td>PI</td>
-    <td>Value</td>
-    <td>
-      <button id="garageOptionsButton"
-              onClick="garageOptions()">
-        Show options
-      </button>
-    </td>
-  </thead>
-  <tbody id="garageTableBody">
-    <tr id="newCarRow"
-        style="display: none">
+  <!-- Garage -->
+  <h1>Garage</h1>
+  <table class="garage">
+    <thead id="garageTableHead">
+      <td>Name</td>
+      <td>PI</td>
+      <td>Value</td>
       <td>
-        <input id="newCarName"
-               type="text"
-               placeholder="Name"
-               style="width: 100%"
-               onkeyup=newCarInput()>
-        <select id="newCarMake"
-                onchange="newCarMakeSelect()">
-        </select>
-        <select id="newCarModel"
-                onchange="newCarModelSelect()">
-        </select>
-      </td>
-      <td></td>
-      <td></td>
-      <td>
-        <button onClick="addCar()">
-          Buy car
+        <button id="garageOptionsButton"
+                onClick="garageOptions()">
+          Show options
         </button>
       </td>
-    </tr>
-  </tbody>
-</table>
+    </thead>
+    <tbody id="garageTableBody">
+      <tr id="newCarRow"
+          style="display: none">
+        <td>
+          <input id="newCarName"
+                 type="text"
+                 placeholder="Name"
+                 style="width: 100%"
+                 onkeyup=newCarInput()>
+          <select id="newCarMake"
+                  onchange="newCarMakeSelect()">
+          </select>
+          <select id="newCarModel"
+                  onchange="newCarModelSelect()">
+          </select>
+        </td>
+        <td></td>
+        <td></td>
+        <td>
+          <button onClick="addCar()">
+            Buy car
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-<h1>Settings</h1>
-<h2>Game settings</h2>
-Racing category:
-<div>
-  <input id="roadRadio"
-         type="radio"
-         name="category"
-         onClick="roadRadio()">
-  <label for="roadRadio">Road Circuits</label><br>
-  <input id="dirtRadio"
-         type="radio"
-         name="category"
-         onClick="dirtRadio()">
-  <label for="dirtRadio">Dirt Scrambles</label><br>
-</div>
-<br>
-<div>
-  <input id="showCompleted"
-         type="checkbox"
-         onClick="showCompleted()">
-  <label for="showCompleted">Show completed events</label>
-</div>
-<br>
-<h2>Save settings</h2>
-Save game:
-<div>
-  <button onClick="saveGameButton()">Copy game data to clipboard</button>
-</div>
-<br>
-Load game:
-<div>
-  <input id="gameLoad"
-         placeholder="Paste game data here"
-         onkeyup=loadGameInput()>
-  <button onClick="loadGameButton()">Load game</button>
-</div>
-<p id="gameLoadError" style="color: red"></p>
-<br>
-Reset game:
-<div>
-  <button onClick="resetGameButton()">Reset</button>
-</div>
+  <!-- Settings -->
+  <h1>Settings</h1>
+  <h2>Game settings</h2>
+  Racing category:
+  <div>
+    <input id="roadRadio"
+           type="radio"
+           name="category"
+           onClick="roadRadio()">
+    <label for="roadRadio">Road Circuits</label><br>
+    <input id="dirtRadio"
+           type="radio"
+           name="category"
+           onClick="dirtRadio()">
+    <label for="dirtRadio">Dirt Scrambles</label><br>
+  </div>
+  <br>
+  <div>
+    <input id="showCompleted"
+           type="checkbox"
+           onClick="showCompleted()">
+    <label for="showCompleted">Show completed events</label>
+  </div>
+  <br>
+  <h2>Save settings</h2>
+  Save game:
+  <div>
+    <button onClick="saveGameButton()">Copy game data to clipboard</button>
+  </div>
+  <br>
+  Load game:
+  <div>
+    <input id="gameLoad"
+           placeholder="Paste game data here"
+           onkeyup=loadGameInput()>
+    <button onClick="loadGameButton()">Load game</button>
+  </div>
+  <p id="gameLoadError" style="color: red"></p>
+  <br>
+  Reset game:
+  <div>
+    <button onClick="resetGameButton()">Reset</button>
+  </div>
 
 </div>

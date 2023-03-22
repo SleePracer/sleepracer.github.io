@@ -1102,6 +1102,7 @@ function getStateString(s = state) {
     // Store state as compact as possible
     let compact = {
         n: s.name,
+        t: s.date,
         xp: s.xp,
         l: s.lvl,
         w: s.wins,
@@ -1192,6 +1193,13 @@ function updateState() {
     }
     eStateXPProgress.style.backgroundColor = classColor[state.lvl];
 
+    // Show new news
+    if (news > state.date) {
+        eNews.style.display = "block";
+    } else {
+        eNews.style.display = "none";
+    }
+
     // Check the boxes
     eRoadRadio.checked = state.road;
     eDirtRadio.checked = state.dirt;
@@ -1256,7 +1264,7 @@ function updateState() {
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.1.0", "0.2.0"];
+    let validVersions = ["0.2.0", "0.2.1"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1279,8 +1287,16 @@ function setStateFromString(inputString) {
 
     // inputString and version is valid, set state
     let compact = parsed[1];
+
+    // 0.2.0 -> 0.2.1
+    if (!Object.hasOwn(compact, 't')) {
+        // - 1 makes sure the player sees the notification first time
+        compact.t = dateInt() - 1;
+    }
+
     state.version = thisVersion;
     state.name = compact.n;
+    state.date = compact.t;
     state.xp = compact.xp;
     state.lvl = compact.l;
     state.wins = compact.w;
@@ -1437,6 +1453,7 @@ function startGameButton() {
     setStateFromString(getStateString(defaultState));
 
     // Set the start game inputs
+    state.date = dateInt();
     state.name = startName;
     state.lvl = 2; // C
     state.xp = classXP[state.lvl] / 10;
@@ -1583,6 +1600,11 @@ function newCarModelSelect() {
 // -----------------------------------------------------------------------
 // Settings
 // -----------------------------------------------------------------------
+
+function newsOk() {
+    state.date = dateInt();
+    updateState();
+}
 
 function roadRadio() {
     state.road = true;
@@ -1778,12 +1800,17 @@ for (let t = 0; t < dirtScrambles.length; t++) {
                           "dirt"));
 }
 
+// Loan cars... this is a bit dirty but ok for now
 let loanCars = new Map();
 loanCars.set("vintageHatch", {pi: 490, rep: 10000 / 200});
 loanCars.set("vintageSport", {pi: 480, rep: 50000 / 200});
 loanCars.set("vintageExplorer", {pi: 450, rep: 20000 / 200});
 loanCars.set("80Super", {pi: 780, rep: 120000 / 200});
 loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
+
+// Initialize page
+// yymmdd of latest news post
+let news = 230322;
 
 // Initialize state
 let state = {};

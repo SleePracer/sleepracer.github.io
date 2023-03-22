@@ -17,6 +17,27 @@ function toPositiveInt(string) {
     return Math.max(0, toInt(string));
 }
 
+function dateInt() {
+    let time = new Date();
+    let y = time.getFullYear() - 2000;
+    let m = time.getMonth() + 1;
+    let d = time.getDate();
+
+    let date = y.toString();
+    if (m <= 9) {
+        date += '0' + m.toString();
+    } else {
+        date += m.toString();
+    }
+    if (d <= 9) {
+        date += '0' + d.toString();
+    } else {
+        date += d.toString();
+    }
+
+    return toInt(date);
+}
+
 function toIntPI(string) {
     let integer = toInt(string);
     if (integer < classPI[0]) {

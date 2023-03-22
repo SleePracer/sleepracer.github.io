@@ -37,7 +37,7 @@ Bring some purpose back to the open world and get yourself immersed!
     * Note that "Lap Time and Position" is needed to see your car damage!
 * Make your own tunes and liveries.
 This will help you get invested in your playthrough and your cars!
-* Charge for livery changes, 10 0000 as a suggestion.
+* Charge for livery changes, 5 000 as a suggestion.
     * Do this by upgrading your car to the same PI. Livery change button coming maybe!
 * Use cockpit view for extra immersion!
 
