@@ -438,15 +438,14 @@ class Race {
     }
 
     setDeltaMoney(pi) {
+        let repairCost = 0;
         if (this.loanCar !== "none") {
-            this.deltaMoney = this.getPrize(this.position, pi)
-                            - Math.floor(this.damage
-                                       * loanCars.get(this.loanCar).rep);
+            repairCost = Math.floor(this.damage * loanCars.get(this.loanCar).rep);
         } else {
-            this.deltaMoney = this.getPrize(this.position, pi)
-                            - state.cars[state.cCar].repairCost(this.damage);
+            repairCost = state.cars[state.cCar].repairCost(this.damage);
         }
 
+        this.deltaMoney = this.getPrize(this.position, pi) - repairCost;
 
         // Set button text depending on prize
         if (this.deltaMoney > 0) {
@@ -570,7 +569,7 @@ class Race {
     }
 
     setDamage(value) {
-        this.damage = Math.min(100, toPositiveInt(value));
+        this.damage = Math.min(100, toPositiveInt(10 * value) / 10);
 
         if (this.loanCar !== "none") {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
@@ -1290,8 +1289,7 @@ function setStateFromString(inputString) {
 
     // 0.2.0 -> 0.2.1
     if (!Object.hasOwn(compact, 't')) {
-        // - 1 makes sure the player sees the notification first time
-        compact.t = dateInt() - 1;
+        compact.t = 0;
     }
 
     state.version = thisVersion;
