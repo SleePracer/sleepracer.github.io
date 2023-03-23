@@ -615,6 +615,10 @@ class Race {
         }
         this.row.cells[3].removeChild(this.finishButton);
         this.row.cells[3].innerText = moneyToString(this.deltaMoney);
+        this.row.cells[3].style.color = "inherit";
+        if (this.deltaMoney < 0) {
+            this.row.cells[3].style.color = "red";
+        }
 
         // Depreciate value of car
         if (this.loanCar === "none") {
@@ -1178,8 +1182,14 @@ function updateState() {
         eEvents.style.display = "none";
     }
 
-    // Update driver rating progress bar
+    // Update money
     eStateMoney.innerText = moneyToString(state.money);
+    eStateMoney.style.color = "inherit";
+    if (state.money < 0) {
+        eStateMoney.style.color = "red";
+    }
+
+    // Update driver rating progress bar
     if (state.lvl > 4) {
         eStateLvl.innerHTML = "Game completed!";
         eStateXPBar.style.display = "none";
