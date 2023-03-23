@@ -124,7 +124,6 @@ function hasBuyableModel(make) {
     let foundModel = false;
     for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
         if (state.lvl >= piToClass(carList[iMake][iModel].pi)
-         && state.money >= carList[iMake][iModel].cost
          && carList[iMake][iModel].buyable) {
             foundModel = true;
         }

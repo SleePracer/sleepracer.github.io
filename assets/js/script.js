@@ -1512,6 +1512,11 @@ function addCar() {
     let newPI = carList[newMake][newModel].pi;
     let newCost = carList[newMake][newModel].cost;
 
+    // Check if the player can afford the car
+    if (newCost > state.money) {
+        return;
+    }
+
     // Ask for confirmation if new car PI is too high
     if (piToClass(newPI) > state.lvl) {
         if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
@@ -1559,10 +1564,9 @@ function newCarMakeSelect() {
         return;
     }
 
-    // Add all buyable car models
+    // Add all car models of current class or lower
     for (let iModel = 1; iModel < carList[make].length; iModel++) {
         if (state.lvl >= piToClass(carList[make][iModel].pi)
-         && state.money >= carList[make][iModel].cost
          && carList[make][iModel].buyable) {
             let option = document.createElement("option");
             option.value = iModel;
@@ -1593,6 +1597,11 @@ function newCarModelSelect() {
     // Show PI and cost
     eNewCarRow.cells[1].innerHTML = addClassToPI(carList[make][model].pi);
     eNewCarRow.cells[2].innerHTML = moneyToString(carList[make][model].cost);
+
+    eNewCarRow.cells[2].style.color = "inherit";
+    if (carList[make][model].cost > state.money) {
+        eNewCarRow.cells[2].style.color = "red";
+    }
 }
 
 // -----------------------------------------------------------------------
