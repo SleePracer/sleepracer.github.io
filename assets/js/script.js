@@ -1624,6 +1624,10 @@ function newsOk() {
 }
 
 function roadRadio() {
+    if (state.road) {
+        return;
+    }
+
     state.road = true;
     state.dirt = false;
     state.next = [];
@@ -1631,6 +1635,10 @@ function roadRadio() {
 }
 
 function dirtRadio() {
+    if (state.dirt) {
+        return;
+    }
+
     state.dirt = true;
     state.road = false;
     state.next = [];
