@@ -864,6 +864,9 @@ class Event {
 
             // Add sharecode
             allInfo += "\n\n";
+            if (this.eventType === "show") {
+                allInfo += "Event track: " + this.raceName + "\n";
+            }
             allInfo += "Event sharecode: " + this.sharecode;
 
             if (this.eventType === "spec") {
