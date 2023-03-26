@@ -471,7 +471,7 @@ class Race {
                 baseXP--;
             }
         }
-/*
+
         if (this.position === 1) {
             // This race win
             if (Math.floor((state.wins % 100) / 10) === 1) {
@@ -483,7 +483,7 @@ class Race {
                 baseXP--;
             }
         }
-*/
+
         return baseXP;
     }
 
@@ -1053,15 +1053,14 @@ class Event {
                 this.race.deltaMoney]);
             updateState();
 
-            // Check if podium before finishing
-            let podium = (this.race.position > 0
-                       && this.race.position < 4);
+            // Check if DNF before finishing
+            let dnf = this.race.position === 0;
 
             this.race.finish();
             this.finished = true;
 
-            // Only level up with a podium
-            if (this.eventType === "prog" && podium) {
+            // Only level up if not DNF
+            if (this.eventType === "prog" && !dnf) {
                 state.lvl++;
                 updateState();
             }
