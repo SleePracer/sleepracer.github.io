@@ -15,7 +15,6 @@ In order to play, simply pretend that your in-game garage and credits don't exis
 Start with your rustbox of choice and progress through your career by racing specific blueprints in Forza Horizon 5.
 If you encounter any issues or have any questions, get in touch on [youtube](https://www.youtube.com/@sleepracer5124/featured) or discord!
 
-
 # Rules (have to's)
 
 * Use the website to keep track of your cars and credits.
@@ -42,22 +41,6 @@ This will help you get invested in your playthrough and your cars!
 * Use cockpit view for extra immersion!
 
 
-# Future plans
-
-* Dynamic difficulty, changing with race results. The difficulty is currently set at about 10% higher than Unbeatable for all events.
-    * If this is too high for you, but you want to play career mode, and don't want to wait for me to fix this, hit me up for help on how to modify the blueprint rules yourself!
-    * Note that in Career Mode, you're not meant to win all races! Rather, you're meant to finish somewhere in the top half, and not take too much damage.
-* Custom routes.
-    * I'd love to expand beyond the Forza Horizon 5 base game maps at some point, contact me if you're interested in having your tracks in Career Mode!
-* Further balancing, many aspects have not been playtested at all.
-* Blueprint rules could possibly end the event prematurely as a DNF if enough damage is taken.
-* Change livery button in garage?
-    * Pay for livery changes manually for now, by upgrading your car to the same PI!
-* Undo button.
-    * If you want help modifying your game state, send me a message!
-* More images on the website (track locations?)!
-
-
 # Questions and Answers
 
 * What's so special about the blueprints? Why can't I just run vanilla Forza events?
@@ -71,3 +54,9 @@ Damage is shown in the HUD info and the only thing you have to do is remember to
     * I also can't use the pre-defined categories since I'll need to share one blueprint per category per track (extra time consuming since I will need to test run them because of the eventlab rules).
     * So I've used custom car restrictions, which is limited to 50 cars.
 The career mode roster and eventlab restrictions are the same, so you will always be able to use your car for the blueprints!
+
+
+# Other Useful Information
+
+  * [Future plans](/future)
+
