@@ -5,6 +5,39 @@ permalink: /news/
 ---
 
 
+# Beta 0.2.2: Updated blueprints!
+
+As I worked on adding switchable difficulty (and other things) to the Rules of Play, I realized that these updates were a massive improvement.
+So I spent the weekend on getting the new rules finished, blueprints re-shared and sharecodes updated!
+They are now live!
+Here's a list of improvements:
+  * Switchable difficulties (this is the big one!)
+      * At the start of a race, you will have 10 seconds to press Activate or Rewind to increase or decrease the difficulty of the event!
+  * Improved balancing
+      * Difficulty now affects drivatar grip in addition to torque, and some light balancing between tracks has been applied!
+  * Taking damage reduces your torque
+      * In almost all events, your damage is divided by three and subtracted from your engine torque. Stay out of trouble!
+  * Boost mode after checkpoint miss and car reset
+      * A little extra help to get back in the race! Not big enough to be abuseable, but enough to soften the blow of a missed checkpoint!
+
+Let me stress once again, that the game is balanced for you to place somewhere in the top 6 on average!
+Winning every now and then is all good of course, but winning twice in a row probably means that the difficulty is set too low.
+On the other end of the spectrum, if you just barely manage to finish in 6th and sometimes place even worse, the difficulty is set too high!
+The steps should be granular enough to let you find a sweet spot.
+Also note that when changing builds, cars or categories, your sweet spot difficulty might change!
+
+In addition to this (in my opinion) massive improvement, I'm also going to remove the requirement to finish class advancement races in podium.
+I failed several times and it was annoying, frustrating and not fun.
+I'll replace it with some extra reward for podium instead, in the future, but this is a necessary hotfix for now.
+
+Happy racing!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-03-26
+  </em>
+</div>
+
+
 # QoL and bugs
 
 The things I mentioned in the previous post were indeed easy to implement, and are now live on the site!

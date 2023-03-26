@@ -11,17 +11,6 @@ The ideas on this page are roughly sorted by when I'll work on implementing them
 I will add new ideas here as I get them, and I will remove items from this page as they are added to the game.
 
 
-# Dynamic difficulty
-
-While I initially envisioned this as "one blueprint per difficulty" and having Career Mode automatically suggest the appropriate blueprint for the player, I have since reconsidered.
-Sharing blueprints with Rules of Play requires playtesting, and even when testing circuits with a single lap, sharing them all took eight hours.
-So sharing one blueprint per difficulty would mean eight hours of boring work per difficulty...
-
-Instead, I will remake the Rules of Play to have the difficulty switchable in the event itself!
-The work in progress version gives the player 10 seconds at the start of the race to increase or decrease difficulty in steps of 10% by pressing the activate and rewind buttons respectively.
-It will be up to the player to choose the difficulty, but keep in mind that the game is balanced for finishing around 4th on average, and repeated wins will decrease the xp gain!
-
-
 # Career restructure
 
 I have only played through 0.2.0 once but I already have ideas and opinions on what to change!
@@ -35,7 +24,10 @@ Making the game longer by means of decreasing xp gain from events would mean tha
 
 In my playthrough, I failed the class advancement from B to A three times, and it was frustrating and not fun.
 I don't want other players to experience that, but I also want it to feel like there's something extra at stake for the class advancements.
-My current thinking is to change it to a more "fail forward" design, where the player advances regardless, but getting podium would give the player a new car discount (in addition to the already twice as high prize money from the event).
+My current thinking is to change it to a more "fail forward" design, where the player gets a new car discount for finishing on the podium (in addition to the already twice as high prize money from the event).
+
+The requirement to finish on podium to progress was removed in 0.2.2 as a hot fix.
+It simply wasn't fun in practice.
 
 I would also like to make the three advancements different events rather than the Colossus or Gauntlet three times.
 Possibly endurance races, as I'll discuss a bit down below.
@@ -82,7 +74,8 @@ What I'm saying is, it would be cool, but it would not be for everyone.
 Players with less than 11 Xbox friends could get themselves a few rivals like this, but to take full advantage you would basically need to make a friendless alt account.
 
 Even then, I will probably do this at some point, because I think it would be cool.
-I've already made one rustbox account, McMillipede####, and getting to the point where the rustbox appeared as a drivatar only took about an hour.
+I've already made one rustbox account, McMillipede#8621, and getting to the point where the rustbox appeared as a drivatar only took about an hour.
+So it's not complete madness, I've already spent countless hours on this project as is.
 
 
 # Alternative starter cars

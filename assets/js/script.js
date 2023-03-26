@@ -1276,7 +1276,7 @@ function updateState() {
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.2.0", "0.2.1"];
+    let validVersions = ["0.2.0", "0.2.1", "0.2.2"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1748,7 +1748,10 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "The Horizon Festival will lend you one of these " +
                       "old beat up, race prepped cars for the event. " +
                       "Prize money will only be given out for podium " +
-                      "placements, so don't hesitate to get dirty!",
+                      "placements, so don't hesitate to get dirty! " +
+                      "\n\nNote that the difficulty starts at 60% " +
+                      "to offset the difference in launch between " +
+                      "you and the drivatars!",
                       "Horizon Baja Scramble 7L",
                       "893 632 614",
                       "both", "show", "podium",
@@ -1773,7 +1776,10 @@ events.push(new Event("Showcase: Vintage Explorers",
                       events.length,
                       "Explore the Mexican countryside in your choice " +
                       "of old 4x4 offroaders, " +
-                      "courtesy of the Horizon Festival!",
+                      "courtesy of the Horizon Festival! " +
+                      "\n\nNote that the difficulty starts at 80% " +
+                      "to offset the difference in launch between " +
+                      "you and the drivatars!",
                       endurances[3],
                       "308 395 047",
                       "both", "show", "normal",
@@ -1838,7 +1844,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230324;
+let news = 230326;
 
 // Initialize state
 let state = {};
