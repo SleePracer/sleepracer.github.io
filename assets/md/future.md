@@ -4,8 +4,6 @@ permalink: /future/
 ---
 
 
-## Future plans
-
 Here I'll try to summarize all my plans for the near and far future.
 The ideas on this page are roughly sorted by when I'll work on implementing them, starting with things planned for the nearest future, working up towards what will probably mark the finished release of Career Mode.
 I will add new ideas here as I get them, and I will remove items from this page as they are added to the game.

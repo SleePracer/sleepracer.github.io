@@ -1709,7 +1709,7 @@ events = [];
 
 events.push(new Event("Class advancement: " + endurances[1],
                       events.length,
-                      "Finish on the podium to advance " +
+                      "Finish this race to advance " +
                       "to the next class!",
                       endurances[1],
                       "100 751 232",
@@ -1717,7 +1717,7 @@ events.push(new Event("Class advancement: " + endurances[1],
 
 events.push(new Event("Class advancement: " + endurances[2],
                       events.length,
-                      "Finish on the podium to advance " +
+                      "Finish this race to advance " +
                       "to the next class!",
                       endurances[2],
                       "835 192 621",
