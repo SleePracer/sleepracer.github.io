@@ -5,6 +5,21 @@ permalink: /news/
 ---
 
 
+<div style="margin-top: 37px"></div>
+# QoL: Paint button!
+
+There's now a "Paint" button in the garage, that essentially does a 5 000 credit upgrade of your car to the same PI!
+Just as for upgrades, the value is increased by half of that amount.
+
+That's all!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-03-28
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Beta 0.2.2: Updated blueprints!
 
 As I worked on adding switchable difficulty (and other things) to the Rules of Play, I realized that these updates were a massive improvement.
@@ -38,6 +53,7 @@ Happy racing!
 </div>
 
 
+<div style="margin-top: 37px"></div>
 # QoL and bugs
 
 The things I mentioned in the previous post were indeed easy to implement, and are now live on the site!
@@ -67,6 +83,7 @@ Something to look forward to!
 </div>
 
 
+<div style="margin-top: 37px"></div>
 # Beta 0.2.1: News page
 
 Introducing the "News" page, where I'll keep you up to date on the progress of Career Mode!

@@ -18,6 +18,9 @@ function getInButtonClick() {
 function showUpgradeButtonClick() {
     carMap.get(this.id).showUpgrade();
 }
+function paintButtonClick() {
+    carMap.get(this.id).paint();
+}
 function sellButtonClick() {
     carMap.get(this.id).sell();
 }
@@ -127,6 +130,7 @@ class Car {
         this.getInButton.innerText = "Get in";
         this.getInButton.onclick = getInButtonClick;
         this.getInButton.style.display = buttonDisplay;
+        this.getInButton.className = "marginBottom";
         this.row.cells[3].appendChild(this.getInButton);
 
         this.showUpgradeButton = document.createElement("button");
@@ -136,6 +140,13 @@ class Car {
         this.showUpgradeButton.style.display = buttonDisplay;
         this.showUpgradeButton.className = "margin";
         this.row.cells[3].appendChild(this.showUpgradeButton);
+
+        this.paintButton = document.createElement("button");
+        this.paintButton.id = this.name;
+        this.paintButton.innerText = "Paint";
+        this.paintButton.onclick = paintButtonClick;
+        this.paintButton.style.display = buttonDisplay;
+        this.row.cells[3].appendChild(this.paintButton);
 
         this.sellButton = document.createElement("button");
         this.sellButton.id = this.name;
@@ -192,6 +203,7 @@ class Car {
     garageOptionsButtons(buttonDisplay) {
         this.getInButton.style.display = buttonDisplay;
         this.showUpgradeButton.style.display = buttonDisplay;
+        this.paintButton.style.display = buttonDisplay;
         this.sellButton.style.display = buttonDisplay;
     }
 
@@ -249,6 +261,20 @@ class Car {
 
         // Show the upgrade buttons
         this.toggleUpgradeButtons("inline");
+    }
+
+    paint() {
+        // Return if player can't afford painting their car
+        if (state.money < 5000) {
+            window.confirm("You can't afford to paint this car! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
+            return;
+        }
+
+        // Update state variables
+        this.value += 2500;
+        state.money -= 5000;
+
+        updateState();
     }
 
     sell() {
@@ -1843,7 +1869,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230326;
+let news = 230328;
 
 // Initialize state
 let state = {};

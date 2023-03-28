@@ -4,11 +4,15 @@ permalink: /future/
 ---
 
 
+<font size="6">Future plans</font>
+<div style="margin-top: 15px"></div>
+
 Here I'll try to summarize all my plans for the near and far future.
 The ideas on this page are roughly sorted by when I'll work on implementing them, starting with things planned for the nearest future, working up towards what will probably mark the finished release of Career Mode.
 I will add new ideas here as I get them, and I will remove items from this page as they are added to the game.
 
 
+<div style="margin-top: 37px"></div>
 # Career restructure
 
 I have only played through 0.2.0 once but I already have ideas and opinions on what to change!
@@ -31,13 +35,7 @@ I would also like to make the three advancements different events rather than th
 Possibly endurance races, as I'll discuss a bit down below.
 
 
-# Livery change button
-
-While not enforced as a rule, changing liveries in career mode should cost the player some money.
-To make this easier, I will add a button next to the upgrade button in the garage.
-For now though, simply make a 5 000 upgrade to the same PI!
-
-
+<div style="margin-top: 37px"></div>
 # Head-to-heads
 
 When cruising between events in Horizon Solo, the drivatars can be challenged to a head-to-head.
@@ -45,6 +43,7 @@ I would like to encourage this by adding head-to-head win/lose buttons that woul
 This sounds abuseable so I'm thinking maybe it could be limited to once between events, but then again, this whole Career Mode is based on trusting players to impose limits on themselves, so I might be overthinking it.
 
 
+<div style="margin-top: 37px"></div>
 # Endurance events
 
 I love endurance events in old Gran Turismo games and would like to add something like that to Career Mode.
@@ -52,6 +51,7 @@ In my opinion, one hour is the sweet spot endurance race length, but even half h
 Since I already plan on replacing the C and B class advancement events with something other than Colossus/Gauntlet, 30 minute endurance races seem like the natural choice for this, so that's probably what I'll do... probably.
 
 
+<div style="margin-top: 37px"></div>
 # Rally events
 
 Since real rally events are run as time trials essentially, it would be cool to have something like that in Career Mode.
@@ -60,6 +60,7 @@ Could even have both tarmac and dirt rallies for both kinds of builds?
 Some planning is needed though, so this will not happen in the nearest future.
 
 
+<div style="margin-top: 37px"></div>
 # Custom drivatars
 
 Imagine if, when playing Career Mode, every event would feature the same drivatars, driving the same car.
@@ -76,6 +77,7 @@ I've already made one rustbox account, McMillipede#8621, and getting to the poin
 So it's not complete madness, I've already spent countless hours on this project as is.
 
 
+<div style="margin-top: 37px"></div>
 # Alternative starter cars
 
 After playing Career Mode one or even more times, players might want to start the game with another rustbox from the roster.
@@ -83,6 +85,7 @@ This is simple enough to do with some save file trickery, but I would like to ha
 For now, if you want help getting a fresh game with another car, just let me know and I'll help out!
 
 
+<div style="margin-top: 37px"></div>
 # Custom routes
 
 While the base game tracks are fun, there are simply not enough of them.
@@ -99,6 +102,7 @@ Here are some criteria the map would need to meet, although I reserve the right 
   * It has to be mainly featuring the pre-existing roads, although some limited custom road usage may be ok
 
 
+<div style="margin-top: 37px"></div>
 # Undo button
 
 It would be very nice to have a way to undo one or more things in Career Mode.
@@ -106,6 +110,7 @@ I don't know how I would implement it though, so it will require some tinkering,
 Not something I will prioritize right now.
 
 
+<div style="margin-top: 37px"></div>
 # Scoring system
 
 In the far future, I would maybe like this feature to signify the transition from Career Mode Beta to Release.

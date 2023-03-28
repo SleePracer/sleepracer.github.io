@@ -5,6 +5,7 @@ permalink: /rules/
 ---
 
 
+<div style="margin-top: 37px"></div>
 # What is this?
 
 Do you also love driving cars in Forza Horizon 5, but not the structure of the game itself?
@@ -16,6 +17,7 @@ Start with your rustbox of choice and progress through your career by racing spe
 If you encounter any issues or have any questions, get in touch on [youtube](https://www.youtube.com/@sleepracer5124/featured) or discord!
 
 
+<div style="margin-top: 37px"></div>
 # Rules (have to's)
 
   * Use the website to keep track of your cars and credits.
@@ -29,6 +31,7 @@ If you encounter any issues or have any questions, get in touch on [youtube](htt
   * No restarts or rewinds, let whatever happens happen!
 
 
+<div style="margin-top: 37px"></div>
 # Recommendations (can do's)
 
   * Drive to your destination instead of fast traveling.
@@ -39,11 +42,10 @@ Bring some purpose back to the open world and get yourself immersed!
       * The only thing you really need is "Lap Time and Position", to see your car damage!
   * Make your own tunes and liveries.
 This will help you get invested in your playthrough and your cars!
-  * Charge for livery changes, 5 000 as a suggestion.
-      * Do this by upgrading your car to the same PI. Livery change button coming maybe!
   * Use cockpit view for extra immersion!
 
 
+<div style="margin-top: 37px"></div>
 # Questions and Answers
 
   * What's so special about the blueprints? Why can't I just run vanilla Forza events?
@@ -59,7 +61,8 @@ Damage is shown in the HUD info and the only thing you have to do is remember to
 The career mode roster and eventlab restrictions are the same, so you will always be able to use your car for the blueprints!
 
 
+<div style="margin-top: 37px"></div>
 # Other Useful Information
 
-  * [Future plans](/future)
+  * [Future plans for Career Mode](/future)
 

@@ -59,3 +59,4 @@ table.garage td:nth-of-type(3) {width: 18%;}
 table.garage td:nth-of-type(4) {width: 28%;}
 
 button.margin {margin: 0px 5px;}
+button.marginBottom {margin-bottom: 5px;}
