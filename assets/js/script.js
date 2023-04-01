@@ -125,20 +125,11 @@ class Car {
 
         // Create and add the options buttons
 
-        this.getInButton = document.createElement("button");
-        this.getInButton.id = this.name;
-        this.getInButton.innerText = "Get in";
-        this.getInButton.onclick = getInButtonClick;
-        this.getInButton.style.display = buttonDisplay;
-        this.getInButton.className = "marginBottom";
-        this.row.cells[3].appendChild(this.getInButton);
-
         this.showUpgradeButton = document.createElement("button");
         this.showUpgradeButton.id = this.name;
         this.showUpgradeButton.innerText = "Upgrade";
         this.showUpgradeButton.onclick = showUpgradeButtonClick;
         this.showUpgradeButton.style.display = buttonDisplay;
-        this.showUpgradeButton.className = "margin";
         this.row.cells[3].appendChild(this.showUpgradeButton);
 
         this.paintButton = document.createElement("button");
@@ -146,6 +137,7 @@ class Car {
         this.paintButton.innerText = "Paint";
         this.paintButton.onclick = paintButtonClick;
         this.paintButton.style.display = buttonDisplay;
+        this.paintButton.className = "margin";
         this.row.cells[3].appendChild(this.paintButton);
 
         this.sellButton = document.createElement("button");
@@ -154,6 +146,14 @@ class Car {
         this.sellButton.onclick = sellButtonClick;
         this.sellButton.style.display = buttonDisplay;
         this.row.cells[3].appendChild(this.sellButton);
+
+        this.getInButton = document.createElement("button");
+        this.getInButton.id = this.name;
+        this.getInButton.innerText = "Get in";
+        this.getInButton.onclick = getInButtonClick;
+        this.getInButton.style.display = buttonDisplay;
+        this.getInButton.className = "marginTop";
+        this.row.cells[3].appendChild(this.getInButton);
 
         // Create the upgrade fields and buttons
 
@@ -201,10 +201,10 @@ class Car {
     }
 
     garageOptionsButtons(buttonDisplay) {
-        this.getInButton.style.display = buttonDisplay;
         this.showUpgradeButton.style.display = buttonDisplay;
         this.paintButton.style.display = buttonDisplay;
         this.sellButton.style.display = buttonDisplay;
+        this.getInButton.style.display = buttonDisplay;
     }
 
     toggleUpgradeButtons(buttonDisplay) {
@@ -239,15 +239,6 @@ class Car {
         this.row.cells[2].innerHTML = moneyToString(this.value);
     }
 
-    getIn() {
-        // Only allow getting into car if class <= lvl
-        if (piToClass(this.pi) <= state.lvl) {
-            state.cCar = this.iCar;
-        }
-
-        updateState();
-    }
-
     showUpgrade() {
         // Hide the car state and show upgrade inputs
         this.row.cells[1].innerHTML = "";
@@ -274,6 +265,7 @@ class Car {
         this.value += 2500;
         state.money -= 5000;
 
+        this.row.cells[2].innerHTML = moneyToString(this.value);
         updateState();
     }
 
@@ -301,6 +293,22 @@ class Car {
         // Delete car from table and state
         eGarageTB.deleteRow(this.iCar);
         state.cars.splice(this.iCar, 1);
+
+        updateState();
+    }
+
+    getIn() {
+        // Only allow getting into car if class <= lvl
+        if (piToClass(this.pi) <= state.lvl) {
+            if (state.cCar !== -1) {
+                // Show "Get in" on the car we're switching from
+                state.cars[state.cCar].getInButton.style.display = "inline";
+            }
+            // Change car
+            state.cCar = this.iCar;
+            // Hide "Get in" on the car we're switching to
+            state.cars[state.cCar].getInButton.style.display = "none";
+        }
 
         updateState();
     }
@@ -1533,6 +1541,9 @@ function garageOptions(show = false) {
     for (let iCar = 0; iCar < state.cars.length; iCar++) {
         state.cars[iCar].garageOptionsButtons(newDisplay);
     }
+    if (state.cCar !== -1) {
+        state.cars[state.cCar].getInButton.style.display = "none";
+    }
 }
 
 function addCar() {
@@ -1568,10 +1579,8 @@ function addCar() {
                             newModel));
     state.money -= newCost;
 
-    // Set to current car if possible
-    if (piToClass(newPI) <= state.lvl) {
-        state.cCar = state.cars.length - 1;
-    }
+    // Try setting to current car
+    state.cars[state.cars.length - 1].getIn();
 
     // Clear input fields
     // Car selectors will be reset in updateState
@@ -1869,7 +1878,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230328;
+let news = 230401;
 
 // Initialize state
 let state = {};

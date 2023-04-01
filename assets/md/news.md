@@ -11,10 +11,12 @@ permalink: /news/
 There's now a "Paint" button in the garage, that essentially does a 5 000 credit upgrade of your car to the same PI!
 Just as for upgrades, the value is increased by half of that amount.
 
+Also, the "Get in" button only shows for the cars you're not already in.
+
 That's all!
 <div style="text-align: right">
   <em>
-    Anaerobisk / SleePracer, 2023-03-28
+    Anaerobisk / SleePracer, 2023-04-01
   </em>
 </div>
 
