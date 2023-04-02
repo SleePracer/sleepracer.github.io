@@ -43,6 +43,11 @@ let eNewCarRow = document.getElementById("newCarRow");
 let eNewCarName = document.getElementById("newCarName");
 let eNewCarMake = document.getElementById("newCarMake");
 let eNewCarModel = document.getElementById("newCarModel");
+let eNewCarPrice = document.getElementById("newCarPrice");
+let eNewCarDiscountB = document.getElementById("newCarDiscountB");
+let eNewCarDiscountBoxB = document.getElementById("newCarDiscountBoxB");
+let eNewCarDiscountA = document.getElementById("newCarDiscountA");
+let eNewCarDiscountBoxA = document.getElementById("newCarDiscountBoxA");
 
 let eRoadRadio = document.getElementById("roadRadio");
 let eDirtRadio = document.getElementById("dirtRadio");

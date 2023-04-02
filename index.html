@@ -125,7 +125,7 @@ layout: home
   <!-- News -->
   <div id="news">
     <h1>News</h1>
-    <a href="/news/">QoL: Paint button!</a>
+    <a href="/news/">Car discounts and paint button!</a>
     <button onClick="newsOk()">
       Ok
     </button>
@@ -215,7 +215,23 @@ layout: home
           </select>
         </td>
         <td></td>
-        <td></td>
+        <td>
+          <div id="newCarPrice"></div>
+          <div id="newCarDiscountB"
+               style="display: none">
+            <input id="newCarDiscountBoxB"
+                   type="checkbox"
+                   onClick="newCarModelSelect()">
+            <label for="newCarDiscountBoxB">-20k</label>
+          </div>
+          <div id="newCarDiscountA"
+               style="display: none">
+            <input id="newCarDiscountBoxA"
+                   type="checkbox"
+                   onClick="newCarModelSelect()">
+            <label for="newCarDiscountBoxA">-40k</label>
+          </div>
+        </td>
         <td>
           <button onClick="addCar()">
             Buy car

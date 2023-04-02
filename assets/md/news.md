@@ -6,23 +6,27 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
-# QoL: Paint button!
+# Beta 0.2.3: Discounts and Paint Button!
 
-There's now a "Paint" button in the garage, that essentially does a 5 000 credit upgrade of your car to the same PI!
+Class Advancements have changed to a more fail-forward approach:
+podium is no longer needed to advance to the next class (since Beta 0.2.2),
+but from Beta 0.2.3, getting podium rewards the player with a discount on their next car purchase!
+All players already in B or A class will get the discounts regardless of their advancement race placements.
+
+Also, there's now a "Paint" button in the garage, that essentially does a 5 000 credit upgrade of your car to the same PI!
 Just as for upgrades, the value is increased by half of that amount.
+And the "Get in" button now only shows for the cars you're not already in.
 
-Also, the "Get in" button only shows for the cars you're not already in.
-
-That's all!
+That's all for this update!
 <div style="text-align: right">
   <em>
-    Anaerobisk / SleePracer, 2023-04-01
+    Anaerobisk / SleePracer, 2023-04-02
   </em>
 </div>
 
 
 <div style="margin-top: 37px"></div>
-# Beta 0.2.2: Updated blueprints!
+# Beta 0.2.2: Updated Blueprints!
 
 As I worked on adding switchable difficulty (and other things) to the Rules of Play, I realized that these updates were a massive improvement.
 So I spent the weekend on getting the new rules finished, blueprints re-shared and sharecodes updated!
@@ -56,7 +60,7 @@ Happy racing!
 
 
 <div style="margin-top: 37px"></div>
-# QoL and bugs
+# QoL and Bugs
 
 The things I mentioned in the previous post were indeed easy to implement, and are now live on the site!
 New quality of life improvements are:
@@ -86,7 +90,7 @@ Something to look forward to!
 
 
 <div style="margin-top: 37px"></div>
-# Beta 0.2.1: News page
+# Beta 0.2.1: News Page!
 
 Introducing the "News" page, where I'll keep you up to date on the progress of Career Mode!
 This will serve as a change log and maybe a blog, hopefully adding a bit of transparency to the project.

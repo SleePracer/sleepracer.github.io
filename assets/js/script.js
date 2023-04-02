@@ -1087,7 +1087,9 @@ class Event {
                 this.race.deltaMoney]);
             updateState();
 
-            // Check if DNF before finishing
+            // Check for podium and DNF before finishing
+            let podium = ((this.race.position >= 1)
+                       && (this.race.position <= 3));
             let dnf = this.race.position === 0;
 
             this.race.finish();
@@ -1096,6 +1098,12 @@ class Event {
             // Only level up if not DNF
             if (this.eventType === "prog" && !dnf) {
                 state.lvl++;
+                if (podium && state.lvl === 3) {
+                    state.discountB = true;
+                }
+                if (podium && state.lvl === 4) {
+                    state.discountA = true;
+                }
                 updateState();
             }
 
@@ -1144,6 +1152,8 @@ function getStateString(s = state) {
         t: s.date,
         xp: s.xp,
         l: s.lvl,
+        db: 0,
+        da: 0,
         w: s.wins,
         r: 0,
         d: 0,
@@ -1155,6 +1165,12 @@ function getStateString(s = state) {
         cc: s.cCar,
         c: carArgs};
 
+    if (s.discountB) {
+        compact.db = 1;
+    }
+    if (s.discountA) {
+        compact.da = 1;
+    }
     if (s.road) {
         compact.r = 1;
     }
@@ -1309,7 +1325,7 @@ function updateState() {
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.2.0", "0.2.1", "0.2.2"];
+    let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1338,11 +1354,27 @@ function setStateFromString(inputString) {
         compact.t = 0;
     }
 
+    // 0.2.2 -> 0.2.3
+    if (!Object.hasOwn(compact, 'db')) {
+        compact.db = 0;
+        if (compact.l >= 3) {
+            compact.db = 1;
+        }
+    }
+    if (!Object.hasOwn(compact, 'da')) {
+        compact.da = 0;
+        if (compact.l >= 4) {
+            compact.da = 1;
+        }
+    }
+
     state.version = thisVersion;
     state.name = compact.n;
     state.date = compact.t;
     state.xp = compact.xp;
     state.lvl = compact.l;
+    state.discountB = (compact.db === 1);
+    state.discountA = (compact.da === 1);
     state.wins = compact.w;
     state.road = (compact.r === 1);
     state.dirt = (compact.d === 1);
@@ -1546,6 +1578,20 @@ function garageOptions(show = false) {
     }
 }
 
+function calculateCost(make, model) {
+    let cost = carList[make][model].cost;
+    if (eNewCarDiscountBoxB.checked) {
+        cost -= 20000;
+    }
+    if (eNewCarDiscountBoxA.checked) {
+        cost -= 40000;
+    }
+    if (cost < 0) {
+        cost = 0;
+    }
+    return cost;
+}
+
 function addCar() {
     // Check if the input fields are filled out
     if (eNewCarName.value === ""
@@ -1559,7 +1605,7 @@ function addCar() {
     let newMake = toPositiveInt(eNewCarMake.value);
     let newModel = toPositiveInt(eNewCarModel.value);
     let newPI = carList[newMake][newModel].pi;
-    let newCost = carList[newMake][newModel].cost;
+    let newCost = calculateCost(newMake, newModel);
 
     // Check if the player can afford the car
     if (newCost > state.money) {
@@ -1579,6 +1625,16 @@ function addCar() {
                             newModel));
     state.money -= newCost;
 
+    // Use the discounts
+    if (eNewCarDiscountBoxB.checked) {
+        state.discountB = false;
+        eNewCarDiscountBoxB.checked = false;
+    }
+    if (eNewCarDiscountBoxA.checked) {
+        state.discountA = false;
+        eNewCarDiscountBoxA.checked = false;
+    }
+
     // Try setting to current car
     state.cars[state.cars.length - 1].getIn();
 
@@ -1586,7 +1642,9 @@ function addCar() {
     // Car selectors will be reset in updateState
     eNewCarName.value = "";
     eNewCarRow.cells[1].innerHTML = "";
-    eNewCarRow.cells[2].innerHTML = "";
+    eNewCarPrice.innerHTML = "";
+    eNewCarDiscountB.style.display = "none";
+    eNewCarDiscountA.style.display = "none";
 
     updateState();
 }
@@ -1603,7 +1661,9 @@ function newCarMakeSelect() {
 
     // Clear display
     eNewCarRow.cells[1].innerHTML = "";
-    eNewCarRow.cells[2].innerHTML = "";
+    eNewCarPrice.innerHTML = "";
+    eNewCarDiscountB.style.display = "none";
+    eNewCarDiscountA.style.display = "none";
 
     // "Choose manufacturer"
     let make = toPositiveInt(eNewCarMake.value);
@@ -1637,17 +1697,30 @@ function newCarModelSelect() {
     if (make === 0 || model === 0) {
         // Clear display and return
         eNewCarRow.cells[1].innerHTML = "";
-        eNewCarRow.cells[2].innerHTML = "";
+        eNewCarPrice.innerHTML = "";
+        eNewCarDiscountB.style.display = "none";
+        eNewCarDiscountA.style.display = "none";
         return;
     }
 
+    // Calculate cost with discounts
+    let cost = calculateCost(make, model);
+
     // Show PI and cost
     eNewCarRow.cells[1].innerHTML = addClassToPI(carList[make][model].pi);
-    eNewCarRow.cells[2].innerHTML = moneyToString(carList[make][model].cost);
+    eNewCarPrice.innerHTML = moneyToString(cost);
 
-    eNewCarRow.cells[2].style.color = "inherit";
-    if (carList[make][model].cost > state.money) {
-        eNewCarRow.cells[2].style.color = "red";
+    // Show discounts
+    if (state.discountB) {
+        eNewCarDiscountB.style.display = "block";
+    }
+    if (state.discountA) {
+        eNewCarDiscountA.style.display = "block";
+    }
+
+    eNewCarPrice.style.color = "inherit";
+    if (cost > state.money) {
+        eNewCarPrice.style.color = "red";
     }
 }
 
@@ -1878,7 +1951,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230401;
+let news = 230402;
 
 // Initialize state
 let state = {};

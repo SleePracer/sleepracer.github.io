@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.2.2";
+const thisVersion = "0.2.3";
 
 const defaultState = {
     version: thisVersion,
@@ -10,6 +10,8 @@ const defaultState = {
     name: "",
     xp: 1,
     lvl: 1,
+    discountB: false,
+    discountA: false,
     wins: 0,
     road: false,
     dirt: false,
