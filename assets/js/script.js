@@ -835,9 +835,9 @@ class Event {
         }
 
         // Check if ready for level up (if level up event)
-        let levelUpOk = (this.eventType !== "prog");
+        let progOk = (this.eventType !== "prog");
         if (xpToClass(state.xp) > state.lvl) {
-            levelUpOk = true;
+            progOk = true;
         }
 
         // Check if special event ok (has it been completed?)
@@ -853,8 +853,7 @@ class Event {
         if (garageOk
          && playerClassOk
          && nextEventOk
-         && categoryOk
-         && levelUpOk) {
+         && categoryOk) {
             if (state.completed.includes(this.iEvent)) {
                 if (state.show) {
                     eCompletedT.style.display = "block";
@@ -876,7 +875,7 @@ class Event {
                 if (this.eventType === "show" || this.eventType === "spec") {
                     this.completedRow.style.display = "none";
                 }
-                if ((carModelOk && carClassOk && specOk)
+                if ((carModelOk && carClassOk && specOk && progOk)
                   || showOk) {
                     this.enterButton.style.display = "inline";
                 } else {
@@ -901,7 +900,12 @@ class Event {
             if (this.eventType === "show") {
                 allInfo += "Event track: " + this.raceName + "\n";
             }
-            allInfo += "Event sharecode: " + this.sharecode;
+            if (this.eventType === "prog"
+             && xpToClass(state.xp) <= state.lvl) {
+                allInfo += "Race more to unlock!";
+            } else {
+                allInfo += "Event sharecode: " + this.sharecode;
+            }
 
             if (this.eventType === "spec") {
                 // Add PI restriction
@@ -1817,16 +1821,16 @@ events = [];
 
 events.push(new Event("Class advancement: " + endurances[1],
                       events.length,
-                      "Finish this race to advance " +
-                      "to the next class!",
+                      "Podium placements are rewarded with a " +
+                      "discount on a new car purchase!",
                       endurances[1],
                       "100 751 232",
                       "road", "prog", "double"));
 
 events.push(new Event("Class advancement: " + endurances[2],
                       events.length,
-                      "Finish this race to advance " +
-                      "to the next class!",
+                      "Podium placements are rewarded with a " +
+                      "discount on a new car purchase!",
                       endurances[2],
                       "835 192 621",
                       "dirt", "prog", "double"));
