@@ -58,7 +58,7 @@ Damage is shown in the HUD info and the only thing you have to do is remember to
       * I don't want to use "Anything goes" for the blueprints because drivatars will bring Peel P50s and Unimogs and whatnot.
       * I also can't use the pre-defined categories since I'll need to share one blueprint per category per track (extra time consuming since I will need to test run them because of the eventlab rules).
       * So I've used custom car restrictions, which is limited to 50 cars.
-The career mode roster and eventlab restrictions are the same, so you will always be able to use your car for the blueprints!
+[The career mode roster](/roster) and eventlab restrictions are the same, so if you can buy a car on the website, you will always be able to use it for the blueprints!
 
 
 <div style="margin-top: 37px"></div>

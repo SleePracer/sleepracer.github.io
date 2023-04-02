@@ -12,6 +12,7 @@ Class Advancements have changed to a more fail-forward approach:
 podium is no longer needed to advance to the next class (since Beta 0.2.2),
 but from Beta 0.2.3, getting podium rewards the player with a discount on their next car purchase!
 All players already in B or A class will get the discounts regardless of their advancement race placements.
+In addition, the prices of a few cars have been slightly modified, and [a chart of all 50 available cars](/roster) has been added!
 
 Also, there's now a "Paint" button in the garage, that essentially does a 5 000 credit upgrade of your car to the same PI!
 Just as for upgrades, the value is increased by half of that amount.

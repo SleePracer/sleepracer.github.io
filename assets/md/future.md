@@ -24,13 +24,6 @@ It also felt short in the regard that I barely had enough money to upgrade my ca
 I kept the starter car throughout just to see if it was feasible, but even then, I would not be able to afford a new car anyway.
 Making the game longer by means of decreasing xp gain from events would mean that the player would gain more money per class.
 
-In my playthrough, I failed the class advancement from B to A three times, and it was frustrating and not fun.
-I don't want other players to experience that, but I also want it to feel like there's something extra at stake for the class advancements.
-My current thinking is to change it to a more "fail forward" design, where the player gets a new car discount for finishing on the podium (in addition to the already twice as high prize money from the event).
-
-The requirement to finish on podium to progress was removed in 0.2.2 as a hot fix.
-It simply wasn't fun in practice.
-
 I would also like to make the three advancements different events rather than the Colossus or Gauntlet three times.
 Possibly endurance races, as I'll discuss a bit down below.
 

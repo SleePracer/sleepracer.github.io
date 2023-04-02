@@ -97,7 +97,7 @@ const carList = [
     ["Acura", // 1
         {name: "Integra Type R", // 1
          pi: 596,
-         cost: 48000, // 25k
+         cost: 42000, // 25k
          year: 2001,
          buyable: true}],
     ["Audi", // 2
@@ -143,7 +143,7 @@ const carList = [
          buyable: true},
         {name: "Corvette ZR-1", // 2
          pi: 693,
-         cost: 64000, // 45k
+         cost: 68000, // 45k
          year: 1995,
          buyable: true},
         {name: "Camaro Super Sport Coupe", // 3
@@ -188,7 +188,7 @@ const carList = [
          buyable: true},
         {name: "Focus RS", // 2
          pi: 660,
-         cost: 38000, // 25k
+         cost: 44000, // 25k
          year: 2009,
          buyable: true},
         {name: "SVT Cobra R", // 3
@@ -198,7 +198,7 @@ const carList = [
          buyable: true},
         {name: "Sierra Cosworth RS500", // 4
          pi: 604,
-         cost: 34000, // 66k
+         cost: 42000, // 66k
          year: 1987,
          buyable: true},
         {name: "Fiesta XR2", // 5
@@ -400,13 +400,13 @@ const carList = [
     ["Renault", // 25
         {name: "Megane R.S.", // 1
          pi: 670,
-         cost: 44000, // 37k
+         cost: 48000, // 37k
          year: 2018,
          buyable: true}],
     ["Subaru", // 26
         {name: "Impreza 22B-STI Version", // 1
          pi: 640,
-         cost: 68000, // 110k
+         cost: 64000, // 110k
          year: 1998,
          buyable: true}],
     ["Toyota", // 27
@@ -417,7 +417,7 @@ const carList = [
          buyable: true},
         {name: "86", // 2
          pi: 579,
-         cost: 46000, // 28.8k
+         cost: 38000, // 28.8k
          year: 2013,
          buyable: true},
         {name: "Supra RZ", // 3
@@ -450,7 +450,7 @@ const carList = [
     ["Vauxhall", // 28
         {name: "Corsa VXR", // 1
          pi: 584,
-         cost: 36000, // 28k
+         cost: 38000, // 28k
          year: 2016,
          buyable: true}],
     ["Volkswagen", // 29
