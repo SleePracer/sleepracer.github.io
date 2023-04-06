@@ -6,6 +6,21 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
+# Beta 0.2.4: Head-to-Head!
+
+Added a "Head-to-Head" event with a 200 credit wager to encourage players to challenge drivatars to a Head-to-Head when cruising between events!
+Winning gives 200 credits and losing removes 200 credits, xp is unaffected.
+Just a small thing to help you get in the mood while playing!
+
+Go challenge some drivatars!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-04-06
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Beta 0.2.3: Discounts and Paint Button!
 
 Class Advancements have changed to a more fail-forward approach:

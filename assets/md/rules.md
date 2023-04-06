@@ -27,7 +27,9 @@ If you encounter any issues or have any questions, get in touch on [youtube](htt
       * It will increase as you progress, starting with C and ending with A!
   * Set the race difficulty appropriately.
       * This will require some trial and error, I suggest starting at 100%!
-      * The game is balanced for finishing somewhere in the top 6 on average. Not winning is ok!
+      * The game is balanced for finishing somewhere in the top 6 on average.
+          * If you win, it might be set too low!
+          * If you place 7th or lower, it might be set too high!
   * No restarts or rewinds, let whatever happens happen!
 
 

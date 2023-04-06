@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.2.3";
+const thisVersion = "0.2.4";
 
 const defaultState = {
     version: thisVersion,
@@ -476,47 +476,6 @@ const carList = [
          cost: 22000, // 45k
          year: 1983,
          buyable: true}]];
-
-// Antique: more than 100 years old
-// Vintage: 40 - 100 years old
-// Retro: 20 - 30 years old
-
-// 2000GT and Fairlady are gold
-// Ferrari Dino 246 GT too? E-Type?
-//const sportsCars60s = [
-//    [76, 26], // Nissan Fairlady Z 1969 D482
-//    [100, 19]]; // Toyota 2000GT 1969 D487
-
-// Bronco, Scout, Series III and FJ40 are gold
-// Jeep sticks out a little bit but kinda fits still (unless I find a better use for it?)
-// Something out in the desert at first?
-//const explorers70s = [
-//    [33, 45], // Ford Bronco 1975 D421
-//    [48, 1], // International Scout 1970 D384
-//    [55, 6], // Land Rover Series III 1972 D100
-//    [100, 17]]; // Toyota FJ40 1979 D269
-
-// Fiesta, Civic and Golf are gold
-// Mini is a bit smaller but works
-// FWD only so no Gremlin ? try gremlin! gremlin could go with renault 5
-// Try scirocco too!
-// I want this to be rallycross folkrace kinda
-//const hatchbacks70s = [
-//    [33, 42], // Ford Fiesta 1981 D369
-//    [41, 15], // Honda Civic 1974 D368
-//    [104, 10]]; // Volkswagen Golf MK1 1983 D428
-
-//const rallyGroupA = [
-//    [70, 5], // Mitsubishi Evo VI 1999 B659
-//    [99, 9], // Subaru Impreza 1998 B640
-//    [100, 11], // Toyota Celica 1994 C590
-
-//const supercars90s = [
-//    [18, 4], // Bugatti EB110 1992 S805
-//    [32, 27], // Ferrari F50 1995 A789
-//    [50, 11], // Jaguar XJ220 1993 A786
-//    [54, 18], // Lamborghini Diablo 1997 A763
-//    [63, 14], // McLaren F1 1993 S817
 
 const roadCircuits = [
     {name: "Bahía de Plano", // 0

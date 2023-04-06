@@ -75,6 +75,14 @@ function returnEventButtonClick() {
     eventMap.get(this.id).returnToEvents();
 }
 
+// HeadToHead
+function wonButtonClick() {
+    eventMap.get(this.id).won();
+}
+function lostButtonClick() {
+    eventMap.get(this.id).lost();
+}
+
 // -----------------------------------------------------------------------
 // Car class
 // -----------------------------------------------------------------------
@@ -1140,6 +1148,57 @@ class Event {
 }
 
 // -----------------------------------------------------------------------
+// HeadToHead class
+// -----------------------------------------------------------------------
+
+class HeadToHead {
+    constructor(name, wager) {
+
+        // Add to event map for the buttons
+        eventMap.set(name + " E", this);
+
+        // Parameters
+        this.name = name;
+        this.wager = wager;
+
+        // Add and populate new row in event table
+        let nCells = eEventsTH.rows[0].cells.length;
+        let iRow = eEventsTB.rows.length;
+        this.row = eEventsTB.insertRow(iRow);
+        for (let cell = 0; cell < nCells; cell++) {
+            this.row.insertCell();
+        }
+        this.row.cells[0].innerText = this.name;
+
+        // Create and add the won button
+        this.wonButton = document.createElement("button");
+        this.wonButton.id = this.name + " E";
+        this.wonButton.onclick = wonButtonClick;
+        this.wonButton.innerText = "Won";
+        this.row.cells[1].appendChild(this.wonButton);
+
+        // Create and add the lost button
+        this.lostButton = document.createElement("button");
+        this.lostButton.id = this.name + " E";
+        this.lostButton.onclick = lostButtonClick;
+        this.lostButton.innerText = "Lost";
+        this.lostButton.className = "margin";
+        this.row.cells[1].appendChild(this.lostButton);
+    }
+
+    won() {
+        state.money += this.wager;
+        updateState();
+    }
+
+    lost() {
+        state.money -= this.wager;
+        updateState();
+    }
+
+}
+
+// -----------------------------------------------------------------------
 // State functions
 // -----------------------------------------------------------------------
 
@@ -1329,7 +1388,7 @@ function updateState() {
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3"];
+    let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1816,6 +1875,10 @@ function resetGameButton() {
 // Main
 // -----------------------------------------------------------------------
 
+// Create head to head first
+// This will put it on top of events table
+new HeadToHead("Head-to-Head", 200);
+
 // Create all events
 events = [];
 
@@ -1955,7 +2018,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230402;
+let news = 230406;
 
 // Initialize state
 let state = {};

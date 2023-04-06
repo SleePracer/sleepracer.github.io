@@ -29,14 +29,6 @@ Possibly endurance races, as I'll discuss a bit down below.
 
 
 <div style="margin-top: 37px"></div>
-# Head-to-heads
-
-When cruising between events in Horizon Solo, the drivatars can be challenged to a head-to-head.
-I would like to encourage this by adding head-to-head win/lose buttons that would give/take a small amount of money, maybe 500.
-This sounds abuseable so I'm thinking maybe it could be limited to once between events, but then again, this whole Career Mode is based on trusting players to impose limits on themselves, so I might be overthinking it.
-
-
-<div style="margin-top: 37px"></div>
 # Endurance events
 
 I love endurance events in old Gran Turismo games and would like to add something like that to Career Mode.
