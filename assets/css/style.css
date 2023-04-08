@@ -1,5 +1,4 @@
-#startCars {
-    display: flex;
+#startCarsBase {
     justify-content: space-between;
 }
 div.startCar {

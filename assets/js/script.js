@@ -1504,52 +1504,178 @@ function startNameInput() {
     }
 }
 
-function mustangRadio() {
-    // Set values
+function setBaseInfo(sharecode) {
+    eStartCarInfoDiv.style.display = "block";
+    eStartCarInfo.innerHTML = "Buy a "
+                            + carList[startCarMake][0] + " "
+                            + carList[startCarMake][startCarModel].name
+                            + ", add the livery "
+                            + sharecode
+                            + " and install a roll cage!";
+}
+
+function mustangBaseRadio() {
     startCarMake = 9;
     startCarModel = 3;
     startCarPI = 545;
 
-    // Show info
-    eStartCarInfoDiv.style.display = "block";
-    eStartCarInfo.innerHTML = "Buy a "
-                            + carList[startCarMake][0] + " "
-                            + carList[startCarMake][startCarModel].name
-                            + ", add the livery "
-                            + "180 091 208"
-                            + ", and install a roll cage!";
+    setBaseInfo("180 091 208");
 }
 
-function eclipseRadio() {
-    // Set values
+function mustangBaseImg() {
+    eStartMustang.checked = true;
+    mustangBaseRadio();
+}
+
+function eclipseBaseRadio() {
     startCarMake = 21;
     startCarModel = 3;
     startCarPI = 545;
 
-    // Show info
-    eStartCarInfoDiv.style.display = "block";
-    eStartCarInfo.innerHTML = "Buy a "
-                            + carList[startCarMake][0] + " "
-                            + carList[startCarMake][startCarModel].name
-                            + ", add the livery "
-                            + "125 302 643"
-                            + ", and install a roll cage!";
+    setBaseInfo("125 302 643");
 }
 
-function corradoRadio() {
-    // Set values
+function eclipseBaseImg() {
+    eStartEclipse.checked = true;
+    eclipseBaseRadio();
+}
+
+function corradoBaseRadio() {
     startCarMake = 29;
     startCarModel = 1;
     startCarPI = 537;
 
-    // Show info
+    setBaseInfo("167 278 252");
+}
+
+function corradoBaseImg() {
+    eStartCorrado.checked = true;
+    corradoBaseRadio();
+}
+
+function setAltInfo() {
     eStartCarInfoDiv.style.display = "block";
     eStartCarInfo.innerHTML = "Buy a "
                             + carList[startCarMake][0] + " "
                             + carList[startCarMake][startCarModel].name
-                            + ", add the livery "
-                            + "167 278 252"
-                            + ", and install a roll cage!";
+                            + ", add a rust bucket livery of your choice "
+                            + "and install a roll cage!";
+}
+
+function impalaAltRadio() {
+    startCarMake = 6;
+    startCarModel = 1;
+    startCarPI = 515;
+
+    setAltInfo();
+}
+
+function chargerAltRadio() {
+    startCarMake = 7;
+    startCarModel = 2;
+    startCarPI = 562;
+
+    setAltInfo();
+}
+
+function mustangAltRadio() {
+    startCarMake = 9;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    setAltInfo();
+}
+
+function civicAltRadio() {
+    startCarMake = 10;
+    startCarModel = 2;
+    startCarPI = 558;
+
+    setAltInfo();
+}
+
+function miataAltRadio() {
+    startCarMake = 17;
+    startCarModel = 2;
+    startCarPI = 446;
+
+    setAltInfo();
+}
+
+function savannaAltRadio() {
+    startCarMake = 17;
+    startCarModel = 3;
+    startCarPI = 560;
+
+    setAltInfo();
+}
+
+function eclipseAltRadio() {
+    startCarMake = 21;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    setAltInfo();
+}
+
+function nissanAltRadio() {
+    startCarMake = 22;
+    startCarModel = 3;
+    startCarPI = 451;
+
+    setAltInfo();
+}
+
+function firebirdAltRadio() {
+    startCarMake = 23;
+    startCarModel = 1;
+    startCarPI = 436;
+
+    setAltInfo();
+}
+
+function truenoAltRadio() {
+    startCarMake = 27;
+    startCarModel = 5;
+    startCarPI = 485;
+
+    setAltInfo();
+}
+
+function corradoAltRadio() {
+    startCarMake = 29;
+    startCarModel = 1;
+    startCarPI = 537;
+
+    setAltInfo();
+}
+
+function golfAltRadio() {
+    startCarMake = 29;
+    startCarModel = 2;
+    startCarPI = 435;
+
+    setAltInfo();
+}
+
+function volvoAltRadio() {
+    startCarMake = 30;
+    startCarModel = 1;
+    startCarPI = 555;
+
+    setAltInfo();
+}
+
+function starterChangeButton() {
+    if (eStartCarsBase.style.display === "flex") {
+        eStartCarsAlt.style.display = "block";
+        eStartCarsBase.style.display = "none";
+        eStartCarsChange.innerText = "Actually, give me one of the three first ones";
+    } else {
+        eStartCarsAlt.style.display = "none";
+        eStartCarsBase.style.display = "flex";
+        eStartCarsChange.innerText = "Changed my mind again, give me the full list";
+    }
 }
 
 function startCarInfoButton() {
@@ -2018,7 +2144,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230406;
+let news = 230408;
 
 // Initialize state
 let state = {};

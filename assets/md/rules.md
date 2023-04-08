@@ -13,7 +13,7 @@ Are you tired of the hamster wheel playlist, the mountain of mundane accolades, 
 If so, maybe this website can help you play the game in a more rewarding way!
 
 In order to play, simply pretend that your in-game garage and credits don't exist, and keep track of your cars and cash here instead.
-Start with your rustbox of choice and progress through your career by racing specific blueprints in Forza Horizon 5.
+Start with your rust bucket of choice and progress through your career by racing specific blueprints in Forza Horizon 5.
 If you encounter any issues or have any questions, get in touch on [youtube](https://www.youtube.com/@sleepracer5124/featured) or discord!
 
 

@@ -49,25 +49,17 @@ Some planning is needed though, so this will not happen in the nearest future.
 # Custom drivatars
 
 Imagine if, when playing Career Mode, every event would feature the same drivatars, driving the same car.
-Rivals with cool names also driving rustboxes.
-Maybe they'll even evolve alongside you, upgrading their rustboxes to racecars as you do.
+Rivals with cool names also driving rust buckets.
+Maybe they'll even evolve alongside you, upgrading their rust buckets to racecars as you do.
 
 In Forza Horizon 5, the only way I can see this working is to follow exactly 11 Xbox accounts like this on your Xbox account, and not be part of a club.
-Also, you would have to make the 11 alt accounts with cool names and make sure they only have one rustbox in their garage.
+Also, you would have to make the 11 alt accounts with cool names and make sure they only have one rust bucket in their garage.
 What I'm saying is, it would be cool, but it would not be for everyone.
 Players with less than 11 Xbox friends could get themselves a few rivals like this, but to take full advantage you would basically need to make a friendless alt account.
 
 Even then, I will probably do this at some point, because I think it would be cool.
-I've already made one rustbox account, McMillipede#8621, and getting to the point where the rustbox appeared as a drivatar only took about an hour.
+I've already made one rust bucket account, McMillipede#8621, and getting to the point where the rust bucket appeared as a drivatar only took about an hour.
 So it's not complete madness, I've already spent countless hours on this project as is.
-
-
-<div style="margin-top: 37px"></div>
-# Alternative starter cars
-
-After playing Career Mode one or even more times, players might want to start the game with another rustbox from the roster.
-This is simple enough to do with some save file trickery, but I would like to have it as an "advanced option" to pick freely between C or even D class starter rustboxes.
-For now, if you want help getting a fresh game with another car, just let me know and I'll help out!
 
 
 <div style="margin-top: 37px"></div>

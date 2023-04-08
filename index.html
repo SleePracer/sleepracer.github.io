@@ -29,45 +29,170 @@ layout: home
   </div>
   <div id="startCarDiv" style="display: none">
     <br>
-    <p>Choose your rustbox:</p>
-    <div id="startCars">
+    <p>Choose your rust bucket:</p>
+    <div id="startCarsBase" style="display: flex">
       <div class="startCar">
         <div class="startCarImg">
-          <img src="./assets/png/mustang.png"></img>
+          <img src="./assets/png/mustang.png"
+               onClick="mustangBaseImg()">
+          </img>
         </div>
         <div>
-          <input id="mustangRadio"
+          <input id="mustangBaseRadio"
                  type="radio"
                  name="startCar"
-                 onClick="mustangRadio()">
-          <label for="mustangRadio">Ford SVT Cobra R</label><br>
+                 onClick="mustangBaseRadio()">
+          <label for="mustangBaseRadio">
+            Ford SVT Cobra R
+          </label>
+          <br>
         </div>
       </div>
       <div class="startCar">
         <div class="startCarImg">
-          <img src="./assets/png/eclipse.png"></img>
+          <img src="./assets/png/eclipse.png"
+               onClick="eclipseBaseImg()">
+          </img>
         </div>
         <div>
-          <input id="eclipseRadio"
+          <input id="eclipseBaseRadio"
                  type="radio"
                  name="startCar"
-                 onClick="eclipseRadio()">
-          <label for="eclipseRadio">Mitsubishi Eclipse GSX</label><br>
+                 onClick="eclipseBaseRadio()">
+          <label for="eclipseBaseRadio">
+            Mitsubishi Eclipse GSX
+          </label>
+          <br>
         </div>
       </div>
       <div class="startCar">
         <div class="startCarImg">
-          <img src="./assets/png/corrado.png"></img>
+          <img src="./assets/png/corrado.png"
+               onClick="corradoBaseImg()">
+          </img>
         </div>
         <div>
-          <input id="corradoRadio"
+          <input id="corradoBaseRadio"
                  type="radio"
                  name="startCar"
-                 onClick="corradoRadio()">
-          <label for="corradoRadio">Volkswagen Corrado VR6</label><br>
+                 onClick="corradoBaseRadio()">
+          <label for="corradoBaseRadio">
+            Volkswagen Corrado VR6
+          </label>
+          <br>
         </div>
       </div>
     </div>
+    <div id="startCarsAlt" style="display: none">
+      <input id="impalaAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="impalaAltRadio()">
+      <label for="impalaAltRadio">
+        Chevrolet Impala Super Sport (1996)
+      </label>
+      <br>
+      <input id="chargerAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="chargerAltRadio()">
+      <label for="chargerAltRadio">
+        Dodge Charger R/T (1969)
+      </label>
+      <br>
+      <input id="mustangAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="mustangAltRadio()">
+      <label for="mustangAltRadio">
+        Ford SVT Cobra R (1993)
+      </label>
+      <br>
+      <input id="civicAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="civicAltRadio()">
+      <label for="civicAltRadio">
+        Honda Civic Type R (1997)
+      </label>
+      <br>
+      <input id="miataAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="miataAltRadio()">
+      <label for="miataAltRadio">
+        Mazda MX-5 Miata (1994)
+      </label>
+      <br>
+      <input id="savannaAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="savannaAltRadio()">
+      <label for="savannaAltRadio">
+        Mazda Savanna RX-7 (1990)
+      </label>
+      <br>
+      <input id="eclipseAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="eclipseAltRadio()">
+      <label for="eclipseAltRadio">
+        Mitsubishi Eclipse GSX (1995)
+      </label>
+      <br>
+      <input id="nissanAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="nissanAltRadio()">
+      <label for="nissanAltRadio">
+        Nissan 240SX SE (1993)
+      </label>
+      <br>
+      <input id="firebirdAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="firebirdAltRadio()">
+      <label for="firebirdAltRadio">
+        Pontiac Firebird Trans AM (1977)
+      </label>
+      <br>
+      <input id="truenoAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="truenoAltRadio()">
+      <label for="truenoAltRadio">
+        Toyota Sprinter Trueno GT Apex (1985)
+      </label>
+      <br>
+      <input id="corradoAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="corradoAltRadio()">
+      <label for="corradoAltRadio">
+        Volkswagen Corrado VR6 (1995)
+      </label>
+      <br>
+      <input id="golfAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="golfAltRadio()">
+      <label for="golfAltRadio">
+        Volkswagen Golf GTI 16V MK2 (1992)
+      </label>
+      <br>
+      <input id="volvoAltRadio"
+             type="radio"
+             name="startCar"
+             onClick="volvoAltRadio()">
+      <label for="volvoAltRadio">
+        Volvo 242 Turbo Evolution (1983)
+      </label>
+      <br>
+    </div>
+    <br>
+    <button id=startCarsChangeButton onClick="starterChangeButton()">
+      I don't want any of these
+    </button>
   </div>
   <div id="startCarInfoDiv" style="display: none">
     <br>
@@ -76,7 +201,7 @@ layout: home
   </div>
   <div id="startCarNameDiv" style="display: none">
     <br>
-    <p>Name your rustbox:</p>
+    <p>Name your rust bucket:</p>
     <input id="startCarName"
            type="text"
            placeholder="First Car Name"
@@ -125,7 +250,7 @@ layout: home
   <!-- News -->
   <div id="news">
     <h1>News</h1>
-    <a href="/news/">Head-to-Heads!</a>
+    <a href="/news/">Head-to-Heads and Alternativ Starters!</a>
     <button onClick="newsOk()">
       Ok
     </button>
