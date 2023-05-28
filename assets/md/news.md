@@ -16,7 +16,7 @@ In addition, the Vintage Hatchbacks and Explorers showcases have been updated, s
 I'll keep the old blueprints and tunes shared for the time being.
 
 Next on my to-do list is adding another special event.
-I also plan on letting players borrow cars for them if they don't have one, and I will extend their rosters to include non-Career-Mode cars that the drivatars can use.
+I also plan on extending their rosters to include non-Career-Mode cars that the drivatars can use.
 
 As the new Forza Motorsport draws near I realize that the already limited interest for Horizon 5 Career Mode will likely die off, since Motorsport hopefully has a satisfactory Career Mode in itself.
 I will attempt to finalize the most important changes and release Career Mode before the Motorsport release.
