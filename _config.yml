@@ -18,7 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Forza Horizon 5 Career Mode [Beta 0.2.4]
+title: Forza Horizon 5 Career Mode [Beta 0.2.5]
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   This website is meant to be used as a tool to play Forza Horizon 5

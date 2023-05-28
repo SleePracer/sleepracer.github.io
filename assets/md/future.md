@@ -24,16 +24,12 @@ It also felt short in the regard that I barely had enough money to upgrade my ca
 I kept the starter car throughout just to see if it was feasible, but even then, I would not be able to afford a new car anyway.
 Making the game longer by means of decreasing xp gain from events would mean that the player would gain more money per class.
 
-I would also like to make the three advancements different events rather than the Colossus or Gauntlet three times.
-Possibly endurance races, as I'll discuss a bit down below.
-
 
 <div style="margin-top: 37px"></div>
 # Endurance events
 
 I love endurance events in old Gran Turismo games and would like to add something like that to Career Mode.
 In my opinion, one hour is the sweet spot endurance race length, but even half hour races would probably be both fun and challenging.
-Since I already plan on replacing the C and B class advancement events with something other than Colossus/Gauntlet, 30 minute endurance races seem like the natural choice for this, so that's probably what I'll do... probably.
 
 
 <div style="margin-top: 37px"></div>
@@ -76,7 +72,7 @@ Here are some criteria the map would need to meet, although I reserve the right 
   * It has to be drivatar friendly
       * This means that the driving line has to be drawn close to the race line, while keeping some distance from the edge of the track
       * It also means that there has to be as few dead stop points as possible
-  * It has to be mainly featuring the pre-existing roads, although some limited custom road usage may be ok
+  * Using the pre-existing roads would be preferable, although some limited custom road usage may be ok
 
 
 <div style="margin-top: 37px"></div>

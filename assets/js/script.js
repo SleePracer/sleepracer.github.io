@@ -843,9 +843,13 @@ class Event {
         }
 
         // Check if ready for level up (if level up event)
-        let progOk = (this.eventType !== "prog");
-        if (xpToClass(state.xp) > state.lvl) {
-            progOk = true;
+        let progRowOk = (this.eventType !== "prog");
+        let progEnterOk = (this.eventType !== "prog");
+        if (piToClass(this.pi) === state.lvl) {
+            progRowOk = true;
+            if (xpToClass(state.xp) > state.lvl) {
+                progEnterOk = true;
+            }
         }
 
         // Check if special event ok (has it been completed?)
@@ -861,17 +865,15 @@ class Event {
         if (garageOk
          && playerClassOk
          && nextEventOk
-         && categoryOk) {
+         && categoryOk
+         && progRowOk) {
             if (state.completed.includes(this.iEvent)) {
                 if (state.show) {
                     eCompletedT.style.display = "block";
                 }
                 this.completedRow.style.display = "table-row";
                 this.row.style.display = "none";
-
-                if (state.completed.includes(this.iEvent)) {
-                    this.completedRow.cells[1].appendChild(this.infoButton);
-                }
+                this.completedRow.cells[1].appendChild(this.infoButton);
             } else {
 
                 if (this.eventType !== "norm") {
@@ -883,7 +885,7 @@ class Event {
                 if (this.eventType === "show" || this.eventType === "spec") {
                     this.completedRow.style.display = "none";
                 }
-                if ((carModelOk && carClassOk && specOk && progOk)
+                if ((carModelOk && carClassOk && specOk && progEnterOk)
                   || showOk) {
                     this.enterButton.style.display = "inline";
                 } else {
@@ -903,15 +905,19 @@ class Event {
             let allInfo = this.name + ": ";
             allInfo += this.infoString;
 
-            // Add sharecode
             allInfo += "\n\n";
             if (this.eventType === "show") {
                 allInfo += "Event track: " + this.raceName + "\n";
             }
+
             if (this.eventType === "prog"
              && xpToClass(state.xp) <= state.lvl) {
-                allInfo += "Race more to unlock!";
-            } else {
+                allInfo += "Progress to the top of your class to unlock!";
+            } else if (this.eventType === "prog"
+             && state.cCar !== -1
+             && state.cars[state.cCar].pi < this.pi) {
+                allInfo += "Build your car to the top of your class to unlock!";
+            } else if (state.cCar !== -1) {
                 allInfo += "Event sharecode: " + this.sharecode;
             }
 
@@ -1388,7 +1394,8 @@ function updateState() {
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4"];
+    let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4",
+                         "0.2.5"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1428,6 +1435,18 @@ function setStateFromString(inputString) {
         compact.da = 0;
         if (compact.l >= 4) {
             compact.da = 1;
+        }
+    }
+
+    // earlier -> 0.2.5
+    if (version === "0.2.0" || version === "0.2.1"
+     || version === "0.2.2" || version === "0.2.3"
+     || version === "0.2.4") {
+        for (let i = 0; i < compact.x.length; i++) {
+            compact.x[i] = compact.x[i] + 4;
+        }
+        for (let i = 0; i < compact.f.length; i++) {
+            compact.f[i] = compact.f[i] + 4;
         }
     }
 
@@ -2008,21 +2027,55 @@ new HeadToHead("Head-to-Head", 200);
 // Create all events
 events = [];
 
-events.push(new Event("Class advancement: " + endurances[1],
+events.push(new Event("C Class Finale: " +
+                      roadCircuits[1].name + " Circuit",
                       events.length,
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
-                      endurances[1],
-                      "100 751 232",
-                      "road", "prog", "double"));
+                      roadCircuits[1].name + " Circuit",
+                      "110 496 434",
+                      "road", "prog", "double", 600));
 
-events.push(new Event("Class advancement: " + endurances[2],
+events.push(new Event("C Class Finale: " +
+                      dirtScrambles[2].name + " Scramble",
                       events.length,
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
+                      dirtScrambles[2].name + " Scramble",
+                      "303 190 681",
+                      "dirt", "prog", "double", 600));
+
+events.push(new Event("B Class Finale: " +
+                      roadCircuits[11].name + " Circuit",
+                      events.length,
+                      "Podium placements are rewarded with a " +
+                      "discount on a new car purchase!",
+                      roadCircuits[1].name + " Circuit",
+                      "392 359 657",
+                      "road", "prog", "double", 700));
+
+events.push(new Event("B Class Finale: " +
+                      dirtScrambles[7].name + " Scramble",
+                      events.length,
+                      "Podium placements are rewarded with a " +
+                      "discount on a new car purchase!",
+                      dirtScrambles[7].name + " Scramble",
+                      "159 395 533",
+                      "dirt", "prog", "double", 700));
+
+events.push(new Event("Grand Finale: " + endurances[1],
+                      events.length,
+                      "This is the final event, prepare accordingly!",
+                      endurances[1],
+                      "671 340 778",
+                      "road", "prog", "double", 800));
+
+events.push(new Event("Grand Finale: " + endurances[2],
+                      events.length,
+                      "This is the final event, prepare accordingly!",
                       endurances[2],
-                      "835 192 621",
-                      "dirt", "prog", "double"));
+                      "114 179 434",
+                      "dirt", "prog", "double", 800));
 
 events.push(new Event("Group A Touring: " + endurances[1],
                       events.length,
@@ -2144,7 +2197,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230408;
+let news = 230528;
 
 // Initialize state
 let state = {};

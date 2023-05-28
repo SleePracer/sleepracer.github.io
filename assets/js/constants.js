@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.2.4";
+const thisVersion = "0.2.5";
 
 const defaultState = {
     version: thisVersion,

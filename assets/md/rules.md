@@ -53,12 +53,13 @@ This will help you get invested in your playthrough and your cars!
   * What's so special about the blueprints? Why can't I just run vanilla Forza events?
       * The blueprint rules calculate damage based on collisions with drivatars and objects.
 Damage is shown in the HUD info and the only thing you have to do is remember to check it before crossing the finish line, and entering it here after the race.
-      * The rules also dynamically adjust torque/gravity based on positions and damage, decreasing the chance of the lead drivatar running away from the pack.
+      * The rules also dynamically adjust torque/gravity based on positions and damage.
       * Additionally, the drivatars have changeable base torque and grip, detailed as "Difficulty" in the HUD info.
 
   * Why can't I buy my favourite Forza car in career mode?
+      * In order to use the blueprint rules described above, I have to create my own blueprints for the races, and for these I have to define car categories.
       * I don't want to use "Anything goes" for the blueprints because drivatars will bring Peel P50s and Unimogs and whatnot.
-      * I also can't use the pre-defined categories since I'll need to share one blueprint per category per track (extra time consuming since I will need to test run them because of the eventlab rules).
+      * I will also need to limit myself to one single category for this to be feasible, and the pre-defined categories aren't big and varied enough for this.
       * So I've used custom car restrictions, which is limited to 50 cars.
 [The career mode roster](/roster) and eventlab restrictions are the same, so if you can buy a car on the website, you will always be able to use it for the blueprints!
 
