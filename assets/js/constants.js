@@ -206,13 +206,13 @@ const carList = [
          cost: 0, // 25k
          year: 1981,
          buyable: false,
-         sharecode: "337 396 243"},
+         sharecode: "106 479 211"},
         {name: "Bronco", // 6
          pi: 421,
          cost: 0, // 38k
          year: 1975,
          buyable: false,
-         sharecode: "152 201 597"},
+         sharecode: "282 480 610"},
         {name: "Mustang Boss 302", // 7
          pi: 581,
          cost: 34000, // 230k
@@ -239,7 +239,7 @@ const carList = [
          cost: 0, // 25k
          year: 1974,
          buyable: false,
-         sharecode: "768 988 417"}],
+         sharecode: "226 758 458"}],
     ["HSV", // 11
         {name: "Limited Edition Gen-F GTS Maloo", // 1
          pi: 742,
@@ -252,7 +252,7 @@ const carList = [
          cost: 0, // 40k
          year: 1970,
          buyable: false,
-         sharecode: "432 785 346"}],
+         sharecode: "786 531 552"}],
     ["Jaguar", // 13
         {name: "XKR-S", // 1
          pi: 756,
@@ -284,7 +284,7 @@ const carList = [
          cost: 0, // 20k
          year: 1972,
          buyable: false,
-         sharecode: "741 498 791"}],
+         sharecode: "587 482 713"}],
     ["Lotus", // 16
         {name: "Elise Series 1 Sport 190", // 1
          pi: 711,
@@ -440,7 +440,7 @@ const carList = [
          cost: 0, // 55k
          year: 1979,
          buyable: false,
-         sharecode: "659 489 904"},
+         sharecode: "539 560 580"},
         {name: "2000GT", // 7
          pi: 487,
          cost: 0, // 750k
@@ -469,7 +469,7 @@ const carList = [
          cost: 0, // 20k
          year: 1983,
          buyable: false,
-         sharecode: "125 978 062"}],
+         sharecode: "110 055 064"}],
     ["Volvo", // 30
         {name: "242 Turbo Evolution", // 1
          pi: 548,

@@ -6,20 +6,23 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
-# Beta 0.2.5: New Class Finales!
+# Beta 0.2.5: New Class Finales and Updated Showcases!
 
 Hello, first update in a while because I've been busy with other things (RHEC, HTCC, TW), this one revamps and renames the class advancements to finales!
 Instead of doing the Colossus or Gauntlet three times, players will do double length races around Mulegé for C class, Guanajuato for B class and the Colossus or Gauntlet remains as the grand finale for A class.
 The Colossus and Gauntlet races have also been slightly rebalanced to make up for drivatar quirks.
 
-Next on my to-do list is a re-tune of the Vintage Hatchbacks and Explorers showcases, as they each have some slight issues.
-Once that is done, I want to add another special event, let players borrow cars for them if they don't have one, and extend their rosters to include non-Career-Mode cars that the drivatars can use.
+In addition, the Vintage Hatchbacks and Explorers showcases have been updated, since they had some issues before.
+I'll keep the old blueprints and tunes shared for the time being.
 
-As the new Forza Motorsport draws near I realize that the already limited interest for Horizon 5 Career Mode will likely die off, since Motorsport hopefully already has a satisfactory Career Mode in itself.
+Next on my to-do list is adding another special event.
+I also plan on letting players borrow cars for them if they don't have one, and I will extend their rosters to include non-Career-Mode cars that the drivatars can use.
+
+As the new Forza Motorsport draws near I realize that the already limited interest for Horizon 5 Career Mode will likely die off, since Motorsport hopefully has a satisfactory Career Mode in itself.
 I will attempt to finalize the most important changes and release Career Mode before the Motorsport release.
 But even then, we'll probably get a new Horizon in the future, and at that point this Career Mode might become relevant again.
 
-The future is bright!
+Regardless, the future is bright!
 <div style="text-align: right">
   <em>
     Anaerobisk / SleePracer, 2023-05-28

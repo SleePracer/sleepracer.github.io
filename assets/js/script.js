@@ -2106,7 +2106,7 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "to offset the difference in launch between " +
                       "you and the drivatars!",
                       "Horizon Baja Scramble 7L",
-                      "893 632 614",
+                      "225 814 856",
                       "both", "show", "podium",
                       0, [[9, 5], [10, 4], [29, 3]],
                       "vintageHatch"));
@@ -2129,14 +2129,11 @@ events.push(new Event("Showcase: Vintage Explorers",
                       events.length,
                       "Explore the Mexican countryside in your choice " +
                       "of old 4x4 offroaders, " +
-                      "courtesy of the Horizon Festival! " +
-                      "\n\nNote that the difficulty starts at 80% " +
-                      "to offset the difference in launch between " +
-                      "you and the drivatars!",
+                      "courtesy of the Horizon Festival!",
                       endurances[3],
-                      "308 395 047",
+                      "169 663 287",
                       "both", "show", "normal",
-                      0, [[9, 6], [12, 1], [15, 1], [27, 6]],
+                      0, [[9, 6], [12, 1], [27, 6]],
                       "vintageExplorer"));
 
 events.push(new Event("Showcase: 80s Supercars",
