@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.2.5";
+const thisVersion = "0.2.6";
 
 const defaultState = {
     version: thisVersion,
@@ -544,13 +544,6 @@ const dirtScrambles = [
     {name: "El Pípila", // 7
      sharecode: "130 710 595",
      next: [1, 3, 4, 5]}];
-
-const endurances = [
-    "The Goliath",
-    "The Colossus",
-    "The Gauntlet",
-    "The Titan",
-    "The Marathon"];
 
 const classPI = [
     100,

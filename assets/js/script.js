@@ -791,8 +791,8 @@ class Event {
             }
         }
 
-        // For special events, let garage be ok when outleveled
-        if (this.eventType === "spec" && state.lvl > piToClass(this.pi)) {
+        // For special events, let garage be ok
+        if (this.eventType === "spec" && state.lvl >= piToClass(this.pi)) {
             garageOk = true;
         }
 
@@ -1395,7 +1395,7 @@ function updateState() {
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
     let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4",
-                         "0.2.5"];
+                         "0.2.5", "0.2.6"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1447,6 +1447,18 @@ function setStateFromString(inputString) {
         }
         for (let i = 0; i < compact.f.length; i++) {
             compact.f[i] = compact.f[i] + 4;
+        }
+    }
+
+    // earlier -> 0.2.6
+    if (version === "0.2.0" || version === "0.2.1"
+     || version === "0.2.2" || version === "0.2.3"
+     || version === "0.2.4" || version === "0.2.5") {
+        for (let i = 0; i < compact.x.length; i++) {
+            compact.x[i]++;
+        }
+        for (let i = 0; i < compact.f.length; i++) {
+            compact.f[i]++;
         }
     }
 
@@ -2063,35 +2075,44 @@ events.push(new Event("B Class Finale: " +
                       "159 395 533",
                       "dirt", "prog", "double", 700));
 
-events.push(new Event("Grand Finale: " + endurances[1],
+events.push(new Event("Grand Finale: The Colossus",
                       events.length,
                       "This is the final event, prepare accordingly!",
-                      endurances[1],
+                      "The Colossus",
                       "671 340 778",
                       "road", "prog", "double", 800));
 
-events.push(new Event("Grand Finale: " + endurances[2],
+events.push(new Event("Grand Finale: The Gauntlet",
                       events.length,
                       "This is the final event, prepare accordingly!",
-                      endurances[2],
+                      "The Gauntlet",
                       "114 179 434",
                       "dirt", "prog", "double", 800));
 
-events.push(new Event("Group A Touring: " + endurances[1],
+events.push(new Event("Classic Muscle: Gran Pantano Sprint",
+                      events.length,
+                      "Bring your Classic Muscle car " +
+                      "to this power showdown!",
+                      "Gran Pantano Sprint",
+                      "935 382 632",
+                      "both", "spec", "double",
+                      600, [[6, 3], [7, 2], [9, 7]]));
+
+events.push(new Event("Group A Touring: Sierra Verde Sprint",
                       events.length,
                       "Bring your DTM legend " +
-                      "to this ultimate road racing showdown!",
-                      endurances[1],
-                      "135 179 684",
+                      "to this road racing showdown!",
+                      "Sierra Verde Sprint",
+                      "306 811 911",
                       "both", "spec", "double",
-                      610, [[3, 2], [9, 4], [19, 2]]));
+                      650, [[3, 2], [9, 3], [9, 4], [19, 2], [30, 1]]));
 
-events.push(new Event("Group A Rally: " + endurances[2],
+events.push(new Event("Group A Rally: Bajío Trail",
                       events.length,
                       "Bring your WRC legend " +
-                      "to this ultimate rally showdown!",
-                      endurances[2],
-                      "821 715 025",
+                      "to this dirt racing showdown!",
+                      "Bajío Trail",
+                      "494 070 628",
                       "both", "spec", "double",
                       670, [[21, 1], [26, 1], [27, 4]]));
 
@@ -2130,7 +2151,7 @@ events.push(new Event("Showcase: Vintage Explorers",
                       "Explore the Mexican countryside in your choice " +
                       "of old 4x4 offroaders, " +
                       "courtesy of the Horizon Festival!",
-                      endurances[3],
+                      "The Titan",
                       "169 663 287",
                       "both", "show", "normal",
                       0, [[9, 6], [12, 1], [27, 6]],
@@ -2144,7 +2165,7 @@ events.push(new Event("Showcase: 80s Supercars",
                       "avoid any attention. " +
                       "Also, try to avoid damaging these " +
                       "expensive poster cars!",
-                      endurances[4],
+                      "The Marathon",
                       "894 091 504",
                       "both", "show", "double",
                       0, [[8, 3], [14, 2], [24, 3]],
@@ -2158,7 +2179,7 @@ events.push(new Event("Showcase: 90s Supercars",
                       "Prize money will be given out to all placements " +
                       "for this event, so be extra careful " +
                       "with these priceless supercars.",
-                      endurances[0],
+                      "The Goliath",
                       "509 774 586",
                       "both", "show", "all",
                       0, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]],
@@ -2194,7 +2215,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230528;
+let news = 230610;
 
 // Initialize state
 let state = {};

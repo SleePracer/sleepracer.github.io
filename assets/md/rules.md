@@ -8,8 +8,8 @@ permalink: /rules/
 <div style="margin-top: 37px"></div>
 # What is this?
 
-Do you also love driving cars in Forza Horizon 5, but not the structure of the game itself?
-Are you tired of the hamster wheel playlist, the mountain of mundane accolades, and your limitless credits and cars from all those wheelspins?
+Do you also love driving in Forza Horizon 5, but not the structure of the game itself?
+Are you tired of the hamster wheel playlist, the mountain of accolades, and your endless credits and cars from all those wheelspins?
 If so, maybe this website can help you play the game in a more rewarding way!
 
 In order to play, simply pretend that your in-game garage and credits don't exist, and keep track of your cars and cash here instead.
@@ -43,7 +43,7 @@ Bring some purpose back to the open world and get yourself immersed!
   * Hide as many UI elements you are comfortable with.
       * The only thing you really need is "Lap Time and Position", to see your car damage!
   * Make your own tunes and liveries.
-This will help you get invested in your playthrough and your cars!
+This will help you get invested in your playthrough!
   * Use cockpit view for extra immersion!
 
 

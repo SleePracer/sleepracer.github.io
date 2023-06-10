@@ -6,6 +6,28 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
+# Beta 0.2.6: New Special Event!
+
+This update introduces another special event: Classic Muscle!
+Players can bring the Camaro, Charger or Mustang to this event, but drivatars can also pick from a number of non-roster cars.
+The Group A Touring and Rally events have also been updated to include a few non-roster cars for the drivatars to pick.
+Also, I have changed the tracks to some fitting sprints not included elsewhere in Career Mode, since the Colossus and Gauntlet is already used for the final races.
+
+For the next update I want to change the roster slightly.
+This will mean updated sharecodes and will result in an **incompability with current game saves.**
+To reflect this, the version number will go up to 0.3.0 (with the release being what will tick over to 1.0.0).
+Therefore **I highly recommend wrapping up any playthroughs you have in progress before July!**
+I promise to not release 0.3.0 before July 1st, but it might take even longer.
+
+Happy racing!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-06-10
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Beta 0.2.5: New Class Finales and Updated Showcases!
 
 Hello, first update in a while because I've been busy with other things (RHEC, HTCC, TW), this one revamps and renames the class advancements to finales!
