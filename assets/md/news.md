@@ -6,6 +6,37 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
+# Beta 0.3.0: New Car Roster!
+
+These five cars:
+  * Audi Avant RS2 '95
+  * Chevrolet Impala '96
+  * HSV Maloo Ute '14
+  * Lotus Elise '99
+  * Vauxhall Corsa '16
+
+have been replaced with these five cars:
+  * Cadillac ATS-V '16
+  * Lexus RC F '15
+  * Lexus SC300 '97
+  * Lotus Exige '12
+  * Toyota Celica '03
+
+I spend a little extra time making this change somewhat backwards compatible, the only real issue being players currently using the removed cars.
+In such cases, they will automatically be sold, as they will not be useable for the new blueprints.
+If you're using other cars, hopefully the transition should be seamless!
+
+Next, now that the roster is in its final form, I will add some more special events.
+
+Happy racing!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-07-08
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Beta 0.2.6: New Special Event!
 
 This update introduces another special event: Classic Muscle!

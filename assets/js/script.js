@@ -277,10 +277,14 @@ class Car {
         updateState();
     }
 
-    sell() {
-        // Ask for confirmation before selling
-        if (!window.confirm("Sale price is: " + moneyToString(this.value) + ", are you sure you want to sell?")) {
-            return;
+    sell(force = false) {
+        if (!force) {
+            // Ask for confirmation before selling
+            if (!window.confirm("Sale price is: " +
+                                moneyToString(this.value) +
+                                ", are you sure you want to sell?")) {
+                return;
+            }
         }
 
         // Add back sale price to money
@@ -1395,7 +1399,7 @@ function updateState() {
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
     let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4",
-                         "0.2.5", "0.2.6"];
+                         "0.2.5", "0.2.6", "0.3.0"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1462,6 +1466,33 @@ function setStateFromString(inputString) {
         }
     }
 
+    // earlier -> 0.3.0
+    if (version === "0.2.0" || version === "0.2.1"
+     || version === "0.2.2" || version === "0.2.3"
+     || version === "0.2.4" || version === "0.2.5"
+     || version === "0.2.6") {
+        for (let iCars = 0; iCars < compact.c.length; iCars++) {
+            if (compact.c[iCars].m[0] >= 6) {
+                // Cadillac
+                compact.c[iCars].m[0]++;
+            }
+            if (compact.c[iCars].m[0] >= 17) {
+                // Lexus
+                compact.c[iCars].m[0]++;
+            }
+            if (compact.c[iCars].m[0] === 18
+             && compact.c[iCars].m[1] === 1) {
+                // Lotus Exige
+                compact.c[iCars].m[1]++;
+            }
+            if (compact.c[iCars].m[0] === 29
+             && compact.c[iCars].m[1] >= 3) {
+                // Toyota Celica
+                compact.c[iCars].m[1]++;
+            }
+        }
+    }
+
     state.version = thisVersion;
     state.name = compact.n;
     state.date = compact.t;
@@ -1496,6 +1527,22 @@ function setStateFromString(inputString) {
     if (state.cCar !== -1) {
         if (piToClass(state.cars[state.cCar].pi) > state.lvl) {
             state.cCar = -1;
+        }
+    }
+
+    let removedCars = [[2, 2], [7, 1], [12, 1], [18, 2], [30, 1]];
+    for (let iRemoved = 0; iRemoved < removedCars.length; iRemoved++) {
+        for (let iGarage = 0; iGarage < state.cars.length; iGarage++) {
+            if (removedCars[iRemoved][0] === state.cars[iGarage].make
+             && removedCars[iRemoved][1] === state.cars[iGarage].model) {
+                window.confirm("Your car " + state.cars[iGarage].name +
+                               " is not included in the 0.3.x roster!" +
+                               " In order to keep playing in 0.3.x," +
+                               " it will automatically be sold for " +
+                               moneyToString(state.cars[iGarage].value) +
+                               ".");
+                state.cars[iGarage].sell(true);
+            }
         }
     }
 
@@ -1546,7 +1593,7 @@ function setBaseInfo(sharecode) {
 }
 
 function mustangBaseRadio() {
-    startCarMake = 9;
+    startCarMake = 10;
     startCarModel = 3;
     startCarPI = 545;
 
@@ -1559,7 +1606,7 @@ function mustangBaseImg() {
 }
 
 function eclipseBaseRadio() {
-    startCarMake = 21;
+    startCarMake = 23;
     startCarModel = 3;
     startCarPI = 545;
 
@@ -1572,7 +1619,7 @@ function eclipseBaseImg() {
 }
 
 function corradoBaseRadio() {
-    startCarMake = 29;
+    startCarMake = 31;
     startCarModel = 1;
     startCarPI = 537;
 
@@ -1593,16 +1640,8 @@ function setAltInfo() {
                             + "and install a roll cage!";
 }
 
-function impalaAltRadio() {
-    startCarMake = 6;
-    startCarModel = 1;
-    startCarPI = 515;
-
-    setAltInfo();
-}
-
 function chargerAltRadio() {
-    startCarMake = 7;
+    startCarMake = 8;
     startCarModel = 2;
     startCarPI = 562;
 
@@ -1610,7 +1649,7 @@ function chargerAltRadio() {
 }
 
 function mustangAltRadio() {
-    startCarMake = 9;
+    startCarMake = 10;
     startCarModel = 3;
     startCarPI = 545;
 
@@ -1618,15 +1657,23 @@ function mustangAltRadio() {
 }
 
 function civicAltRadio() {
-    startCarMake = 10;
+    startCarMake = 11;
     startCarModel = 2;
     startCarPI = 558;
 
     setAltInfo();
 }
 
-function miataAltRadio() {
+function soarerAltRadio() {
     startCarMake = 17;
+    startCarModel = 2;
+    startCarPI = 557;
+
+    setAltInfo();
+}
+
+function miataAltRadio() {
+    startCarMake = 19;
     startCarModel = 2;
     startCarPI = 446;
 
@@ -1634,7 +1681,7 @@ function miataAltRadio() {
 }
 
 function savannaAltRadio() {
-    startCarMake = 17;
+    startCarMake = 19;
     startCarModel = 3;
     startCarPI = 560;
 
@@ -1642,7 +1689,7 @@ function savannaAltRadio() {
 }
 
 function eclipseAltRadio() {
-    startCarMake = 21;
+    startCarMake = 23;
     startCarModel = 3;
     startCarPI = 545;
 
@@ -1650,7 +1697,7 @@ function eclipseAltRadio() {
 }
 
 function nissanAltRadio() {
-    startCarMake = 22;
+    startCarMake = 24;
     startCarModel = 3;
     startCarPI = 451;
 
@@ -1658,7 +1705,7 @@ function nissanAltRadio() {
 }
 
 function firebirdAltRadio() {
-    startCarMake = 23;
+    startCarMake = 25;
     startCarModel = 1;
     startCarPI = 436;
 
@@ -1666,15 +1713,15 @@ function firebirdAltRadio() {
 }
 
 function truenoAltRadio() {
-    startCarMake = 27;
-    startCarModel = 5;
+    startCarMake = 29;
+    startCarModel = 6;
     startCarPI = 485;
 
     setAltInfo();
 }
 
 function corradoAltRadio() {
-    startCarMake = 29;
+    startCarMake = 31;
     startCarModel = 1;
     startCarPI = 537;
 
@@ -1682,7 +1729,7 @@ function corradoAltRadio() {
 }
 
 function golfAltRadio() {
-    startCarMake = 29;
+    startCarMake = 31;
     startCarModel = 2;
     startCarPI = 435;
 
@@ -1690,7 +1737,7 @@ function golfAltRadio() {
 }
 
 function volvoAltRadio() {
-    startCarMake = 30;
+    startCarMake = 32;
     startCarModel = 1;
     startCarPI = 555;
 
@@ -2045,7 +2092,7 @@ events.push(new Event("C Class Finale: " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       roadCircuits[1].name + " Circuit",
-                      "110 496 434",
+                      "168 353 490",
                       "road", "prog", "double", 600));
 
 events.push(new Event("C Class Finale: " +
@@ -2054,7 +2101,7 @@ events.push(new Event("C Class Finale: " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       dirtScrambles[2].name + " Scramble",
-                      "303 190 681",
+                      "138 618 342",
                       "dirt", "prog", "double", 600));
 
 events.push(new Event("B Class Finale: " +
@@ -2063,7 +2110,7 @@ events.push(new Event("B Class Finale: " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       roadCircuits[1].name + " Circuit",
-                      "392 359 657",
+                      "628 612 139",
                       "road", "prog", "double", 700));
 
 events.push(new Event("B Class Finale: " +
@@ -2072,21 +2119,21 @@ events.push(new Event("B Class Finale: " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       dirtScrambles[7].name + " Scramble",
-                      "159 395 533",
+                      "462 558 415",
                       "dirt", "prog", "double", 700));
 
 events.push(new Event("Grand Finale: The Colossus",
                       events.length,
                       "This is the final event, prepare accordingly!",
                       "The Colossus",
-                      "671 340 778",
+                      "120 289 492",
                       "road", "prog", "double", 800));
 
 events.push(new Event("Grand Finale: The Gauntlet",
                       events.length,
                       "This is the final event, prepare accordingly!",
                       "The Gauntlet",
-                      "114 179 434",
+                      "757 020 992",
                       "dirt", "prog", "double", 800));
 
 events.push(new Event("Classic Muscle: Gran Pantano Sprint",
@@ -2096,7 +2143,7 @@ events.push(new Event("Classic Muscle: Gran Pantano Sprint",
                       "Gran Pantano Sprint",
                       "935 382 632",
                       "both", "spec", "double",
-                      600, [[6, 3], [7, 2], [9, 7]]));
+                      600, [[7, 3], [8, 2], [10, 7]]));
 
 events.push(new Event("Group A Touring: Sierra Verde Sprint",
                       events.length,
@@ -2105,7 +2152,7 @@ events.push(new Event("Group A Touring: Sierra Verde Sprint",
                       "Sierra Verde Sprint",
                       "306 811 911",
                       "both", "spec", "double",
-                      650, [[3, 2], [9, 3], [9, 4], [19, 2], [30, 1]]));
+                      650, [[3, 2], [10, 3], [10, 4], [21, 2], [32, 1]]));
 
 events.push(new Event("Group A Rally: Bajío Trail",
                       events.length,
@@ -2114,7 +2161,7 @@ events.push(new Event("Group A Rally: Bajío Trail",
                       "Bajío Trail",
                       "494 070 628",
                       "both", "spec", "double",
-                      670, [[21, 1], [26, 1], [27, 4]]));
+                      670, [[23, 1], [28, 1], [29, 5]]));
 
 events.push(new Event("Showcase: Vintage Hatchbacks",
                       events.length,
@@ -2129,7 +2176,7 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
                       "Horizon Baja Scramble 7L",
                       "225 814 856",
                       "both", "show", "podium",
-                      0, [[9, 5], [10, 4], [29, 3]],
+                      0, [[10, 5], [11, 4], [31, 3]],
                       "vintageHatch"));
 
 events.push(new Event("Showcase: Fairlady vs. 2000GT",
@@ -2143,7 +2190,7 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
                       "Horizon Mexico Circuit 7L",
                       "180 247 097",
                       "both", "show", "all",
-                      0, [[22, 4], [27, 7]],
+                      0, [[24, 4], [29, 8]],
                       "vintageSport"));
 
 events.push(new Event("Showcase: Vintage Explorers",
@@ -2154,7 +2201,7 @@ events.push(new Event("Showcase: Vintage Explorers",
                       "The Titan",
                       "169 663 287",
                       "both", "show", "normal",
-                      0, [[9, 6], [12, 1], [27, 6]],
+                      0, [[10, 6], [13, 1], [29, 7]],
                       "vintageExplorer"));
 
 events.push(new Event("Showcase: 80s Supercars",
@@ -2168,7 +2215,7 @@ events.push(new Event("Showcase: 80s Supercars",
                       "The Marathon",
                       "894 091 504",
                       "both", "show", "double",
-                      0, [[8, 3], [14, 2], [24, 3]],
+                      0, [[9, 3], [15, 2], [26, 3]],
                       "80Super"));
 
 events.push(new Event("Showcase: 90s Supercars",
@@ -2182,7 +2229,7 @@ events.push(new Event("Showcase: 90s Supercars",
                       "The Goliath",
                       "509 774 586",
                       "both", "show", "all",
-                      0, [[4, 1], [8, 2], [13, 2], [14, 1], [18, 1]],
+                      0, [[4, 1], [9, 2], [14, 2], [15, 1], [20, 1]],
                       "90Super"));
 
 let roadStart = events.length;
@@ -2215,7 +2262,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230610;
+let news = 230708;
 
 // Initialize state
 let state = {};

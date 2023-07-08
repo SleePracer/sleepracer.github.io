@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.2.6";
+const thisVersion = "0.3.0";
 
 const defaultState = {
     version: thisVersion,
@@ -23,75 +23,6 @@ const defaultState = {
     cCar: -1,
     cars: []};
 
-/*
-Classic Muscle
-Classic Rally
-GT Cars
-Hot Hatch
-Modern Muscle
-Modern Sports Cars
-Retro Hot Hatch
-Retro Muscle
-Retro Rally
-Retro Saloons
-Retro Sports Cars
-Retro Supercars
-Super Hot Hatch
-Super Saloons
-Vans and Utility
-
-        {name: "Corrado VR6", // 1
-        {name: "Integra Type R", // 1
-        {name: "TT RS Coupé", // 1
-        {name: "Avant RS2", // 2
-        {name: "M2 Coupé", // 1
-        {name: "M3", // 2
-        {name: "Regal GNX", // 1
-        {name: "Impala Super Sport", // 1
-        {name: "Corvette ZR-1", // 2
-        {name: "Camaro Super Sport Coupe", // 3
-        {name: "Challenger SRT Hellcat", // 1
-        {name: "Charger R/T", // 2
-        {name: "F355 Berlinetta", // 1
-        {name: "Mustang GT", // 1
-        {name: "Focus RS", // 2
-        {name: "SVT Cobra R", // 3
-        {name: "Sierra Cosworth RS500", // 4
-        {name: "Mustang Boss 302", // 7
-        {name: "Civic Type R", // 1
-        {name: "Civic Type R", // 2
-        {name: "NSX-R", // 3
-        {name: "Limited Edition Gen-F GTS Maloo", // 1
-        {name: "XKR-S", // 1
-        {name: "Elise Series 1 Sport 190", // 1
-        {name: "RX-7", // 1
-        {name: "MX-5 Miata", // 2
-        {name: "Savanna RX-7", // 3
-        {name: "C 63 AMG Coupé Black Series", // 1
-        {name: "190E 2.5-16 Evolution II", // 2
-        {name: "John Cooper Works GP", // 1
-        {name: "Lancer Evolution VI GSR", // 1
-        {name: "GTO", // 2
-        {name: "Eclipse GSX", // 3
-        {name: "370Z", // 1
-        {name: "Skyline GT-R V-Spec II", // 2
-        {name: "240SX SE", // 3
-        {name: "Firebird Trans AM", // 1
-        {name: "Cayman GTS", // 1
-        {name: "944 Turbo", // 2
-        {name: "911 Turbo 3.3", // 4
-        {name: "Megane R.S.", // 1
-        {name: "Impreza 22B-STI Version", // 1
-        {name: "GR Supra", // 1
-        {name: "86", // 2
-        {name: "Supra RZ", // 3
-        {name: "Celica GT-Four ST205", // 4
-        {name: "Sprinter Trueno GT Apex", // 5
-        {name: "Corsa VXR", // 1
-        {name: "Golf GTI 16V MK2", // 2
-        {name: "242 Turbo Evolution", // 1
-*/
-
 const carList = [
     ["Choose manufacturer", "Choose model"],
     ["Acura", // 1
@@ -106,11 +37,11 @@ const carList = [
          cost: 84000, // 66k
          year: 2010,
          buyable: true},
-        {name: "Avant RS2", // 2
+        {name: "Avant RS2", // 2 // TODO: remove in release
          pi: 601,
-         cost: 52000, // 50k
+         cost: 0, // 50k
          year: 1995,
-         buyable: true}],
+         buyable: false}],
     ["BMW", // 3
         {name: "M2 Coupé", // 1
          pi: 718,
@@ -135,12 +66,18 @@ const carList = [
          cost: 26000, // 130k
          year: 1987,
          buyable: true}],
-    ["Chevrolet", // 6
-        {name: "Impala Super Sport", // 1
+    ["Cadillac", // 6
+        {name: "ATS-V",
+         pi: 716,
+         cost: 88000, // 65k
+         year: 2016,
+         buyable: true}],
+    ["Chevrolet", // 7
+        {name: "Impala Super Sport", // 1 // TODO: remove in release
          pi: 509,
-         cost: 22000, // 20k
+         cost: 0, // 20k
          year: 1996,
-         buyable: true},
+         buyable: false},
         {name: "Corvette ZR-1", // 2
          pi: 693,
          cost: 68000, // 45k
@@ -151,7 +88,7 @@ const carList = [
          cost: 32000, // 110k
          year: 1969,
          buyable: true}],
-    ["Dodge", // 7
+    ["Dodge", // 8
         {name: "Challenger SRT Hellcat", // 1
          pi: 755,
          cost: 94000, // 75k
@@ -162,7 +99,7 @@ const carList = [
          cost: 32000, // 103k
          year: 1969,
          buyable: true}],
-    ["Ferrari", // 8
+    ["Ferrari", // 9
         {name: "F355 Berlinetta", // 1
          pi: 717,
          cost: 142000, // 190k
@@ -180,7 +117,7 @@ const carList = [
          year: 1987,
          buyable: false,
          sharecode: "158 350 366"}],
-    ["Ford", // 9
+    ["Ford", // 10
         {name: "Mustang GT", // 1
          pi: 756,
          cost: 88000, // 40k
@@ -218,7 +155,7 @@ const carList = [
          cost: 34000, // 230k
          year: 1969,
          buyable: true}],
-    ["Honda", // 10
+    ["Honda", // 11
         {name: "Civic Type R", // 1
          pi: 727,
          cost: 78000, // 59k
@@ -240,20 +177,20 @@ const carList = [
          year: 1974,
          buyable: false,
          sharecode: "226 758 458"}],
-    ["HSV", // 11
+    ["HSV", // 12 TODO: remove in release
         {name: "Limited Edition Gen-F GTS Maloo", // 1
          pi: 742,
-         cost: 86000, // 62k
+         cost: 0, // 62k
          year: 2014,
-         buyable: true}],
-    ["International", // 12
+         buyable: false}],
+    ["International", // 13
         {name: "Scout 800A", // 1
          pi: 384,
          cost: 0, // 40k
          year: 1970,
          buyable: false,
          sharecode: "786 531 552"}],
-    ["Jaguar", // 13
+    ["Jaguar", // 14
         {name: "XKR-S", // 1
          pi: 756,
          cost: 102000, // 100k
@@ -265,7 +202,7 @@ const carList = [
          year: 1993,
          buyable: false,
          sharecode: "734 670 250"}],
-    ["Lamborghini", // 14
+    ["Lamborghini", // 15
         {name: "Diablo SV", // 1
          pi: 763,
          cost: 0, // 174k
@@ -278,20 +215,36 @@ const carList = [
          year: 1988,
          buyable: false,
          sharecode: "715 133 482"}],
-    ["Land Rover", // 15
+    ["Land Rover", // 16 TODO: remove in release
         {name: "Series III", // 1
          pi: 100,
          cost: 0, // 20k
          year: 1972,
          buyable: false,
          sharecode: "587 482 713"}],
-    ["Lotus", // 16
-        {name: "Elise Series 1 Sport 190", // 1
-         pi: 711,
-         cost: 76000, // 81k
-         year: 1999,
+    ["Lexus", // 17
+        {name: "RC F", // 1
+         pi: 741,
+         cost: 94000, // 75k
+         year: 2015,
+         buyable: true},
+        {name: "SC300", // 2
+         pi: 555,
+         cost: 24000, // 25k
+         year: 1997,
          buyable: true}],
-    ["Mazda", // 17
+    ["Lotus", // 18
+        {name: "Exige S", // 1
+         pi: 754,
+         cost: 92000, // 85k
+         year: 2012,
+         buyable: true},
+        {name: "Elise Series 1 Sport 190", // 2 // TODO: remove in release
+         pi: 711,
+         cost: 0, // 81k
+         year: 1999,
+         buyable: false}],
+    ["Mazda", // 19
         {name: "RX-7", // 1
          pi: 645,
          cost: 54000, // 35k
@@ -307,14 +260,14 @@ const carList = [
          cost: 26000, // 25k
          year: 1990,
          buyable: true}],
-    ["McLaren", // 18
+    ["McLaren", // 20
         {name: "F1", // 1
          pi: 817,
          cost: 0, // 15m
          year: 1993,
          buyable: false,
          sharecode: "179 587 003"}],
-    ["Mercedes-Benz", // 19
+    ["Mercedes-Benz", // 21
         {name: "C 63 AMG Coupé Black Series", // 1
          pi: 768,
          cost: 96000, // 150k
@@ -325,13 +278,13 @@ const carList = [
          cost: 36000, // 150k
          year: 1990,
          buyable: true}],
-    ["Mini", // 20
+    ["Mini", // 22
         {name: "John Cooper Works GP", // 1
          pi: 719,
          cost: 74000, // 42k
          year: 2021,
          buyable: true}],
-    ["Mitsubishi", // 21
+    ["Mitsubishi", // 23
         {name: "Lancer Evolution VI GSR", // 1
          pi: 659,
          cost: 58000, // 28k
@@ -347,7 +300,7 @@ const carList = [
          cost: 24000, // 25k
          year: 1995,
          buyable: true}],
-    ["Nissan", // 22
+    ["Nissan", // 24
         {name: "370Z", // 1
          pi: 688,
          cost: 52000, // 40k
@@ -369,13 +322,13 @@ const carList = [
          year: 1969,
          buyable: false,
          sharecode: "Stock"}],
-    ["Pontiac", // 23
+    ["Pontiac", // 25
         {name: "Firebird Trans AM", // 1
          pi: 418,
          cost: 16000, // 45k
          year: 1977,
          buyable: true}],
-    ["Porsche", // 24
+    ["Porsche", // 26
         {name: "Cayman GTS", // 1
          pi: 767,
          cost: 112000, // 80k
@@ -397,19 +350,19 @@ const carList = [
          cost: 86000, // 150k
          year: 1982,
          buyable: true}],
-    ["Renault", // 25
+    ["Renault", // 27
         {name: "Megane R.S.", // 1
          pi: 670,
          cost: 48000, // 37k
          year: 2018,
          buyable: true}],
-    ["Subaru", // 26
+    ["Subaru", // 28
         {name: "Impreza 22B-STI Version", // 1
          pi: 640,
          cost: 64000, // 110k
          year: 1998,
          buyable: true}],
-    ["Toyota", // 27
+    ["Toyota", // 29
         {name: "GR Supra", // 1
          pi: 731,
          cost: 82000, // 55k
@@ -420,40 +373,45 @@ const carList = [
          cost: 38000, // 28.8k
          year: 2013,
          buyable: true},
-        {name: "Supra RZ", // 3
+        {name: "Celica Sport Specialty II", // 3
+         pi: 557,
+         cost: 34000, // 250k
+         year: 2003,
+         buyable: true},
+        {name: "Supra RZ", // 4
          pi: 646,
          cost: 54000, // 38k
          year: 1998,
          buyable: true},
-        {name: "Celica GT-Four ST205", // 4
+        {name: "Celica GT-Four ST205", // 5
          pi: 590,
          cost: 48000, // 20k
          year: 1994,
          buyable: true},
-        {name: "Sprinter Trueno GT Apex", // 5
+        {name: "Sprinter Trueno GT Apex", // 6
          pi: 480,
          cost: 14000, // 20k
          year: 1985,
          buyable: true},
-        {name: "FJ40", // 6
+        {name: "FJ40", // 7
          pi: 269,
          cost: 0, // 55k
          year: 1979,
          buyable: false,
          sharecode: "539 560 580"},
-        {name: "2000GT", // 7
+        {name: "2000GT", // 8
          pi: 487,
          cost: 0, // 750k
          year: 1969,
          buyable: false,
          sharecode: "Stock"}],
-    ["Vauxhall", // 28
-        {name: "Corsa VXR", // 1
+    ["Vauxhall", // 30
+        {name: "Corsa VXR", // 1 // TODO: remove in release
          pi: 584,
-         cost: 38000, // 28k
+         cost: 0, // 28k
          year: 2016,
-         buyable: true}],
-    ["Volkswagen", // 29
+         buyable: false}],
+    ["Volkswagen", // 31
         {name: "Corrado VR6", // 1
          pi: 533,
          cost: 24000, // 20k
@@ -470,7 +428,7 @@ const carList = [
          year: 1983,
          buyable: false,
          sharecode: "110 055 064"}],
-    ["Volvo", // 30
+    ["Volvo", // 32
         {name: "242 Turbo Evolution", // 1
          pi: 548,
          cost: 22000, // 45k
@@ -479,70 +437,70 @@ const carList = [
 
 const roadCircuits = [
     {name: "Bahía de Plano", // 0
-     sharecode: "902 029 576",
+     sharecode: "130 995 031",
      next: [7, 8, 11]},
     {name: "Arch of Mulegé", // 1
-     sharecode: "117 039 835",
+     sharecode: "459 057 512",
      next: [7, 8, 9]},
     {name: "Los Jardines", // 2
-     sharecode: "161 003 763",
+     sharecode: "623 871 886",
      next: [3, 4, 5]},
     {name: "Chihuahua", // 3
-     sharecode: "690 793 470",
+     sharecode: "908 751 913",
      next: [2, 4, 6, 10, 12]},
     {name: "Tierra Próspera", // 4
-     sharecode: "951 064 714",
+     sharecode: "236 936 786",
      next: [2, 3, 5, 9, 12]},
     {name: "Playa Azul", // 5
-     sharecode: "110 210 247",
+     sharecode: "289 169 770",
      next: [2, 4, 9]},
     {name: "Lookout", // 6
-     sharecode: "128 017 391",
+     sharecode: "725 302 909",
      next: [3, 10, 11, 12]},
     {name: "Horizon Mexico", // 7
-     sharecode: "182 132 731",
+     sharecode: "275 594 929",
      next: [0, 1, 8, 9]},
     {name: "Emerald", // 8
-     sharecode: "153 220 974",
+     sharecode: "172 890 487",
      next: [0, 1, 7]},
     {name: "Estadio", // 9
-     sharecode: "199 296 902",
+     sharecode: "134 730 395",
      next: [1, 4, 5, 7, 10, 11, 12]},
     {name: "Cathedral", // 10
-     sharecode: "109 087 973",
+     sharecode: "526 809 505",
      next: [3, 6, 9, 11, 12]},
     {name: "Plaza", // 11
-     sharecode: "302 910 602",
+     sharecode: "140 331 213",
      next: [0, 6, 9, 10, 12]},
     {name: "Bola Ocho", // 12
-     sharecode: "452 687 980",
+     sharecode: "714 847 969",
      next: [3, 4, 6, 9, 10, 11]}];
 
 const dirtScrambles = [
     {name: "River", // 0
-     sharecode: "230 252 004",
+     sharecode: "173 128 172",
      next: [2, 3, 6]},
     {name: "Mangrove", // 1
-     sharecode: "181 928 475",
+     sharecode: "141 819 812",
      next: [4, 6, 7]},
     {name: "Mulegé Town", // 2
-     sharecode: "342 557 110",
+     sharecode: "801 687 765",
      next: [0, 3, 5]},
     {name: "San Juan", // 3
-     sharecode: "298 694 879",
+     sharecode: "116 904 965",
      next: [0, 2, 4, 5, 7]},
 //    "Horizon Baja",
     {name: "Teotihuacán", // 4
-     sharecode: "715 068 995",
+     sharecode: "129 877 344",
      next: [1, 3, 6, 7]},
     {name: "Caldera", // 5
-     sharecode: "163 891 705",
+     sharecode: "476 382 721",
      next: [2, 3, 7]},
     {name: "La Selva", // 6
-     sharecode: "158 363 893",
+     sharecode: "796 910 033",
      next: [0, 1, 4]},
     {name: "El Pípila", // 7
-     sharecode: "130 710 595",
+     sharecode: "140 003 168",
      next: [1, 3, 4, 5]}];
 
 const classPI = [
