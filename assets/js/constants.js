@@ -2,7 +2,7 @@
 // Constants
 // -----------------------------------------------------------------------
 
-const thisVersion = "0.3.0";
+const thisVersion = "0.3.1";
 
 const defaultState = {
     version: thisVersion,
@@ -481,7 +481,7 @@ const dirtScrambles = [
      sharecode: "173 128 172",
      next: [2, 3, 6]},
     {name: "Mangrove", // 1
-     sharecode: "141 819 812",
+     sharecode: "432 344 336",
      next: [4, 6, 7]},
     {name: "Mulegé Town", // 2
      sharecode: "801 687 765",

@@ -903,62 +903,66 @@ class Event {
 
     }
 
+    getInfo() {
+        let allInfo = this.name + ": ";
+        allInfo += this.infoString;
+
+        allInfo += "\n\n";
+        if (this.eventType === "show") {
+            allInfo += "Event track: " + this.raceName + "\n";
+        }
+
+        if (this.eventType === "prog"
+         && xpToClass(state.xp) <= state.lvl) {
+            allInfo += "Progress to the top of your class to unlock!";
+        } else if (this.eventType === "prog"
+         && state.cCar !== -1
+         && state.cars[state.cCar].pi < this.pi) {
+            allInfo += "Build your car to the top of your class to unlock!";
+        } else if (state.cCar !== -1) {
+            allInfo += "Event sharecode: " + this.sharecode;
+        }
+
+        if (this.eventType === "spec") {
+            // Add PI restriction
+            allInfo += "\n";
+            allInfo += "Minimum PI: ";
+            allInfo += classLetter[piToClass(this.pi)] + this.pi;
+
+            // Add eligible car models
+            allInfo += "\n\nEligible cars:\n";
+            for (let iModel = 0; iModel < this.cars.length; iModel++) {
+                let makeList = carList[this.cars[iModel][0]];
+                let modelObj = makeList[this.cars[iModel][1]];
+                allInfo += makeList[0] + " ";
+                allInfo += modelObj.name + " (";
+                allInfo += modelObj.year + ")\n";
+            }
+        }
+
+        if (this.eventType === "show") {
+
+            // Add eligible car models
+            allInfo += "\n\nBorrow one of:\n";
+            for (let iModel = 0; iModel < this.cars.length; iModel++) {
+                let makeList = carList[this.cars[iModel][0]];
+                let modelObj = makeList[this.cars[iModel][1]];
+                allInfo += makeList[0] + " ";
+                allInfo += modelObj.name + " ";
+                allInfo += modelObj.year + " (";
+                allInfo += modelObj.sharecode + ")\n";
+            }
+        }
+        return allInfo;
+    }
+
     showInfo() {
         if (this.infoButton.innerText === "Info") {
-            // Add provided info
-            let allInfo = this.name + ": ";
-            allInfo += this.infoString;
-
-            allInfo += "\n\n";
-            if (this.eventType === "show") {
-                allInfo += "Event track: " + this.raceName + "\n";
-            }
-
-            if (this.eventType === "prog"
-             && xpToClass(state.xp) <= state.lvl) {
-                allInfo += "Progress to the top of your class to unlock!";
-            } else if (this.eventType === "prog"
-             && state.cCar !== -1
-             && state.cars[state.cCar].pi < this.pi) {
-                allInfo += "Build your car to the top of your class to unlock!";
-            } else if (state.cCar !== -1) {
-                allInfo += "Event sharecode: " + this.sharecode;
-            }
-
-            if (this.eventType === "spec") {
-                // Add PI restriction
-                allInfo += "\n";
-                allInfo += "Minimum PI: ";
-                allInfo += classLetter[piToClass(this.pi)] + this.pi;
-
-                // Add eligible car models
-                allInfo += "\n\nEligible cars:\n";
-                for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                    let makeList = carList[this.cars[iModel][0]];
-                    let modelObj = makeList[this.cars[iModel][1]];
-                    allInfo += makeList[0] + " ";
-                    allInfo += modelObj.name + "\n";
-                }
-            }
-
-            if (this.eventType === "show") {
-
-                // Add eligible car models
-                allInfo += "\n\nBorrow one of:\n";
-                for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                    let makeList = carList[this.cars[iModel][0]];
-                    let modelObj = makeList[this.cars[iModel][1]];
-                    allInfo += makeList[0] + " ";
-                    allInfo += modelObj.name + " (";
-                    allInfo += modelObj.sharecode + ")\n";
-                }
-            }
-
             // Replace name with info
             if (state.completed.includes(this.iEvent)) {
-                this.completedRow.cells[0].innerText = allInfo;
+                this.completedRow.cells[0].innerText = this.getInfo();
             } else {
-                this.row.cells[0].innerText = allInfo;
+                this.row.cells[0].innerText = this.getInfo();
             }
 
             // Repurpose info button to close info
@@ -1005,13 +1009,19 @@ class Event {
         this.race.damageInput.id = this.name + " E";
         this.race.finishButton.id = this.name + " E";
 
-        // Add the return from event button to a final row
+        // Add the return from event button to another row
         this.returnRow = eRacesTB.insertRow(1);
         for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
             this.returnRow.insertCell();
         }
         this.returnRow.cells[0].innerHTML = "Sharecode: " + this.sharecode;
         this.returnRow.cells[3].appendChild(this.returnButton);
+
+        // Add the info about the event to another row
+        this.infoRow = eRacesTB.insertRow(2);
+        this.infoRow.insertCell();
+        this.infoRow.cells[0].colSpan = 4;
+        this.infoRow.cells[0].innerText = this.getInfo();
 
         // Show first race
         this.entered = true;
@@ -1071,6 +1081,9 @@ class Event {
         // Remove return button and row
         this.returnRow.cells[3].removeChild(this.returnButton);
         this.returnRow.style.display = "none";
+
+        // Remove info row
+        this.infoRow.style.display = "none";
 
         // Hide the races table
         eRacesT.style.display = "none";
@@ -1399,7 +1412,7 @@ function updateState() {
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
     let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4",
-                         "0.2.5", "0.2.6", "0.3.0"];
+                         "0.2.5", "0.2.6", "0.3.0", "0.3.1"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -1489,6 +1502,24 @@ function setStateFromString(inputString) {
              && compact.c[iCars].m[1] >= 3) {
                 // Toyota Celica
                 compact.c[iCars].m[1]++;
+            }
+        }
+    }
+
+    // earlier -> 0.3.1
+    if (version === "0.2.0" || version === "0.2.1"
+     || version === "0.2.2" || version === "0.2.3"
+     || version === "0.2.4" || version === "0.2.5"
+     || version === "0.2.6" || version === "0.3.0") {
+        for (let i = 0; i < compact.x.length; i++) {
+            compact.x[i] = compact.x[i] + 8;
+        }
+        for (let i = 0; i < compact.f.length; i++) {
+            if (compact.f[i] >= 8) {
+                compact.f[i]++;
+            }
+            if (compact.f[i] >= 10) {
+                compact.f[i] = compact.f[i] + 7;
             }
         }
     }
@@ -2154,6 +2185,16 @@ events.push(new Event("Group A Touring: Sierra Verde Sprint",
                       "both", "spec", "double",
                       650, [[3, 2], [10, 3], [10, 4], [21, 2], [32, 1]]));
 
+events.push(new Event("Fast and Furious: Tunnel Run",
+                      events.length,
+                      "Join the Fast and Furious Fan Club " +
+                      "for this event! Hero car required, " +
+                      "cosplay livery optional.",
+                      "Tunnel Run",
+                      "167 123 448",
+                      "both", "spec", "double",
+                      660, [[1, 1], [5, 1], [7, 3], [8, 2], [10, 7], [19, 1], [23, 3], [24, 2], [29, 4]]));
+
 events.push(new Event("Group A Rally: Bajío Trail",
                       events.length,
                       "Bring your WRC legend " +
@@ -2162,6 +2203,65 @@ events.push(new Event("Group A Rally: Bajío Trail",
                       "494 070 628",
                       "both", "spec", "double",
                       670, [[23, 1], [28, 1], [29, 5]]));
+
+events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
+                      events.length,
+                      "Let this event take you back to your first " +
+                      "Horizon Festival in Colorado! " +
+                      "Featuring only cars that appeared " +
+                      "in the first game in the series.",
+                      "Copper Canyon Sprint",
+                      "155 764 596",
+                      "both", "spec", "double",
+                      770, [[2, 1], [3, 2], [7, 3], [8, 2], [10, 4], [14, 1], [18, 1], [19, 1], [19, 2], [21, 1], [23, 1], [24, 1], [24, 2], [24, 3], [25, 1], [26, 4], [28, 1], [29, 2], [29, 4], [29, 6], [31, 1], [31, 2]]));
+
+events.push(new Event("American All-Stars: Dunas Blancas Sprint",
+                      events.length,
+                      "An all American road racing showdown!",
+                      "Dunas Blancas Sprint",
+                      "719 725 279",
+                      "road", "spec", "double",
+                      780, [[5, 1], [6, 1], [7, 2], [7, 3], [8, 1], [8, 2], [10, 1], [10, 2], [10, 3], [10, 4], [10, 7], [25, 1]]));
+
+events.push(new Event("American All-Stars: Baja California Trail",
+                      events.length,
+                      "An all American dirt racing showdown!",
+                      "Baja California Trail",
+                      "165 262 645",
+                      "dirt", "spec", "double",
+                      780, [[5, 1], [6, 1], [7, 2], [7, 3], [8, 1], [8, 2], [10, 1], [10, 2], [10, 3], [10, 4], [10, 7], [25, 1]]));
+
+events.push(new Event("European All-Stars: Llanura Sprint",
+                      events.length,
+                      "An all European road racing showdown!",
+                      "Llanura Sprint",
+                      "141 574 519",
+                      "road", "spec", "double",
+                      780, [[2, 1], [3, 1], [3, 2], [9, 1], [14, 1], [18, 1], [21, 1], [21, 2], [22, 1], [26, 1], [26, 2], [26, 4], [27, 1], [31, 1], [31, 2], [32, 1]]));
+
+events.push(new Event("European All-Stars: Fuera del Camino Trail",
+                      events.length,
+                      "An all European dirt racing showdown!",
+                      "Fuera del Camino Trail",
+                      "137 089 941",
+                      "dirt", "spec", "double",
+                      780, [[2, 1], [3, 1], [3, 2], [9, 1], [14, 1], [18, 1], [21, 1], [21, 2], [22, 1], [26, 1], [26, 2], [26, 4], [27, 1], [31, 1], [31, 2], [32, 1]]));
+
+events.push(new Event("Japanese All-Stars: Riviera Sprint",
+                      events.length,
+                      "An all Japanese road racing showdown!",
+                      "Riviera Sprint",
+                      "957 580 514",
+                      "road", "spec", "double",
+                      780, [[1, 1], [11, 1], [11, 2], [11, 3], [17, 1], [17, 2], [19, 1], [19, 2], [19, 3], [23, 1], [23, 2], [23, 3], [24, 1], [24, 2], [24, 3], [28, 1], [29, 1], [29, 2], [29, 3], [29, 4], [29, 5], [29, 6]]));
+
+events.push(new Event("Japanese All-Stars: Tulum Trail",
+                      events.length,
+                      "An all Japanese dirt racing showdown!",
+                      "Tulum Trail",
+                      "118 732 056",
+                      "dirt", "spec", "double",
+                      780, [[1, 1], [11, 1], [11, 2], [11, 3], [17, 1], [17, 2], [19, 1], [19, 2], [19, 3], [23, 1], [23, 2], [23, 3], [24, 1], [24, 2], [24, 3], [28, 1], [29, 1], [29, 2], [29, 3], [29, 4], [29, 5], [29, 6]]));
 
 events.push(new Event("Showcase: Vintage Hatchbacks",
                       events.length,
@@ -2262,7 +2362,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230708;
+let news = 230716;
 
 // Initialize state
 let state = {};

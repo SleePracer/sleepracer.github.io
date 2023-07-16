@@ -6,6 +6,23 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
+# Beta 0.3.1: New Special Events!
+
+This update adds some new special events!
+The Fast and Furious event and Horizon Colorado events make sure that each of the three starter cars each have at least one special event to attend.
+Additionally, there's now road and dirt regional events for all cars in the game, American, European or Japanese!
+
+So now would be a great time to extend the game length a bit, since there's hardly any time to just do normal races...
+
+Happy racing!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-07-16
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Beta 0.3.0: New Car Roster!
 
 These five cars:
