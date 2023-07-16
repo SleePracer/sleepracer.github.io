@@ -474,6 +474,8 @@ class Race {
         } else if (this.prizeType === "all") {
             if (piToClass(pi) === 1 || piToClass(pi) === 2) {
                 return positionPrize.all.C[position]
+            } else if (piToClass(pi) === 3) {
+                return positionPrize.all.B[position]
             } else if (piToClass(pi) === 4 || piToClass(pi) === 5) {
                 return positionPrize.all.A[position]
             }
@@ -594,6 +596,7 @@ class Race {
 
         // the magic 4 is just game speed balancing
         // adjust/refine if necessary
+console.log(classGameSpeed[iClass]);
         this.deltaXP = Math.ceil(classGameSpeed[iClass]
                                * classFactor
                                * damageFactor);
@@ -821,15 +824,15 @@ class Event {
         }
 
         if (this.loanCar === "vintageHatch") {
-            playerClassOk = state.xp > 5000;
-        } else if (this.loanCar === "vintageSport") {
-            playerClassOk = state.lvl > 2;
+            playerClassOk = state.xp > 3000;
         } else if (this.loanCar === "vintageExplorer") {
-            playerClassOk = state.xp > 50000;
+            playerClassOk = state.xp > 6000;
+        } else if (this.loanCar === "vintageSport") {
+            playerClassOk = state.xp > 30000;
         } else if (this.loanCar === "80Super") {
-            playerClassOk = state.lvl > 3;
+            playerClassOk = state.xp > 60000;
         } else if (this.loanCar === "90Super") {
-            playerClassOk = state.xp > 500000;
+            playerClassOk = state.xp > 300000;
         }
 
         // Check if one of the next races
@@ -903,9 +906,8 @@ class Event {
 
     }
 
-    getInfo() {
-        let allInfo = this.name + ": ";
-        allInfo += this.infoString;
+    getInfo(eligible = true) {
+        let allInfo = this.infoString;
 
         allInfo += "\n\n";
         if (this.eventType === "show") {
@@ -929,14 +931,16 @@ class Event {
             allInfo += "Minimum PI: ";
             allInfo += classLetter[piToClass(this.pi)] + this.pi;
 
-            // Add eligible car models
-            allInfo += "\n\nEligible cars:\n";
-            for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                let makeList = carList[this.cars[iModel][0]];
-                let modelObj = makeList[this.cars[iModel][1]];
-                allInfo += makeList[0] + " ";
-                allInfo += modelObj.name + " (";
-                allInfo += modelObj.year + ")\n";
+            if (eligible) {
+                // Add eligible car models
+                allInfo += "\n\nEligible cars:\n";
+                for (let iModel = 0; iModel < this.cars.length; iModel++) {
+                    let makeList = carList[this.cars[iModel][0]];
+                    let modelObj = makeList[this.cars[iModel][1]];
+                    allInfo += makeList[0] + " ";
+                    allInfo += modelObj.name + " (";
+                    allInfo += modelObj.year + ")\n";
+                }
             }
         }
 
@@ -958,11 +962,15 @@ class Event {
 
     showInfo() {
         if (this.infoButton.innerText === "Info") {
+            // Keep event name
+            let allInfo = this.name + "\n\n";
+            allInfo += this.getInfo();
+
             // Replace name with info
             if (state.completed.includes(this.iEvent)) {
-                this.completedRow.cells[0].innerText = this.getInfo();
+                this.completedRow.cells[0].innerText = allInfo;
             } else {
-                this.row.cells[0].innerText = this.getInfo();
+                this.row.cells[0].innerText = allInfo;
             }
 
             // Repurpose info button to close info
@@ -1011,17 +1019,11 @@ class Event {
 
         // Add the return from event button to another row
         this.returnRow = eRacesTB.insertRow(1);
-        for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
-            this.returnRow.insertCell();
-        }
-        this.returnRow.cells[0].innerHTML = "Sharecode: " + this.sharecode;
-        this.returnRow.cells[3].appendChild(this.returnButton);
-
-        // Add the info about the event to another row
-        this.infoRow = eRacesTB.insertRow(2);
-        this.infoRow.insertCell();
-        this.infoRow.cells[0].colSpan = 4;
-        this.infoRow.cells[0].innerText = this.getInfo();
+        this.returnRow.insertCell();
+        this.returnRow.cells[0].colSpan = 3;
+        this.returnRow.cells[0].innerText = this.getInfo(false);
+        this.returnRow.insertCell();
+        this.returnRow.cells[1].appendChild(this.returnButton);
 
         // Show first race
         this.entered = true;
@@ -1079,11 +1081,8 @@ class Event {
         this.race = null;
 
         // Remove return button and row
-        this.returnRow.cells[3].removeChild(this.returnButton);
+        this.returnRow.cells[1].removeChild(this.returnButton);
         this.returnRow.style.display = "none";
-
-        // Remove info row
-        this.infoRow.style.display = "none";
 
         // Hide the races table
         eRacesT.style.display = "none";
@@ -2173,7 +2172,7 @@ events.push(new Event("Classic Muscle: Gran Pantano Sprint",
                       "to this power showdown!",
                       "Gran Pantano Sprint",
                       "935 382 632",
-                      "both", "spec", "double",
+                      "both", "spec", "normal",
                       600, [[7, 3], [8, 2], [10, 7]]));
 
 events.push(new Event("Group A Touring: Sierra Verde Sprint",
@@ -2182,7 +2181,7 @@ events.push(new Event("Group A Touring: Sierra Verde Sprint",
                       "to this road racing showdown!",
                       "Sierra Verde Sprint",
                       "306 811 911",
-                      "both", "spec", "double",
+                      "road", "spec", "normal",
                       650, [[3, 2], [10, 3], [10, 4], [21, 2], [32, 1]]));
 
 events.push(new Event("Fast and Furious: Tunnel Run",
@@ -2192,7 +2191,7 @@ events.push(new Event("Fast and Furious: Tunnel Run",
                       "cosplay livery optional.",
                       "Tunnel Run",
                       "167 123 448",
-                      "both", "spec", "double",
+                      "both", "spec", "normal",
                       660, [[1, 1], [5, 1], [7, 3], [8, 2], [10, 7], [19, 1], [23, 3], [24, 2], [29, 4]]));
 
 events.push(new Event("Group A Rally: Bajío Trail",
@@ -2201,18 +2200,18 @@ events.push(new Event("Group A Rally: Bajío Trail",
                       "to this dirt racing showdown!",
                       "Bajío Trail",
                       "494 070 628",
-                      "both", "spec", "double",
+                      "dirt", "spec", "normal",
                       670, [[23, 1], [28, 1], [29, 5]]));
 
 events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
                       events.length,
                       "Let this event take you back to your first " +
                       "Horizon Festival in Colorado! " +
-                      "Featuring only cars that appeared " +
+                      "Featuring (almost) only cars that appeared " +
                       "in the first game in the series.",
                       "Copper Canyon Sprint",
                       "155 764 596",
-                      "both", "spec", "double",
+                      "both", "spec", "normal",
                       770, [[2, 1], [3, 2], [7, 3], [8, 2], [10, 4], [14, 1], [18, 1], [19, 1], [19, 2], [21, 1], [23, 1], [24, 1], [24, 2], [24, 3], [25, 1], [26, 4], [28, 1], [29, 2], [29, 4], [29, 6], [31, 1], [31, 2]]));
 
 events.push(new Event("American All-Stars: Dunas Blancas Sprint",
@@ -2220,7 +2219,7 @@ events.push(new Event("American All-Stars: Dunas Blancas Sprint",
                       "An all American road racing showdown!",
                       "Dunas Blancas Sprint",
                       "719 725 279",
-                      "road", "spec", "double",
+                      "road", "spec", "normal",
                       780, [[5, 1], [6, 1], [7, 2], [7, 3], [8, 1], [8, 2], [10, 1], [10, 2], [10, 3], [10, 4], [10, 7], [25, 1]]));
 
 events.push(new Event("American All-Stars: Baja California Trail",
@@ -2228,7 +2227,7 @@ events.push(new Event("American All-Stars: Baja California Trail",
                       "An all American dirt racing showdown!",
                       "Baja California Trail",
                       "165 262 645",
-                      "dirt", "spec", "double",
+                      "dirt", "spec", "normal",
                       780, [[5, 1], [6, 1], [7, 2], [7, 3], [8, 1], [8, 2], [10, 1], [10, 2], [10, 3], [10, 4], [10, 7], [25, 1]]));
 
 events.push(new Event("European All-Stars: Llanura Sprint",
@@ -2236,7 +2235,7 @@ events.push(new Event("European All-Stars: Llanura Sprint",
                       "An all European road racing showdown!",
                       "Llanura Sprint",
                       "141 574 519",
-                      "road", "spec", "double",
+                      "road", "spec", "normal",
                       780, [[2, 1], [3, 1], [3, 2], [9, 1], [14, 1], [18, 1], [21, 1], [21, 2], [22, 1], [26, 1], [26, 2], [26, 4], [27, 1], [31, 1], [31, 2], [32, 1]]));
 
 events.push(new Event("European All-Stars: Fuera del Camino Trail",
@@ -2244,7 +2243,7 @@ events.push(new Event("European All-Stars: Fuera del Camino Trail",
                       "An all European dirt racing showdown!",
                       "Fuera del Camino Trail",
                       "137 089 941",
-                      "dirt", "spec", "double",
+                      "dirt", "spec", "normal",
                       780, [[2, 1], [3, 1], [3, 2], [9, 1], [14, 1], [18, 1], [21, 1], [21, 2], [22, 1], [26, 1], [26, 2], [26, 4], [27, 1], [31, 1], [31, 2], [32, 1]]));
 
 events.push(new Event("Japanese All-Stars: Riviera Sprint",
@@ -2252,7 +2251,7 @@ events.push(new Event("Japanese All-Stars: Riviera Sprint",
                       "An all Japanese road racing showdown!",
                       "Riviera Sprint",
                       "957 580 514",
-                      "road", "spec", "double",
+                      "road", "spec", "normal",
                       780, [[1, 1], [11, 1], [11, 2], [11, 3], [17, 1], [17, 2], [19, 1], [19, 2], [19, 3], [23, 1], [23, 2], [23, 3], [24, 1], [24, 2], [24, 3], [28, 1], [29, 1], [29, 2], [29, 3], [29, 4], [29, 5], [29, 6]]));
 
 events.push(new Event("Japanese All-Stars: Tulum Trail",
@@ -2260,7 +2259,7 @@ events.push(new Event("Japanese All-Stars: Tulum Trail",
                       "An all Japanese dirt racing showdown!",
                       "Tulum Trail",
                       "118 732 056",
-                      "dirt", "spec", "double",
+                      "dirt", "spec", "normal",
                       780, [[1, 1], [11, 1], [11, 2], [11, 3], [17, 1], [17, 2], [19, 1], [19, 2], [19, 3], [23, 1], [23, 2], [23, 3], [24, 1], [24, 2], [24, 3], [28, 1], [29, 1], [29, 2], [29, 3], [29, 4], [29, 5], [29, 6]]));
 
 events.push(new Event("Showcase: Vintage Hatchbacks",
@@ -2300,7 +2299,7 @@ events.push(new Event("Showcase: Vintage Explorers",
                       "courtesy of the Horizon Festival!",
                       "The Titan",
                       "169 663 287",
-                      "both", "show", "normal",
+                      "both", "show", "double",
                       0, [[10, 6], [13, 1], [29, 7]],
                       "vintageExplorer"));
 
@@ -2354,10 +2353,10 @@ for (let t = 0; t < dirtScrambles.length; t++) {
 
 // Loan cars... this is a bit dirty but ok for now
 let loanCars = new Map();
-loanCars.set("vintageHatch", {pi: 490, rep: 10000 / 200});
-loanCars.set("vintageSport", {pi: 480, rep: 50000 / 200});
-loanCars.set("vintageExplorer", {pi: 450, rep: 20000 / 200});
-loanCars.set("80Super", {pi: 780, rep: 120000 / 200});
+loanCars.set("vintageHatch", {pi: 600, rep: 10000 / 200});
+loanCars.set("vintageSport", {pi: 500, rep: 50000 / 200});
+loanCars.set("vintageExplorer", {pi: 500, rep: 20000 / 200});
+loanCars.set("80Super", {pi: 800, rep: 120000 / 200});
 loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page

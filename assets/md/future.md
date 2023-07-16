@@ -13,19 +13,6 @@ I will add new ideas here as I get them, and I will remove items from this page 
 
 
 <div style="margin-top: 37px"></div>
-# Career restructure
-
-I have only played through 0.2.0 once but I already have ideas and opinions on what to change!
-These changes will most likely be rolled out one at a time.
-First and foremost, it felt a bit short, I finished in about 12 hours myself.
-The amount of showcases felt good, maybe a bit too high even, but I think it is important that the first showcase appears relatively early for the first time player to not lose interest.
-
-It also felt short in the regard that I barely had enough money to upgrade my car to the top of each respective class.
-I kept the starter car throughout just to see if it was feasible, but even then, I would not be able to afford a new car anyway.
-Making the game longer by means of decreasing xp gain from events would mean that the player would gain more money per class.
-
-
-<div style="margin-top: 37px"></div>
 # Endurance events
 
 I love endurance events in old Gran Turismo games and would like to add something like that to Career Mode.
@@ -56,23 +43,6 @@ Players with less than 11 Xbox friends could get themselves a few rivals like th
 Even then, I will probably do this at some point, because I think it would be cool.
 I've already made one rust bucket account, McMillipede#8621, and getting to the point where the rust bucket appeared as a drivatar only took about an hour.
 So it's not complete madness, I've already spent countless hours on this project as is.
-
-
-<div style="margin-top: 37px"></div>
-# Custom routes
-
-While the base game tracks are fun, there are simply not enough of them.
-But I also can't just add any custom route freely - in order to have the Rules of Play, the creator of the route must add them and share the blueprint.
-I'd love to create some maps myself, and I probably will at some point, but this is not a priority for me at this moment.
-
-If you have created custom routes that you think would fit Career Mode, contact me!
-Here are some criteria the map would need to meet, although I reserve the right to deny maps for any other reason:
-  * It has to be a circuit or a scramble, where one lap in an A800 has to be less than 2 minutes
-  * It has to be moderately decorated, allowing all PCs and Xboxes to run it
-  * It has to be drivatar friendly
-      * This means that the driving line has to be drawn close to the race line, while keeping some distance from the edge of the track
-      * It also means that there has to be as few dead stop points as possible
-  * Using the pre-existing roads would be preferable, although some limited custom road usage may be ok
 
 
 <div style="margin-top: 37px"></div>
