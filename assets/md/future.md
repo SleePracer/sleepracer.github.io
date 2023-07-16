@@ -13,13 +13,6 @@ I will add new ideas here as I get them, and I will remove items from this page 
 
 
 <div style="margin-top: 37px"></div>
-# Endurance events
-
-I love endurance events in old Gran Turismo games and would like to add something like that to Career Mode.
-In my opinion, one hour is the sweet spot endurance race length, but even half hour races would probably be both fun and challenging.
-
-
-<div style="margin-top: 37px"></div>
 # Rally events
 
 Since real rally events are run as time trials essentially, it would be cool to have something like that in Career Mode.

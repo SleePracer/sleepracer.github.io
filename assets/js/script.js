@@ -717,6 +717,11 @@ class Event {
         this.race = null;
         this.entered = false;
         this.finished = false;
+        this.repeatable = true;
+        if (this.eventType === "show" || this.eventType === "spec"
+         || this.eventType === "endu") {
+            this.repeatable = false;
+        }
 
         // Add and populate new row in event table
         let nCells = eEventsTH.rows[0].cells.length;
@@ -757,7 +762,7 @@ class Event {
         this.returnButton.onclick = returnEventButtonClick;
         this.returnButton.innerText = "Return";
 
-        if (this.eventType === "show" || this.eventType === "spec") {
+        if (!this.repeatable) {
             let iRow = eCompletedTB.rows.length;
             this.completedRow = eCompletedTB.insertRow(iRow);
             for (let cell = 0; cell < nCells; cell++) {
@@ -823,14 +828,18 @@ class Event {
             }
         }
 
+        if (this.eventType === "endu") {
+            playerClassOk = state.xp > 5000;
+        }
+
         if (this.loanCar === "vintageHatch") {
             playerClassOk = state.xp > 3000;
         } else if (this.loanCar === "vintageExplorer") {
-            playerClassOk = state.xp > 6000;
+            playerClassOk = state.xp > 7000;
         } else if (this.loanCar === "vintageSport") {
             playerClassOk = state.xp > 30000;
         } else if (this.loanCar === "80Super") {
-            playerClassOk = state.xp > 60000;
+            playerClassOk = state.xp > 70000;
         } else if (this.loanCar === "90Super") {
             playerClassOk = state.xp > 300000;
         }
@@ -889,7 +898,7 @@ class Event {
 
                 // Show row, but only enter button if car ok
                 this.row.style.display = "table-row";
-                if (this.eventType === "show" || this.eventType === "spec") {
+                if (!this.repeatable) {
                     this.completedRow.style.display = "none";
                 }
                 if ((carModelOk && carClassOk && specOk && progEnterOk)
@@ -1061,7 +1070,7 @@ class Event {
             }
 
             // Mark non-repeatable events as finished
-            if (this.eventType === "show" || this.eventType === "spec") {
+            if (!this.repeatable) {
                 state.completed.push(this.iEvent);
                 this.completedRow.cells[1].appendChild(this.infoButton);
             }
@@ -1511,14 +1520,14 @@ function setStateFromString(inputString) {
      || version === "0.2.4" || version === "0.2.5"
      || version === "0.2.6" || version === "0.3.0") {
         for (let i = 0; i < compact.x.length; i++) {
-            compact.x[i] = compact.x[i] + 8;
+            compact.x[i] = compact.x[i] + 10;
         }
         for (let i = 0; i < compact.f.length; i++) {
             if (compact.f[i] >= 8) {
                 compact.f[i]++;
             }
             if (compact.f[i] >= 10) {
-                compact.f[i] = compact.f[i] + 7;
+                compact.f[i] = compact.f[i] + 9;
             }
         }
     }
@@ -2119,6 +2128,7 @@ events = [];
 events.push(new Event("C Class Finale: " +
                       roadCircuits[1].name + " Circuit",
                       events.length,
+                      "Complete this event to unlock B class! " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       roadCircuits[1].name + " Circuit",
@@ -2128,6 +2138,7 @@ events.push(new Event("C Class Finale: " +
 events.push(new Event("C Class Finale: " +
                       dirtScrambles[2].name + " Scramble",
                       events.length,
+                      "Complete this event to unlock B class! " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       dirtScrambles[2].name + " Scramble",
@@ -2137,15 +2148,17 @@ events.push(new Event("C Class Finale: " +
 events.push(new Event("B Class Finale: " +
                       roadCircuits[11].name + " Circuit",
                       events.length,
+                      "Complete this event to unlock A class! " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
-                      roadCircuits[1].name + " Circuit",
+                      roadCircuits[11].name + " Circuit",
                       "628 612 139",
                       "road", "prog", "double", 700));
 
 events.push(new Event("B Class Finale: " +
                       dirtScrambles[7].name + " Scramble",
                       events.length,
+                      "Complete this event to unlock A class! " +
                       "Podium placements are rewarded with a " +
                       "discount on a new car purchase!",
                       dirtScrambles[7].name + " Scramble",
@@ -2213,6 +2226,28 @@ events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
                       "155 764 596",
                       "both", "spec", "normal",
                       770, [[2, 1], [3, 2], [7, 3], [8, 2], [10, 4], [14, 1], [18, 1], [19, 1], [19, 2], [21, 1], [23, 1], [24, 1], [24, 2], [24, 3], [25, 1], [26, 4], [28, 1], [29, 2], [29, 4], [29, 6], [31, 1], [31, 2]]));
+
+events.push(new Event("Endurance: " +
+                      roadCircuits[7].name + " Circuit",
+                      events.length,
+                      "An endurance race of 20 laps " +
+                      "of the Horizon Mexico Circuit! " +
+                      "Expect this race to take " +
+                      "between 20 and 30 minutes.",
+                      roadCircuits[7].name + " Circuit",
+                      "147 109 808",
+                      "road", "endu", "double"));
+
+events.push(new Event("Endurance: " +
+                      dirtScrambles[0].name + " Scramble",
+                      events.length,
+                      "An endurance race of 18 laps " +
+                      "of the River Scramble! " +
+                      "Expect this race to take " +
+                      "between 20 and 30 minutes.",
+                      dirtScrambles[0].name + " Scramble",
+                      "149 664 189",
+                      "dirt", "endu", "double"));
 
 events.push(new Event("American All-Stars: Dunas Blancas Sprint",
                       events.length,
