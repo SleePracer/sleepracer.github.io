@@ -1,0 +1,259 @@
+// -----------------------------------------------------------------------
+// Start
+// -----------------------------------------------------------------------
+
+function startNameButton() {
+    // Check if the input fields are filled out
+    if (startName === "") {
+        return;
+    }
+
+    // Show next field
+    eStartCarDiv.style.display = "block";
+}
+
+function startNameInput() {
+    startName = eStartName.value;
+
+    // Actually enter input with Enter
+    if (event.key === "Enter") {
+        startNameButton();
+    }
+}
+
+function setBaseInfo(sharecode) {
+    eStartCarInfoDiv.style.display = "block";
+    eStartCarInfo.innerHTML = "Buy a "
+                            + carList[startCarMake][0] + " "
+                            + carList[startCarMake][startCarModel].name
+                            + ", add the livery "
+                            + sharecode
+                            + " and install a roll cage!";
+}
+
+function mustangBaseRadio() {
+    startCarMake = 10;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    setBaseInfo("180 091 208");
+}
+
+function mustangBaseImg() {
+    eStartMustang.checked = true;
+    mustangBaseRadio();
+}
+
+function eclipseBaseRadio() {
+    startCarMake = 23;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    setBaseInfo("125 302 643");
+}
+
+function eclipseBaseImg() {
+    eStartEclipse.checked = true;
+    eclipseBaseRadio();
+}
+
+function corradoBaseRadio() {
+    startCarMake = 31;
+    startCarModel = 1;
+    startCarPI = 537;
+
+    setBaseInfo("167 278 252");
+}
+
+function corradoBaseImg() {
+    eStartCorrado.checked = true;
+    corradoBaseRadio();
+}
+
+function setAltInfo() {
+    eStartCarInfoDiv.style.display = "block";
+    eStartCarInfo.innerHTML = "Buy a "
+                            + carList[startCarMake][0] + " "
+                            + carList[startCarMake][startCarModel].name
+                            + ", add a rust bucket livery of your choice "
+                            + "and install a roll cage!";
+}
+
+function chargerAltRadio() {
+    startCarMake = 8;
+    startCarModel = 2;
+    startCarPI = 562;
+
+    setAltInfo();
+}
+
+function mustangAltRadio() {
+    startCarMake = 10;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    setAltInfo();
+}
+
+function civicAltRadio() {
+    startCarMake = 11;
+    startCarModel = 2;
+    startCarPI = 558;
+
+    setAltInfo();
+}
+
+function soarerAltRadio() {
+    startCarMake = 17;
+    startCarModel = 2;
+    startCarPI = 557;
+
+    setAltInfo();
+}
+
+function miataAltRadio() {
+    startCarMake = 19;
+    startCarModel = 2;
+    startCarPI = 446;
+
+    setAltInfo();
+}
+
+function savannaAltRadio() {
+    startCarMake = 19;
+    startCarModel = 3;
+    startCarPI = 560;
+
+    setAltInfo();
+}
+
+function eclipseAltRadio() {
+    startCarMake = 23;
+    startCarModel = 3;
+    startCarPI = 545;
+
+    setAltInfo();
+}
+
+function nissanAltRadio() {
+    startCarMake = 24;
+    startCarModel = 3;
+    startCarPI = 451;
+
+    setAltInfo();
+}
+
+function firebirdAltRadio() {
+    startCarMake = 25;
+    startCarModel = 1;
+    startCarPI = 436;
+
+    setAltInfo();
+}
+
+function truenoAltRadio() {
+    startCarMake = 29;
+    startCarModel = 6;
+    startCarPI = 485;
+
+    setAltInfo();
+}
+
+function corradoAltRadio() {
+    startCarMake = 31;
+    startCarModel = 1;
+    startCarPI = 537;
+
+    setAltInfo();
+}
+
+function golfAltRadio() {
+    startCarMake = 31;
+    startCarModel = 2;
+    startCarPI = 435;
+
+    setAltInfo();
+}
+
+function volvoAltRadio() {
+    startCarMake = 32;
+    startCarModel = 1;
+    startCarPI = 555;
+
+    setAltInfo();
+}
+
+function starterChangeButton() {
+    if (eStartCarsBase.style.display === "flex") {
+        eStartCarsAlt.style.display = "block";
+        eStartCarsBase.style.display = "none";
+        eStartCarsChange.innerText = "Actually, give me one of the three first ones";
+    } else {
+        eStartCarsAlt.style.display = "none";
+        eStartCarsBase.style.display = "flex";
+        eStartCarsChange.innerText = "Changed my mind again, give me the full list";
+    }
+}
+
+function startCarInfoButton() {
+    // Hide this field
+    eStartCarInfoDiv.style.display = "none";
+
+    // Show next field
+    eStartCarNameDiv.style.display = "block";
+}
+
+function startCarNameButton() {
+    // Check if the input fields are filled out
+    if (startCarName === "") {
+        return;
+    }
+
+    // Show next field
+    eStartGameDiv.style.display = "block";
+}
+
+function startCarNameInput() {
+    startCarName = eStartCarName.value;
+
+    // Actually enter input with Enter
+    if (event.key === "Enter") {
+        startCarNameButton();
+    }
+}
+
+function startGameButton() {
+    // Check if the input fields are filled out
+    if (startName === ""
+     || startCarName === ""
+     || startCarMake === 0
+     || startCarModel === 0) {
+        return;
+    }
+
+    // Start with default state
+    setStateFromString(getStateString(defaultState));
+
+    // Set the start game inputs
+    state.date = dateInt();
+    state.name = startName;
+    state.lvl = 2; // C
+    state.xp = classXP[state.lvl] / 10;
+    state.cars.push(new Car(startCarName,
+                            startCarMake,
+                            startCarModel,
+                            startCarPI,
+                            startCarValue));
+    state.cCar = 0;
+
+    // Since defaultState has no cars in garage,
+    // options will always be shown, so hide them
+    // Do this after pushing the first car! Or it's options will show!
+    garageOptions();
+
+    // Show the actual game
+    eStart.style.display = "none";
+    eGame.style.display = "block";
+
+    updateState();
+}
