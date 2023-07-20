@@ -596,7 +596,6 @@ class Race {
 
         // the magic 4 is just game speed balancing
         // adjust/refine if necessary
-console.log(classGameSpeed[iClass]);
         this.deltaXP = Math.ceil(classGameSpeed[iClass]
                                * classFactor
                                * damageFactor);
