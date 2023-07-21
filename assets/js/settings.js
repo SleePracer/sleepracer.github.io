@@ -35,8 +35,7 @@ function showCompleted() {
 }
 
 function saveGameButton() {
-    let gameSave = getStateString();
-    navigator.clipboard.writeText(gameSave);
+    navigator.clipboard.writeText(getStateString());
 }
 
 function loadGameButton() {

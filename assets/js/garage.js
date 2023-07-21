@@ -72,14 +72,25 @@ function addCar() {
     state.money -= newCost;
 
     // Use the discounts
+    usedA = 0;
+    usedB = 0;
     if (eNewCarDiscountBoxB.checked) {
+        usedB = 1;
         state.discountB = false;
         eNewCarDiscountBoxB.checked = false;
     }
     if (eNewCarDiscountBoxA.checked) {
+        usedA = 1;
         state.discountA = false;
         eNewCarDiscountBoxA.checked = false;
     }
+
+    state.actions.push(["c",
+                        newName,
+                        newMake,
+                        newModel,
+                        usedB,
+                        usedA]);
 
     // Try setting to current car
     state.cars[state.cars.length - 1].getIn();

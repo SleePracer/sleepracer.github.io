@@ -286,12 +286,10 @@ let news = 230716;
 let state = {};
 
 // Initialize start game variables
-let startName = "";
+let startPlayerName = "";
 let startCarName = "";
 let startCarMake = 0;
 let startCarModel = 0;
-let startCarPI = 0;
-let startCarValue = 5000;
 
 // Go to start or game
 if (JSON.parse(localStorage.getItem("state")) === null) {

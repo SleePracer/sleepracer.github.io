@@ -6,6 +6,7 @@ class Car {
     constructor(name,
                 make,
                 model,
+                special = "no",
                 pi = 0,
                 value = 0,
                 buttonDisplay = "inline") {
@@ -18,14 +19,17 @@ class Car {
         this.name = name;
         this.make = make;
         this.model = model;
-        this.pi = pi;
-        if (pi === 0) {
+        this.pi = 0;
+        this.value = 0;
+        if (special === "rust") {
+            this.pi = carList[make][model].rollcage;
+            this.value = rustCarValue;
+        } else if (special === "load") {
+            this.pi = pi;
+            this.value = value;
+        } else {
             this.pi = carList[make][model].pi;
-        }
-        this.cost = carList[make][model].cost;
-        this.value = value;
-        if (value === 0) {
-            this.value = Math.floor(0.9 * this.cost);
+            this.value = Math.floor(0.9 * carList[make][model].cost);
         }
 
         // Car upgrade variables
@@ -139,7 +143,7 @@ class Car {
         // Damage is [0, 100]%
         // At 50% damage, repair costs should be
         // 25% of mean of value and cost
-        let mean = (this.value + this.cost) / 2;
+        let mean = (this.value + carList[this.make][this.model].cost) / 2;
         let repair = mean * damage / 200;
         return Math.floor(repair);
     }
@@ -188,6 +192,11 @@ class Car {
         this.value += 2500;
         state.money -= 5000;
 
+        state.actions.push(["u",
+                            this.iCar,
+                            this.upgradePI,
+                            this.upgradeCost]);
+
         this.row.cells[2].innerHTML = moneyToString(this.value);
         updateState();
     }
@@ -220,6 +229,10 @@ class Car {
         // Delete car from table and state
         eGarageTB.deleteRow(this.iCar);
         state.cars.splice(this.iCar, 1);
+
+        state.actions.push(["s",
+                            this.iCar,
+                            this.value]);
 
         updateState();
     }
@@ -291,6 +304,11 @@ class Car {
         this.pi = this.upgradePI;
         this.value += Math.floor(0.5 * this.upgradeCost);
         state.money -= this.upgradeCost;
+
+        state.actions.push(["u",
+                            this.iCar,
+                            this.upgradePI,
+                            this.upgradeCost]);
 
         this.exitUpgrade();
 

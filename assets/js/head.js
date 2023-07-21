@@ -39,11 +39,13 @@ class HeadToHead {
 
     won() {
         state.money += this.wager;
+        state.actions.push(["hw"]);
         updateState();
     }
 
     lost() {
         state.money -= this.wager;
+        state.actions.push(["hl"]);
         updateState();
     }
 

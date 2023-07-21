@@ -4,7 +4,7 @@
 
 function startNameButton() {
     // Check if the input fields are filled out
-    if (startName === "") {
+    if (startPlayerName === "") {
         return;
     }
 
@@ -13,7 +13,7 @@ function startNameButton() {
 }
 
 function startNameInput() {
-    startName = eStartName.value;
+    startPlayerName = eStartName.value;
 
     // Actually enter input with Enter
     if (event.key === "Enter") {
@@ -34,7 +34,6 @@ function setBaseInfo(sharecode) {
 function mustangBaseRadio() {
     startCarMake = 10;
     startCarModel = 3;
-    startCarPI = 545;
 
     setBaseInfo("180 091 208");
 }
@@ -47,7 +46,6 @@ function mustangBaseImg() {
 function eclipseBaseRadio() {
     startCarMake = 23;
     startCarModel = 3;
-    startCarPI = 545;
 
     setBaseInfo("125 302 643");
 }
@@ -60,7 +58,6 @@ function eclipseBaseImg() {
 function corradoBaseRadio() {
     startCarMake = 31;
     startCarModel = 1;
-    startCarPI = 537;
 
     setBaseInfo("167 278 252");
 }
@@ -82,7 +79,6 @@ function setAltInfo() {
 function chargerAltRadio() {
     startCarMake = 8;
     startCarModel = 2;
-    startCarPI = 562;
 
     setAltInfo();
 }
@@ -90,7 +86,6 @@ function chargerAltRadio() {
 function mustangAltRadio() {
     startCarMake = 10;
     startCarModel = 3;
-    startCarPI = 545;
 
     setAltInfo();
 }
@@ -98,7 +93,6 @@ function mustangAltRadio() {
 function civicAltRadio() {
     startCarMake = 11;
     startCarModel = 2;
-    startCarPI = 558;
 
     setAltInfo();
 }
@@ -106,7 +100,6 @@ function civicAltRadio() {
 function soarerAltRadio() {
     startCarMake = 17;
     startCarModel = 2;
-    startCarPI = 557;
 
     setAltInfo();
 }
@@ -114,7 +107,6 @@ function soarerAltRadio() {
 function miataAltRadio() {
     startCarMake = 19;
     startCarModel = 2;
-    startCarPI = 446;
 
     setAltInfo();
 }
@@ -122,7 +114,6 @@ function miataAltRadio() {
 function savannaAltRadio() {
     startCarMake = 19;
     startCarModel = 3;
-    startCarPI = 560;
 
     setAltInfo();
 }
@@ -130,7 +121,6 @@ function savannaAltRadio() {
 function eclipseAltRadio() {
     startCarMake = 23;
     startCarModel = 3;
-    startCarPI = 545;
 
     setAltInfo();
 }
@@ -138,7 +128,6 @@ function eclipseAltRadio() {
 function nissanAltRadio() {
     startCarMake = 24;
     startCarModel = 3;
-    startCarPI = 451;
 
     setAltInfo();
 }
@@ -146,7 +135,6 @@ function nissanAltRadio() {
 function firebirdAltRadio() {
     startCarMake = 25;
     startCarModel = 1;
-    startCarPI = 436;
 
     setAltInfo();
 }
@@ -154,7 +142,6 @@ function firebirdAltRadio() {
 function truenoAltRadio() {
     startCarMake = 29;
     startCarModel = 6;
-    startCarPI = 485;
 
     setAltInfo();
 }
@@ -162,7 +149,6 @@ function truenoAltRadio() {
 function corradoAltRadio() {
     startCarMake = 31;
     startCarModel = 1;
-    startCarPI = 537;
 
     setAltInfo();
 }
@@ -170,7 +156,6 @@ function corradoAltRadio() {
 function golfAltRadio() {
     startCarMake = 31;
     startCarModel = 2;
-    startCarPI = 435;
 
     setAltInfo();
 }
@@ -178,7 +163,6 @@ function golfAltRadio() {
 function volvoAltRadio() {
     startCarMake = 32;
     startCarModel = 1;
-    startCarPI = 555;
 
     setAltInfo();
 }
@@ -224,7 +208,7 @@ function startCarNameInput() {
 
 function startGameButton() {
     // Check if the input fields are filled out
-    if (startName === ""
+    if (startPlayerName === ""
      || startCarName === ""
      || startCarMake === 0
      || startCarModel === 0) {
@@ -236,15 +220,20 @@ function startGameButton() {
 
     // Set the start game inputs
     state.date = dateInt();
-    state.name = startName;
+    state.name = startPlayerName;
     state.lvl = 2; // C
     state.xp = classXP[state.lvl] / 10;
     state.cars.push(new Car(startCarName,
                             startCarMake,
                             startCarModel,
-                            startCarPI,
-                            startCarValue));
+                            "rust"));
     state.cCar = 0;
+
+    state.actions.push(["i",
+                        startPlayerName,
+                        startCarName,
+                        startCarMake,
+                        startCarModel]);
 
     // Since defaultState has no cars in garage,
     // options will always be shown, so hide them

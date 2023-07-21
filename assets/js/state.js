@@ -26,7 +26,9 @@ function getStateString(s = state) {
         m: s.money,
         ce: s.cEvent,
         cc: s.cCar,
-        c: carArgs};
+        c: carArgs,
+        a: s.actions
+        };
 
     if (s.discountB) {
         compact.db = 1;
@@ -317,6 +319,7 @@ function setStateFromString(inputString) {
     state.money = compact.m;
     state.cEvent = compact.ce;
     state.cCar = compact.cc;
+    state.actions = compact.a;
 
     // Create new cars with args from state
     state.cars = [];
@@ -326,6 +329,7 @@ function setStateFromString(inputString) {
             carArgs[iCar].n,
             carArgs[iCar].m[0],
             carArgs[iCar].m[1],
+            "load",
             carArgs[iCar].pi,
             carArgs[iCar].v,
             "none"));

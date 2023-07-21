@@ -4,6 +4,8 @@
 
 const thisVersion = "0.3.1";
 
+const rustCarValue = 5000;
+
 const defaultState = {
     version: thisVersion,
     date: 0,
@@ -21,7 +23,8 @@ const defaultState = {
     money: 0,
     cEvent: null,
     cCar: -1,
-    cars: []};
+    cars: [],
+    actions: []};
 
 const carList = [
     ["Choose manufacturer", "Choose model"],
@@ -98,6 +101,7 @@ const carList = [
          pi: 548,
          cost: 32000, // 103k
          year: 1969,
+         rollcage: 562,
          buyable: true}],
     ["Ferrari", // 9
         {name: "F355 Berlinetta", // 1
@@ -132,6 +136,7 @@ const carList = [
          pi: 539,
          cost: 24000, // 28k
          year: 1993,
+         rollcage: 545,
          buyable: true},
         {name: "Sierra Cosworth RS500", // 4
          pi: 604,
@@ -165,6 +170,7 @@ const carList = [
          pi: 553,
          cost: 22000, // 25k
          year: 1997,
+         rollcage: 558,
          buyable: true},
         {name: "NSX-R", // 3
          pi: 691,
@@ -232,6 +238,7 @@ const carList = [
          pi: 555,
          cost: 24000, // 25k
          year: 1997,
+         rollcage: 558,
          buyable: true}],
     ["Lotus", // 18
         {name: "Exige S", // 1
@@ -254,11 +261,13 @@ const carList = [
          pi: 445,
          cost: 12000, // 25k
          year: 1994,
+         rollcage: 446,
          buyable: true},
         {name: "Savanna RX-7", // 3
          pi: 558,
          cost: 26000, // 25k
          year: 1990,
+         rollcage: 560,
          buyable: true}],
     ["McLaren", // 20
         {name: "F1", // 1
@@ -299,6 +308,7 @@ const carList = [
          pi: 543,
          cost: 24000, // 25k
          year: 1995,
+         rollcage: 545,
          buyable: true}],
     ["Nissan", // 24
         {name: "370Z", // 1
@@ -315,6 +325,7 @@ const carList = [
          pi: 445,
          cost: 16000, // 25k
          year: 1993,
+         rollcage: 451,
          buyable: true},
         {name: "Fairlady Z 432", // 4
          pi: 482,
@@ -327,6 +338,7 @@ const carList = [
          pi: 418,
          cost: 16000, // 45k
          year: 1977,
+         rollcage: 436,
          buyable: true}],
     ["Porsche", // 26
         {name: "Cayman GTS", // 1
@@ -392,6 +404,7 @@ const carList = [
          pi: 480,
          cost: 14000, // 20k
          year: 1985,
+         rollcage: 485,
          buyable: true},
         {name: "FJ40", // 7
          pi: 269,
@@ -416,11 +429,13 @@ const carList = [
          pi: 533,
          cost: 24000, // 20k
          year: 1995,
+         rollcage: 537,
          buyable: true},
         {name: "Golf GTI 16V MK2", // 2
          pi: 429,
          cost: 12000, // 20k
          year: 1992,
+         rollcage: 435,
          buyable: true},
         {name: "Golf GTI", // 3
          pi: 428,
@@ -433,6 +448,7 @@ const carList = [
          pi: 548,
          cost: 22000, // 45k
          year: 1983,
+         rollcage: 555,
          buyable: true}]];
 
 const roadCircuits = [
