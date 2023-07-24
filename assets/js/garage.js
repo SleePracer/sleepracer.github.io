@@ -89,8 +89,7 @@ function addCar() {
                         newName,
                         newMake,
                         newModel,
-                        usedB,
-                        usedA]);
+                        newCost]);
 
     // Try setting to current car
     state.cars[state.cars.length - 1].getIn();

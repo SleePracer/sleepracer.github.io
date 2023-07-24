@@ -192,10 +192,8 @@ class Car {
         this.value += 2500;
         state.money -= 5000;
 
-        state.actions.push(["u",
-                            this.iCar,
-                            this.upgradePI,
-                            this.upgradeCost]);
+        state.actions.push(["p",
+                            this.iCar]);
 
         this.row.cells[2].innerHTML = moneyToString(this.value);
         updateState();
