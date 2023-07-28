@@ -9,6 +9,12 @@ new HeadToHead("Head-to-Head", 200);
 // Create all events
 events = [];
 
+const iEventsStart = events.length;
+const iFinalesStart = events.length;
+let roadSpecials = [];
+let dirtSpecials = [];
+
+roadSpecials.push(events.length);
 events.push(new Event("C Class Finale: " +
                       roadCircuits[1].name + " Circuit",
                       events.length,
@@ -19,6 +25,7 @@ events.push(new Event("C Class Finale: " +
                       "168 353 490",
                       "road", "prog", "double", 600));
 
+dirtSpecials.push(events.length);
 events.push(new Event("C Class Finale: " +
                       dirtScrambles[2].name + " Scramble",
                       events.length,
@@ -29,6 +36,7 @@ events.push(new Event("C Class Finale: " +
                       "138 618 342",
                       "dirt", "prog", "double", 600));
 
+roadSpecials.push(events.length);
 events.push(new Event("B Class Finale: " +
                       roadCircuits[11].name + " Circuit",
                       events.length,
@@ -39,6 +47,7 @@ events.push(new Event("B Class Finale: " +
                       "628 612 139",
                       "road", "prog", "double", 700));
 
+dirtSpecials.push(events.length);
 events.push(new Event("B Class Finale: " +
                       dirtScrambles[7].name + " Scramble",
                       events.length,
@@ -49,6 +58,7 @@ events.push(new Event("B Class Finale: " +
                       "462 558 415",
                       "dirt", "prog", "double", 700));
 
+roadSpecials.push(events.length);
 events.push(new Event("Grand Finale: The Colossus",
                       events.length,
                       "This is the final event, prepare accordingly!",
@@ -56,12 +66,16 @@ events.push(new Event("Grand Finale: The Colossus",
                       "120 289 492",
                       "road", "prog", "double", 800));
 
+dirtSpecials.push(events.length);
 events.push(new Event("Grand Finale: The Gauntlet",
                       events.length,
                       "This is the final event, prepare accordingly!",
                       "The Gauntlet",
                       "757 020 992",
                       "dirt", "prog", "double", 800));
+
+const iFinalesEnd = events.length;
+const iSpecialsStart = events.length;
 
 events.push(new Event("Classic Muscle: Gran Pantano Sprint",
                       events.length,
@@ -72,6 +86,7 @@ events.push(new Event("Classic Muscle: Gran Pantano Sprint",
                       "both", "spec", "normal",
                       600, [[7, 3], [8, 2], [10, 7]]));
 
+roadSpecials.push(events.length);
 events.push(new Event("Group A Touring: Sierra Verde Sprint",
                       events.length,
                       "Bring your DTM legend " +
@@ -91,6 +106,7 @@ events.push(new Event("Fast and Furious: Tunnel Run",
                       "both", "spec", "normal",
                       660, [[1, 1], [5, 1], [7, 3], [8, 2], [10, 7], [19, 1], [23, 3], [24, 2], [29, 4]]));
 
+dirtSpecials.push(events.length);
 events.push(new Event("Group A Rally: Bajío Trail",
                       events.length,
                       "Bring your WRC legend " +
@@ -111,6 +127,7 @@ events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
                       "both", "spec", "normal",
                       770, [[2, 1], [3, 2], [7, 3], [8, 2], [10, 4], [14, 1], [18, 1], [19, 1], [19, 2], [21, 1], [23, 1], [24, 1], [24, 2], [24, 3], [25, 1], [26, 4], [28, 1], [29, 2], [29, 4], [29, 6], [31, 1], [31, 2]]));
 
+roadSpecials.push(events.length);
 events.push(new Event("Endurance: " +
                       roadCircuits[7].name + " Circuit",
                       events.length,
@@ -122,6 +139,7 @@ events.push(new Event("Endurance: " +
                       "147 109 808",
                       "road", "endu", "double"));
 
+dirtSpecials.push(events.length);
 events.push(new Event("Endurance: " +
                       dirtScrambles[0].name + " Scramble",
                       events.length,
@@ -133,6 +151,7 @@ events.push(new Event("Endurance: " +
                       "149 664 189",
                       "dirt", "endu", "double"));
 
+roadSpecials.push(events.length);
 events.push(new Event("American All-Stars: Dunas Blancas Sprint",
                       events.length,
                       "An all American road racing showdown!",
@@ -141,6 +160,7 @@ events.push(new Event("American All-Stars: Dunas Blancas Sprint",
                       "road", "spec", "normal",
                       780, [[5, 1], [6, 1], [7, 2], [7, 3], [8, 1], [8, 2], [10, 1], [10, 2], [10, 3], [10, 4], [10, 7], [25, 1]]));
 
+dirtSpecials.push(events.length);
 events.push(new Event("American All-Stars: Baja California Trail",
                       events.length,
                       "An all American dirt racing showdown!",
@@ -149,6 +169,7 @@ events.push(new Event("American All-Stars: Baja California Trail",
                       "dirt", "spec", "normal",
                       780, [[5, 1], [6, 1], [7, 2], [7, 3], [8, 1], [8, 2], [10, 1], [10, 2], [10, 3], [10, 4], [10, 7], [25, 1]]));
 
+roadSpecials.push(events.length);
 events.push(new Event("European All-Stars: Llanura Sprint",
                       events.length,
                       "An all European road racing showdown!",
@@ -157,6 +178,7 @@ events.push(new Event("European All-Stars: Llanura Sprint",
                       "road", "spec", "normal",
                       780, [[2, 1], [3, 1], [3, 2], [9, 1], [14, 1], [18, 1], [21, 1], [21, 2], [22, 1], [26, 1], [26, 2], [26, 4], [27, 1], [31, 1], [31, 2], [32, 1]]));
 
+dirtSpecials.push(events.length);
 events.push(new Event("European All-Stars: Fuera del Camino Trail",
                       events.length,
                       "An all European dirt racing showdown!",
@@ -165,6 +187,7 @@ events.push(new Event("European All-Stars: Fuera del Camino Trail",
                       "dirt", "spec", "normal",
                       780, [[2, 1], [3, 1], [3, 2], [9, 1], [14, 1], [18, 1], [21, 1], [21, 2], [22, 1], [26, 1], [26, 2], [26, 4], [27, 1], [31, 1], [31, 2], [32, 1]]));
 
+roadSpecials.push(events.length);
 events.push(new Event("Japanese All-Stars: Riviera Sprint",
                       events.length,
                       "An all Japanese road racing showdown!",
@@ -173,6 +196,7 @@ events.push(new Event("Japanese All-Stars: Riviera Sprint",
                       "road", "spec", "normal",
                       780, [[1, 1], [11, 1], [11, 2], [11, 3], [17, 1], [17, 2], [19, 1], [19, 2], [19, 3], [23, 1], [23, 2], [23, 3], [24, 1], [24, 2], [24, 3], [28, 1], [29, 1], [29, 2], [29, 3], [29, 4], [29, 5], [29, 6]]));
 
+dirtSpecials.push(events.length);
 events.push(new Event("Japanese All-Stars: Tulum Trail",
                       events.length,
                       "An all Japanese dirt racing showdown!",
@@ -180,6 +204,9 @@ events.push(new Event("Japanese All-Stars: Tulum Trail",
                       "118 732 056",
                       "dirt", "spec", "normal",
                       780, [[1, 1], [11, 1], [11, 2], [11, 3], [17, 1], [17, 2], [19, 1], [19, 2], [19, 3], [23, 1], [23, 2], [23, 3], [24, 1], [24, 2], [24, 3], [28, 1], [29, 1], [29, 2], [29, 3], [29, 4], [29, 5], [29, 6]]));
+
+const iSpecialsEnd = events.length;
+const iShowcasesStart = events.length;
 
 events.push(new Event("Showcase: Vintage Hatchbacks",
                       events.length,
@@ -250,7 +277,9 @@ events.push(new Event("Showcase: 90s Supercars",
                       0, [[4, 1], [9, 2], [14, 2], [15, 1], [20, 1]],
                       "90Super"));
 
-let roadStart = events.length;
+const iShowcasesEnd = events.length;
+const iRoadsStart = events.length;
+
 for (let t = 0; t < roadCircuits.length; t++) {
     events.push(new Event(roadCircuits[t].name + " Circuit",
                           events.length,
@@ -260,7 +289,9 @@ for (let t = 0; t < roadCircuits.length; t++) {
                           "road"));
 }
 
-let dirtStart = events.length;
+const iRoadsEnd = events.length;
+const iDirtsStart = events.length;
+
 for (let t = 0; t < dirtScrambles.length; t++) {
     events.push(new Event(dirtScrambles[t].name + " Scramble",
                           events.length,
@@ -269,6 +300,9 @@ for (let t = 0; t < dirtScrambles.length; t++) {
                           dirtScrambles[t].sharecode,
                           "dirt"));
 }
+
+const iDirtsEnd = events.length;
+const iEventsEnd = events.length;
 
 // Loan cars... this is a bit dirty but ok for now
 let loanCars = new Map();

@@ -76,6 +76,230 @@ function next3Random() {
     state.next = state.next.slice(0, 3);
 }
 
+function getAchievements() {
+    // Clear the list
+    while (eAchievementsList.children.length > 0) {
+        eAchievementsList.removeChild(eAchievementsList.children[0]);
+    }
+
+    // Calculate some sums and averages
+    let sumPosition = 0;
+    let sumDamage = 0;
+    let nRaces = 0;
+    let nWins = 0;
+    let nPodiums = 0;
+    let nTwelves = 0;
+    let nBottoms = 0;
+    for (let iAction = 0; iAction < state.actions.length; iAction++) {
+        if(state.actions[iAction][0] === "r") {
+            sumPosition += state.actions[iAction][5];
+            if (state.actions[iAction][5] === 0) {
+                sumPosition += 12;
+            }
+            if (state.actions[iAction][5] === 1
+             || state.actions[iAction][5] === 2
+             || state.actions[iAction][5] === 3) {
+                nPodiums++;
+                if (state.actions[iAction][5] === 1) {
+                    nWins++;
+                }
+            }
+            if (state.actions[iAction][5] === 10
+             || state.actions[iAction][5] === 11
+             || state.actions[iAction][5] === 12) {
+                nBottoms++;
+                if (state.actions[iAction][5] === 12) {
+                    nTwelves++;
+                }
+            }
+
+            sumDamage += state.actions[iAction][6];
+            nRaces++;
+        }
+    }
+    let avgPosition = Math.round(10 * sumPosition / nRaces) / 10;
+    let avgDamage = Math.round(10 * sumDamage / nRaces) / 10;
+    let ratTops = (nPodiums + nWins) / (2 * nRaces);
+    let ratBottoms = (nBottoms + nTwelves) / (2 * nRaces);
+
+    // Calculate some standard deviations
+    let sumDevPosition = 0;
+    let sumDevDamage = 0;
+    for (let iAction = 0; iAction < state.actions.length; iAction++) {
+        if(state.actions[iAction][0] === "r") {
+            sumDevPosition += Math.pow(state.actions[iAction][5] - avgPosition, 2);
+            sumDevDamage += Math.pow(state.actions[iAction][6] - avgDamage, 2);
+        }
+    }
+    let devPosition = Math.round(10 * Math.sqrt(sumDevPosition / nRaces)) / 10;
+    let devDamage = Math.round(10 * Math.sqrt(sumDevDamage / nRaces)) / 10;
+
+    // Check dirt and road
+    let onlyRoad = true;
+    let onlyDirt = true;
+    for (let iAction = 0; iAction < state.actions.length; iAction++) {
+        if(state.actions[iAction][0] === "r") {
+            let iEvent = state.actions[iAction][1];
+            if (roadSpecials.includes(iEvent)) {
+                onlyDirt = false;
+            }
+            if (dirtSpecials.includes(iEvent)) {
+                onlyRoad = false;
+            }
+            if (iEvent >= iRoadsStart && iEvent < iRoadsEnd) {
+                onlyDirt = false;
+            }
+            if (iEvent >= iDirtsStart && iEvent < iDirtsEnd) {
+                onlyRoad = false;
+            }
+        }
+    }
+
+    // Check Special Events
+    let allSpecials = true;
+    for (iSpecials = iSpecialsStart; iSpecials < iSpecialsEnd; iSpecials++) {
+        if (!state.completed.includes(iSpecials)) {
+            allSpecials = false;
+        }
+    }
+
+    // Check Showcases
+    let allShowcases = true;
+    for (iShowcase = iShowcasesStart; iShowcase < iShowcasesEnd; iShowcase++) {
+        if (!state.completed.includes(iShowcase)) {
+            allShowcases = false;
+        }
+    }
+
+    // Check cars
+    let carsBought = 0;
+    let rePaints = 0;
+    let boughtFerrari = false
+    let sumSpecials = 0;
+    for (let iAction = 0; iAction < state.actions.length; iAction++) {
+        if(state.actions[iAction][0] === "i") {
+            sumSpecials += carList[state.actions[iAction][3]][state.actions[iAction][4]].special;
+        } else if(state.actions[iAction][0] === "c") {
+            carsBought++;
+            if (state.actions[iAction][2] === 9) {
+                boughtFerrari = true;
+            }
+            sumSpecials += carList[state.actions[iAction][2]][state.actions[iAction][3]].special;
+        }
+        if(state.actions[iAction][0] === "p") {
+            rePaints++;
+        }
+    }
+
+    // Add the achievement bullets
+
+    let participation = document.createElement("li");
+    participation.innerHTML = "<b>Participation:</b>";
+    participation.innerHTML += " You completed the game! Here's your honorary golden participation star! Well done!";
+    eAchievementsList.appendChild(participation);
+
+    let nothingElse = true;
+
+    if (allSpecials && allShowcases) {
+        let completionist = document.createElement("li");
+        completionist.innerHTML = "<b>Completionist:</b>";
+        completionist.innerHTML += " You also completed all of the special events! This requires some serious planning and dedication, very well done!";
+        eAchievementsList.appendChild(completionist);
+        nothingElse = false;
+    } else if (allSpecials) {
+        let specials = document.createElement("li");
+        specials.innerHTML = "<b>Event Planner:</b>";
+        specials.innerHTML += " You also completed all of the special events! Save for the showcases... But even then, a very impressive feat, very well done!";
+        eAchievementsList.appendChild(specials);
+        nothingElse = false;
+    } else if (allShowcases) {
+        let showcases = document.createElement("li");
+        showcases.innerHTML = "<b>Showcase Sampler:</b>";
+        showcases.innerHTML += " You also completed all the showcases! Variety truly is the spice of life!";
+        eAchievementsList.appendChild(showcases);
+        nothingElse = false;
+    } else if (state.completed.length === 0) {
+        let grindset = document.createElement("li");
+        grindset.innerHTML = "<b>Grindset:</b>";
+        grindset.innerHTML += " You also managed to completely avoid any special events! Impressive in its own right, you gotta respect the grind!";
+        eAchievementsList.appendChild(grindset);
+        nothingElse = false;
+    }
+
+    if (carsBought === 0 && rePaints === 0) {
+        let rust = document.createElement("li");
+        rust.innerHTML = "<b>Rust Lover:</b>";
+        rust.innerHTML += " And you did it all in your trusty old rust bucket! Maybe it's time to give it the race livery it deserves, and join Albannt for some A class road!";
+        eAchievementsList.appendChild(rust);
+        nothingElse = false;
+    }
+
+    if (onlyRoad) {
+        let road = document.createElement("li");
+        road.innerHTML = "<b>Asphalt Lover:</b>";
+        road.innerHTML += " You only raced road events! Wouldn't want to get your car dirty, right?";
+        eAchievementsList.appendChild(road);
+        nothingElse = false;
+    } else if (onlyDirt) {
+        let dirt = document.createElement("li");
+        dirt.innerHTML = "<b>Dirt Lover:</b>";
+        dirt.innerHTML += " You only raced dirt events! What's the point if your car doesn't get dirty?";
+        eAchievementsList.appendChild(dirt);
+        nothingElse = false;
+    }
+
+    if (boughtFerrari) {
+        let ferrari = document.createElement("li");
+        ferrari.innerHTML = "<b>Ferrari Owners Club:</b>";
+        ferrari.innerHTML += " The most expensive car on the roster, and it's all yours! Aah, the taste of success!";
+        eAchievementsList.appendChild(ferrari);
+        nothingElse = false;
+    }
+
+    if (avgDamage < 5) {
+        let clean = document.createElement("li");
+        clean.innerHTML = "<b>Squeaky Clean:</b>";
+        clean.innerHTML += " With an average of " + avgDamage + "% damage in races, you made sure to avoid contact and took good care of your cars!";
+        eAchievementsList.appendChild(clean);
+        nothingElse = false;
+    }
+
+    if (avgDamage > 15) {
+        let wild = document.createElement("li");
+        wild.innerHTML = "<b>Wild and Crazy:</b>";
+        wild.innerHTML += " With an average of " + avgDamage + "% damage in races, you completely disregarded the safety of yourself and your fellow drivers! Please take more care in future playthroughs!";
+        eAchievementsList.appendChild(wild);
+        nothingElse = false;
+    }
+
+    if (ratTops > 0.8) {
+        let sandbag = document.createElement("li");
+        sandbag.innerHTML = "<b>Sandbagger:</b>";
+        sandbag.innerHTML += " You have won a staggering " + nWins + " races! Which means you're either Mars Verstappen or your opponents were too easy... Consider increasing the difficulty for your next playthrough!";
+        eAchievementsList.appendChild(sandbag);
+        nothingElse = false;
+    } else if (ratBottoms > 0.1 && ratTops > 0.5) {
+        let posdev = document.createElement("li");
+        posdev.innerHTML = "<b>All or Nothing:</b>";
+        posdev.innerHTML += " You have simultaneously gotten " + nPodiums + " podiums and a fair few bottom placements, it's either win or crash and burn for you! Those darn checkpoints...";
+        eAchievementsList.appendChild(posdev);
+        nothingElse = false;
+    } if (ratTops < 0.2) {
+        let masochist = document.createElement("li");
+        masochist.innerHTML = "<b>Masochist:</b>";
+        masochist.innerHTML += " You have consistently avoided the podium in races, when the difficulty was all yours to adjust. Impressive! Consider lowering the difficulty for your next playthrough!";
+        eAchievementsList.appendChild(masochist);
+        nothingElse = false;
+    }
+
+    if (nothingElse) {
+        let unremark = document.createElement("li");
+        unremark.innerHTML = "<b>Remarkably Unremarkable:</b>";
+        unremark.innerHTML += " You have managed to completely avoid all the other achievements in this playthrough. Impressive in its own right!";
+        eAchievementsList.appendChild(unremark);
+    }
+}
+
 function updateState() {
     // Update player name
     if (state.name === "") {
@@ -119,6 +343,14 @@ function updateState() {
     }
     eStateXPProgress.style.backgroundColor = classColor[state.lvl];
 
+    // Show achievements if at game end
+    if (state.lvl > 4) {
+        eAchievements.style.display = "block";
+        getAchievements();
+    } else {
+        eAchievements.style.display = "none";
+    }
+
     // Show new news
     if (news > state.date) {
         eNews.style.display = "block";
@@ -135,11 +367,11 @@ function updateState() {
     if (state.next.length === 0) {
         if (state.road) {
             state.next = Array.from(Array(roadCircuits.length).keys());
-            state.next = state.next.map(a => a + roadStart);
+            state.next = state.next.map(a => a + iRoadsStart);
             eEvents.style.display = "block";
         } else if (state.dirt) {
             state.next = Array.from(Array(dirtScrambles.length).keys());
-            state.next = state.next.map(a => a + dirtStart);
+            state.next = state.next.map(a => a + iDirtsStart);
             eEvents.style.display = "block";
         } else {
             eEvents.style.display = "none";
@@ -371,8 +603,8 @@ function setStateFromString(inputString) {
     // Use fakeState to test out things
     fakeState = JSON.parse(JSON.stringify(defaultState));
     for (let iAction = 0; iAction < compact.a.length; iAction++) {
-        thisAction = compact.a[iAction];
-        switch(compact.a[iAction][0]) {
+        let thisAction = compact.a[iAction];
+        switch(thisAction[0]) {
           case "i":
             let iPlayerName = thisAction[1];
             let iName = thisAction[2];

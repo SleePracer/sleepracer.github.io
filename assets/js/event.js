@@ -656,24 +656,24 @@ class Event {
 
             // Get the three next tracks
             // Before updating state
-            if (this.iEvent >= roadStart
-             && this.iEvent < dirtStart) {
+            if (this.iEvent >= iRoadsStart
+             && this.iEvent < iRoadsEnd) {
 
                 // Road
                 state.next = JSON.parse(JSON.stringify(
-                             roadCircuits[this.iEvent - roadStart].next));
+                             roadCircuits[this.iEvent - iRoadsStart].next));
 
                 // Stolen from stackoverflow
-                state.next = state.next.map(a => a + roadStart);
+                state.next = state.next.map(a => a + iRoadsStart);
                 next3Random();
-            } else if (this.iEvent >= dirtStart) {
+            } else if (this.iEvent >= iDirtsStart) {
 
                 // Dirt
                 state.next = JSON.parse(JSON.stringify(
-                             dirtScrambles[this.iEvent - dirtStart].next));
+                             dirtScrambles[this.iEvent - iDirtsStart].next));
 
                 // Stolen from stackoverflow
-                state.next = state.next.map(a => a + dirtStart);
+                state.next = state.next.map(a => a + iDirtsStart);
                 next3Random();
             } else {
                 state.next = [];

@@ -18,7 +18,10 @@ let eStartCarName = document.getElementById("startCarName");
 let eStartGameDiv = document.getElementById("startGameDiv");
 let eStartLoad = document.getElementById("startLoad");
 
-let eNews = document.getElementById("news");
+let eNews = document.getElementById("newsDiv");
+
+let eAchievements = document.getElementById("achievementsDiv");
+let eAchievementsList = document.getElementById("achievementsList");
 
 let eGame = document.getElementById("game");
 let eStateName = document.getElementById("stateName");

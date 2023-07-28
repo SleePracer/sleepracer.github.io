@@ -33,12 +33,14 @@ const carList = [
          pi: 596,
          cost: 42000, // 25k
          year: 2001,
+         special: 1, // fnf
          buyable: true}],
     ["Audi", // 2
         {name: "TT RS Coupé", // 1
          pi: 707,
          cost: 84000, // 66k
          year: 2010,
+         special: 1, // hc
          buyable: true},
         {name: "Avant RS2", // 2 // TODO: remove in release
          pi: 601,
@@ -50,11 +52,13 @@ const carList = [
          pi: 718,
          cost: 84000, // 69k
          year: 2016,
+         special: 0,
          buyable: true},
         {name: "M3", // 2
          pi: 583,
          cost: 36000, // 70k
          year: 1991,
+         special: 2, // dtm, hc
          buyable: true}],
     ["Bugatti", // 4
         {name: "EB110 Super Sport", // 1
@@ -68,12 +72,14 @@ const carList = [
          pi: 564,
          cost: 26000, // 130k
          year: 1987,
+         special: 1, // fnf
          buyable: true}],
     ["Cadillac", // 6
         {name: "ATS-V",
          pi: 716,
          cost: 88000, // 65k
          year: 2016,
+         special: 0,
          buyable: true}],
     ["Chevrolet", // 7
         {name: "Impala Super Sport", // 1 // TODO: remove in release
@@ -85,29 +91,34 @@ const carList = [
          pi: 693,
          cost: 68000, // 45k
          year: 1995,
+         special: 0,
          buyable: true},
         {name: "Camaro Super Sport Coupe", // 3
          pi: 585,
          cost: 32000, // 110k
          year: 1969,
+         special: 3, // cm, fnf, hc
          buyable: true}],
     ["Dodge", // 8
         {name: "Challenger SRT Hellcat", // 1
          pi: 755,
          cost: 94000, // 75k
          year: 2015,
+         special: 0,
          buyable: true},
         {name: "Charger R/T", // 2
          pi: 548,
          cost: 32000, // 103k
          year: 1969,
          rollcage: 562,
+         special: 3, // cm, fnf, hc
          buyable: true}],
     ["Ferrari", // 9
         {name: "F355 Berlinetta", // 1
          pi: 717,
          cost: 142000, // 190k
          year: 1994,
+         special: 0,
          buyable: true},
         {name: "F50", // 2
          pi: 789,
@@ -126,22 +137,26 @@ const carList = [
          pi: 756,
          cost: 88000, // 40k
          year: 2018,
+         special: 0,
          buyable: true},
         {name: "Focus RS", // 2
          pi: 660,
          cost: 44000, // 25k
          year: 2009,
+         special: 0,
          buyable: true},
         {name: "SVT Cobra R", // 3
          pi: 539,
          cost: 24000, // 28k
          year: 1993,
          rollcage: 545,
+         special: 1, // dtm
          buyable: true},
         {name: "Sierra Cosworth RS500", // 4
          pi: 604,
          cost: 42000, // 66k
          year: 1987,
+         special: 2, // dtm, hc
          buyable: true},
         {name: "Fiesta XR2", // 5
          pi: 369,
@@ -159,23 +174,27 @@ const carList = [
          pi: 581,
          cost: 34000, // 230k
          year: 1969,
+         special: 2, // cm, fnf
          buyable: true}],
     ["Honda", // 11
         {name: "Civic Type R", // 1
          pi: 727,
          cost: 78000, // 59k
          year: 2018,
+         special: 0,
          buyable: true},
         {name: "Civic Type R", // 2
          pi: 553,
          cost: 22000, // 25k
          year: 1997,
          rollcage: 558,
+         special: 0,
          buyable: true},
         {name: "NSX-R", // 3
          pi: 691,
          cost: 72000, // 90k
          year: 1992,
+         special: 0,
          buyable: true},
         {name: "Civic RS", // 4
          pi: 368,
@@ -201,6 +220,7 @@ const carList = [
          pi: 756,
          cost: 102000, // 100k
          year: 2012,
+         special: 1, // hc
          buyable: true},
         {name: "XJ220", // 2
          pi: 786,
@@ -233,18 +253,21 @@ const carList = [
          pi: 741,
          cost: 94000, // 75k
          year: 2015,
+         special: 0,
          buyable: true},
         {name: "SC300", // 2
          pi: 555,
          cost: 24000, // 25k
          year: 1997,
          rollcage: 558,
+         special: 0,
          buyable: true}],
     ["Lotus", // 18
         {name: "Exige S", // 1
          pi: 754,
          cost: 92000, // 85k
          year: 2012,
+         special: 1, // hc
          buyable: true},
         {name: "Elise Series 1 Sport 190", // 2 // TODO: remove in release
          pi: 711,
@@ -256,18 +279,21 @@ const carList = [
          pi: 645,
          cost: 54000, // 35k
          year: 1997,
+         special: 2, // fnf, hc
          buyable: true},
         {name: "MX-5 Miata", // 2
          pi: 445,
          cost: 12000, // 25k
          year: 1994,
          rollcage: 446,
+         special: 1, // hc
          buyable: true},
         {name: "Savanna RX-7", // 3
          pi: 558,
          cost: 26000, // 25k
          year: 1990,
          rollcage: 560,
+         special: 0,
          buyable: true}],
     ["McLaren", // 20
         {name: "F1", // 1
@@ -281,51 +307,60 @@ const carList = [
          pi: 768,
          cost: 96000, // 150k
          year: 2012,
+         special: 1, // hc
          buyable: true},
         {name: "190E 2.5-16 Evolution II", // 2
          pi: 579,
          cost: 36000, // 150k
          year: 1990,
+         special: 1, // dtm
          buyable: true}],
     ["Mini", // 22
         {name: "John Cooper Works GP", // 1
          pi: 719,
          cost: 74000, // 42k
          year: 2021,
+         special: 0,
          buyable: true}],
     ["Mitsubishi", // 23
         {name: "Lancer Evolution VI GSR", // 1
          pi: 659,
          cost: 58000, // 28k
          year: 1999,
+         special: 2, // wrc, hc
          buyable: true},
         {name: "GTO", // 2
          pi: 610,
          cost: 56000, // 20k
          year: 1997,
+         special: 0,
          buyable: true},
         {name: "Eclipse GSX", // 3
          pi: 543,
          cost: 24000, // 25k
          year: 1995,
          rollcage: 545,
+         special: 1, // fnf
          buyable: true}],
     ["Nissan", // 24
         {name: "370Z", // 1
          pi: 688,
          cost: 52000, // 40k
          year: 2010,
+         special: 1, // hc
          buyable: true},
         {name: "Skyline GT-R V-Spec II", // 2
          pi: 657,
          cost: 58000, // 63k
          year: 2002,
+         special: 2, // fnf, hc
          buyable: true},
         {name: "240SX SE", // 3
          pi: 445,
          cost: 16000, // 25k
          year: 1993,
          rollcage: 451,
+         special: 1, // hc
          buyable: true},
         {name: "Fairlady Z 432", // 4
          pi: 482,
@@ -339,17 +374,20 @@ const carList = [
          cost: 16000, // 45k
          year: 1977,
          rollcage: 436,
+         special: 1, // hc
          buyable: true}],
     ["Porsche", // 26
         {name: "Cayman GTS", // 1
          pi: 767,
          cost: 112000, // 80k
          year: 2015,
+         special: 0,
          buyable: true},
         {name: "944 Turbo", // 2
          pi: 651,
          cost: 62000, // 35k
          year: 1989,
+         special: 0,
          buyable: true},
         {name: "959", // 3
          pi: 764,
@@ -361,50 +399,59 @@ const carList = [
          pi: 666,
          cost: 86000, // 150k
          year: 1982,
+         special: 1, // hc
          buyable: true}],
     ["Renault", // 27
         {name: "Megane R.S.", // 1
          pi: 670,
          cost: 48000, // 37k
          year: 2018,
+         special: 0,
          buyable: true}],
     ["Subaru", // 28
         {name: "Impreza 22B-STI Version", // 1
          pi: 640,
          cost: 64000, // 110k
          year: 1998,
+         special: 2, // wrc, hc
          buyable: true}],
     ["Toyota", // 29
         {name: "GR Supra", // 1
          pi: 731,
          cost: 82000, // 55k
          year: 2020,
+         special: 0,
          buyable: true},
         {name: "86", // 2
          pi: 579,
          cost: 38000, // 28.8k
          year: 2013,
+         special: 1, // hc
          buyable: true},
         {name: "Celica Sport Specialty II", // 3
          pi: 557,
          cost: 34000, // 250k
          year: 2003,
+         special: 0,
          buyable: true},
         {name: "Supra RZ", // 4
          pi: 646,
          cost: 54000, // 38k
          year: 1998,
+         special: 2, // fnf, hc
          buyable: true},
         {name: "Celica GT-Four ST205", // 5
          pi: 590,
          cost: 48000, // 20k
          year: 1994,
+         special: 1, // wrc
          buyable: true},
         {name: "Sprinter Trueno GT Apex", // 6
          pi: 480,
          cost: 14000, // 20k
          year: 1985,
          rollcage: 485,
+         special: 1, // hc
          buyable: true},
         {name: "FJ40", // 7
          pi: 269,
@@ -430,12 +477,14 @@ const carList = [
          cost: 24000, // 20k
          year: 1995,
          rollcage: 537,
+         special: 1, // hc
          buyable: true},
         {name: "Golf GTI 16V MK2", // 2
          pi: 429,
          cost: 12000, // 20k
          year: 1992,
          rollcage: 435,
+         special: 1, // hc
          buyable: true},
         {name: "Golf GTI", // 3
          pi: 428,
@@ -449,6 +498,7 @@ const carList = [
          cost: 22000, // 45k
          year: 1983,
          rollcage: 555,
+         special: 1, // dtm
          buyable: true}]];
 
 const roadCircuits = [
