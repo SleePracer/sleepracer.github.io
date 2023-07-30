@@ -44,7 +44,7 @@ function mustangBaseImg() {
 }
 
 function eclipseBaseRadio() {
-    startCarMake = 23;
+    startCarMake = 21;
     startCarModel = 3;
 
     setBaseInfo("125 302 643");
@@ -56,7 +56,7 @@ function eclipseBaseImg() {
 }
 
 function corradoBaseRadio() {
-    startCarMake = 31;
+    startCarMake = 28;
     startCarModel = 1;
 
     setBaseInfo("167 278 252");
@@ -98,70 +98,70 @@ function civicAltRadio() {
 }
 
 function soarerAltRadio() {
-    startCarMake = 17;
+    startCarMake = 15;
     startCarModel = 2;
 
     setAltInfo();
 }
 
 function miataAltRadio() {
-    startCarMake = 19;
+    startCarMake = 17;
     startCarModel = 2;
 
     setAltInfo();
 }
 
 function savannaAltRadio() {
-    startCarMake = 19;
+    startCarMake = 17;
     startCarModel = 3;
 
     setAltInfo();
 }
 
 function eclipseAltRadio() {
-    startCarMake = 23;
+    startCarMake = 21;
     startCarModel = 3;
 
     setAltInfo();
 }
 
 function nissanAltRadio() {
-    startCarMake = 24;
+    startCarMake = 22;
     startCarModel = 3;
 
     setAltInfo();
 }
 
 function firebirdAltRadio() {
-    startCarMake = 25;
+    startCarMake = 23;
     startCarModel = 1;
 
     setAltInfo();
 }
 
 function truenoAltRadio() {
-    startCarMake = 29;
+    startCarMake = 27;
     startCarModel = 6;
 
     setAltInfo();
 }
 
 function corradoAltRadio() {
-    startCarMake = 31;
+    startCarMake = 28;
     startCarModel = 1;
 
     setAltInfo();
 }
 
 function golfAltRadio() {
-    startCarMake = 31;
+    startCarMake = 28;
     startCarModel = 2;
 
     setAltInfo();
 }
 
 function volvoAltRadio() {
-    startCarMake = 32;
+    startCarMake = 29;
     startCarModel = 1;
 
     setAltInfo();

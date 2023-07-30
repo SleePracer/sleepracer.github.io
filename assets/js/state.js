@@ -490,33 +490,6 @@ function setStateFromString(inputString) {
         }
     }
 
-    // earlier -> 0.3.0
-    if (version === "0.2.0" || version === "0.2.1"
-     || version === "0.2.2" || version === "0.2.3"
-     || version === "0.2.4" || version === "0.2.5"
-     || version === "0.2.6") {
-        for (let iCars = 0; iCars < compact.c.length; iCars++) {
-            if (compact.c[iCars].m[0] >= 6) {
-                // Cadillac
-                compact.c[iCars].m[0]++;
-            }
-            if (compact.c[iCars].m[0] >= 17) {
-                // Lexus
-                compact.c[iCars].m[0]++;
-            }
-            if (compact.c[iCars].m[0] === 18
-             && compact.c[iCars].m[1] === 1) {
-                // Lotus Exige
-                compact.c[iCars].m[1]++;
-            }
-            if (compact.c[iCars].m[0] === 29
-             && compact.c[iCars].m[1] >= 3) {
-                // Toyota Celica
-                compact.c[iCars].m[1]++;
-            }
-        }
-    }
-
     // earlier -> 0.3.1
     if (version === "0.2.0" || version === "0.2.1"
      || version === "0.2.2" || version === "0.2.3"
@@ -571,22 +544,6 @@ function setStateFromString(inputString) {
     if (state.cCar !== -1) {
         if (piToClass(state.cars[state.cCar].pi) > state.lvl) {
             state.cCar = -1;
-        }
-    }
-
-    let removedCars = [[2, 2], [7, 1], [12, 1], [18, 2], [30, 1]];
-    for (let iRemoved = 0; iRemoved < removedCars.length; iRemoved++) {
-        for (let iGarage = 0; iGarage < state.cars.length; iGarage++) {
-            if (removedCars[iRemoved][0] === state.cars[iGarage].make
-             && removedCars[iRemoved][1] === state.cars[iGarage].model) {
-                window.confirm("Your car " + state.cars[iGarage].name +
-                               " is not included in the 0.3.x roster!" +
-                               " In order to keep playing in 0.3.x," +
-                               " it will automatically be sold for " +
-                               moneyToString(state.cars[iGarage].value) +
-                               ".");
-                state.cars[iGarage].sell(true);
-            }
         }
     }
 
