@@ -6,6 +6,26 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
+# Stellantis and Release
+
+The Career Mode final release is taking form!
+In my development branch, achievements are now handed out at the end of the game based on how the player navigates through their career.
+Some obvious things, and some a little more unlikely to find, all in all something fun rewarded at the end of the game!
+The downside is massive changes to how the game save file works, which will result in an **incompability with current game saves.**
+
+A few weeks back we got the big news that the Italian Stellantis cars will be coming back to Forza!
+As I would love to include a few of the new cars we will be getting (provided they'll actually be autoshow cars and not playlist rewards), and since I will need to do some work once they've been added to the game, I believe the release will be **September at the earliest.**
+Some cars will therefore have to go, looking at the Porsche 944, the Renault Megane and the '03 Toyota Celica mainly but nothing is decided yet!
+
+I'll write again to give a weeks notice before the release!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-07-30
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Beta 0.3.1: New Special Events!
 
 This update adds some new special events!
