@@ -59,13 +59,13 @@ class Car {
         this.showUpgradeButton.style.display = buttonDisplay;
         this.row.cells[3].appendChild(this.showUpgradeButton);
 
-        this.paintButton = document.createElement("button");
-        this.paintButton.id = this.name;
-        this.paintButton.innerText = "Paint";
-        this.paintButton.onclick = paintButtonClick;
-        this.paintButton.style.display = buttonDisplay;
-        this.paintButton.className = "margin";
-        this.row.cells[3].appendChild(this.paintButton);
+        this.showPaintButton = document.createElement("button");
+        this.showPaintButton.id = this.name;
+        this.showPaintButton.innerText = "Paint";
+        this.showPaintButton.onclick = showPaintButtonClick;
+        this.showPaintButton.style.display = buttonDisplay;
+        this.showPaintButton.className = "margin";
+        this.row.cells[3].appendChild(this.showPaintButton);
 
         this.sellButton = document.createElement("button");
         this.sellButton.id = this.name;
@@ -112,6 +112,23 @@ class Car {
         this.abortUpgradeButton.style.display = "none";
         this.abortUpgradeButton.className = "margin";
         this.row.cells[3].appendChild(this.abortUpgradeButton);
+
+        // Create the paint buttons
+
+        this.doPaintButton = document.createElement("button");
+        this.doPaintButton.id = this.name;
+        this.doPaintButton.innerText = "Paint";
+        this.doPaintButton.onclick = doPaintButtonClick;
+        this.doPaintButton.style.display = "none";
+        this.row.cells[3].appendChild(this.doPaintButton);
+
+        this.abortPaintButton = document.createElement("button");
+        this.abortPaintButton.id = this.name;
+        this.abortPaintButton.innerText = "Abort";
+        this.abortPaintButton.onclick = abortPaintButtonClick;
+        this.abortPaintButton.style.display = "none";
+        this.abortPaintButton.className = "margin";
+        this.row.cells[3].appendChild(this.abortPaintButton);
     }
 
     getModel() {
@@ -129,7 +146,7 @@ class Car {
 
     garageOptionsButtons(buttonDisplay) {
         this.showUpgradeButton.style.display = buttonDisplay;
-        this.paintButton.style.display = buttonDisplay;
+        this.showPaintButton.style.display = buttonDisplay;
         this.sellButton.style.display = buttonDisplay;
         this.getInButton.style.display = buttonDisplay;
     }
@@ -137,6 +154,11 @@ class Car {
     toggleUpgradeButtons(buttonDisplay) {
         this.doUpgradeButton.style.display = buttonDisplay;
         this.abortUpgradeButton.style.display = buttonDisplay;
+    }
+
+    togglePaintButtons(buttonDisplay) {
+        this.doPaintButton.style.display = buttonDisplay;
+        this.abortPaintButton.style.display = buttonDisplay;
     }
 
     repairCost(damage) {
@@ -181,22 +203,17 @@ class Car {
         this.toggleUpgradeButtons("inline");
     }
 
-    paint() {
-        // Return if player can't afford painting their car
-        if (state.money < 5000) {
-            window.confirm("You can't afford to paint this car! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
-            return;
-        }
+    showPaint() {
+        // Hide the car state and show upgrade inputs
+        this.row.cells[1].innerHTML = addClassToPI(this.pi);
+        this.row.cells[2].innerHTML = "Cost: " + moneyToString(5000);
 
-        // Update state variables
-        this.value += 2500;
-        state.money -= 5000;
+        // Hide all buttons
+        garageOptions();
+        eGarageOptions.style.display = "none";
 
-        state.actions.push(["p",
-                            this.iCar]);
-
-        this.row.cells[2].innerHTML = moneyToString(this.value);
-        updateState();
+        // Show the upgrade buttons
+        this.togglePaintButtons("inline");
     }
 
     sell(force = false) {
@@ -282,6 +299,19 @@ class Car {
         garageOptions();
     }
 
+    exitPaint() {
+        // Re-add the state information to the table
+        this.row.cells[1].innerHTML = addClassToPI(this.pi);
+        this.row.cells[2].innerHTML = moneyToString(this.value);
+
+        // Hide the upgrade buttons
+        this.togglePaintButtons("none");
+
+        // Show all other buttons and rows again
+        eGarageOptions.style.display = "block";
+        garageOptions();
+    }
+
     doUpgrade() {
         // Return if entering higher cost than money available
         if (this.upgradeCost > state.money) {
@@ -313,7 +343,30 @@ class Car {
         updateState();
     }
 
+    doPaint() {
+        // Return if player can't afford painting their car
+        if (state.money < 5000) {
+            window.confirm("You can't afford to paint this car! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
+            return;
+        }
+
+        // Update state variables
+        this.value += 2500;
+        state.money -= 5000;
+
+        state.actions.push(["p",
+                            this.iCar]);
+
+        this.exitPaint();
+
+        updateState();
+    }
+
     abortUpgrade() {
         this.exitUpgrade();
+    }
+
+    abortPaint() {
+        this.exitPaint();
     }
 }

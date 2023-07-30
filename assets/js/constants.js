@@ -245,7 +245,7 @@ const carList = [
          cost: 92000, // 85k
          year: 2012,
          special: 1, // hc
-         buyable: true},
+         buyable: true}],
     ["Mazda", // 17
         {name: "RX-7", // 1
          pi: 645,

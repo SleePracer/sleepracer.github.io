@@ -18,8 +18,8 @@ function getInButtonClick() {
 function showUpgradeButtonClick() {
     carMap.get(this.id).showUpgrade();
 }
-function paintButtonClick() {
-    carMap.get(this.id).paint();
+function showPaintButtonClick() {
+    carMap.get(this.id).showPaint();
 }
 function sellButtonClick() {
     carMap.get(this.id).sell();
@@ -47,6 +47,12 @@ function doUpgradeButtonClick() {
 }
 function abortUpgradeButtonClick() {
     carMap.get(this.id).abortUpgrade();
+}
+function doPaintButtonClick() {
+    carMap.get(this.id).doPaint();
+}
+function abortPaintButtonClick() {
+    carMap.get(this.id).abortPaint();
 }
 
 // Race
