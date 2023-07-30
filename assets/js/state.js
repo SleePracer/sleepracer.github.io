@@ -549,12 +549,7 @@ function setStateFromString(inputString) {
 
     // Enter event if in progress
     if (compact.ce !== null) {
-        events[compact.ce.ie].enter();
-
-        // Load previous results
-        for (let iRace = 0; iRace < compact.ce.p.length; iRace++) {
-            events[compact.ce.ie].load(compact.ce.p[iRace]);
-        }
+        events[compact.ce.ie].load();
     }
 
     // Use fakeState to test out things

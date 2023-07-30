@@ -242,6 +242,25 @@ class Race {
         }
     }
 
+    finalize() {
+        // Remove interactive elements and display results
+        // Before depreciate of car, or will be wrong on reload
+        this.row.cells[1].removeChild(this.positionSelect);
+        this.row.cells[1].innerText = positionName[this.position];
+        this.row.cells[2].removeChild(this.damageInput);
+        if (this.loanCar !== "none") {
+            this.row.cells[2].innerText = moneyToString(Math.floor(this.damage * loanCars.get(this.loanCar).rep));
+        } else {
+            this.row.cells[2].innerText = moneyToString(state.cars[state.cCar].repairCost(this.damage));
+        }
+        this.row.cells[3].removeChild(this.finishButton);
+        this.row.cells[3].innerText = moneyToString(this.deltaMoney);
+        this.row.cells[3].style.color = "inherit";
+        if (this.deltaMoney < 0) {
+            this.row.cells[3].style.color = "red";
+        }
+    }
+
     finish() {
         // Update XP
         state.xp += this.deltaXP;
@@ -262,22 +281,7 @@ class Race {
         // Update money
         state.money += this.deltaMoney;
 
-        // Remove interactive elements and display results
-        // Before depreciate of car, or will be wrong on reload
-        this.row.cells[1].removeChild(this.positionSelect);
-        this.row.cells[1].innerText = positionName[this.position];
-        this.row.cells[2].removeChild(this.damageInput);
-        if (this.loanCar !== "none") {
-            this.row.cells[2].innerText = moneyToString(Math.floor(this.damage * loanCars.get(this.loanCar).rep));
-        } else {
-            this.row.cells[2].innerText = moneyToString(state.cars[state.cCar].repairCost(this.damage));
-        }
-        this.row.cells[3].removeChild(this.finishButton);
-        this.row.cells[3].innerText = moneyToString(this.deltaMoney);
-        this.row.cells[3].style.color = "inherit";
-        if (this.deltaMoney < 0) {
-            this.row.cells[3].style.color = "red";
-        }
+        this.finalize();
 
         // Depreciate value of car
         if (this.loanCar === "none") {
@@ -618,9 +622,12 @@ class Event {
             // If not null, we're just loading progress
             state.cEvent = {
                 ie: this.iEvent,
-                p: []};
+                p: 0,
+                d: 0,
+                f: 0};
             updateState();
         }
+
 
         // Hide the event table
         eEventTables.style.display = "none";
@@ -715,6 +722,8 @@ class Event {
         if (this.entered && !this.finished) {
             this.race.setPosition(value);
         }
+        state.cEvent.p = value;
+        updateState();
     }
 
     setDamage(value) {
@@ -722,6 +731,8 @@ class Event {
         if (this.entered && !this.finished) {
             this.race.setDamage(value);
         }
+        state.cEvent.d = value;
+        updateState();
     }
 
     finish() {
@@ -734,10 +745,7 @@ class Event {
             }
 
             // Add progress to state
-            state.cEvent.p.push([
-                this.race.position,
-                repairCost,
-                this.race.deltaMoney]);
+            state.cEvent.f = 1;
             updateState();
 
             // Check for podium and DNF before finishing
@@ -771,27 +779,21 @@ class Event {
         }
     }
 
-    load(aProgress) {
-        // This function should only be called when loading state
-        // It only reloads the previous results
-        // the event should have been entered before..?
-        // rethink this in task 65
+    load() {
+        this.enter();
 
-        // Remove interactive elements and display results
-        // This is done in race.finish but we don't call that on load!
-        this.race.row.cells[1].removeChild(this.race.positionSelect);
-                                                     // position
-        this.race.row.cells[1].innerText = positionName[aProgress[0]];
-        this.race.row.cells[2].removeChild(this.race.damageInput);
-                                                      // repairCost
-        this.race.row.cells[2].innerText = moneyToString(aProgress[1]);
-        this.race.row.cells[3].removeChild(this.race.finishButton);
-                                                      // deltaMoney
-        this.race.row.cells[3].innerText = moneyToString(aProgress[2]);
+        this.setPosition(state.cEvent.p);
+        this.race.positionSelect.value = this.race.position.toString();
 
-        // Show next race or return button
-//        this.entered = true; // probably not needed? since we enter() before load()ing
-        this.finished = true;
+        this.setDamage(state.cEvent.d);
+        if (this.race.damage !== 0) {
+            this.race.damageInput.value = this.race.damage.toString();
+        }
+
+        if (state.cEvent.f === 1) {
+            this.race.finalize();
+            this.finished = true;
+        }
     }
 
 }
