@@ -314,7 +314,7 @@ loanCars.set("90Super", {pi: 810, rep: 200000 / 200});
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230716;
+let news = 230730;
 
 // Initialize state
 let state = {};
