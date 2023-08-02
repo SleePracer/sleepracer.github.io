@@ -9,6 +9,7 @@ class Car {
                 special = "no",
                 pi = 0,
                 value = 0,
+                rust = false,
                 buttonDisplay = "inline") {
 
         // Add car to map
@@ -21,9 +22,11 @@ class Car {
         this.model = model;
         this.pi = 0;
         this.value = 0;
+        this.rust = rust;
         if (special === "rust") {
             this.pi = carList[make][model].rollcage;
             this.value = rustCarValue;
+            this.rust = true;
         } else if (special === "load") {
             this.pi = pi;
             this.value = value;
@@ -41,12 +44,15 @@ class Car {
         for (let cell = 0; cell < eGarageTH.rows[0].cells.length; cell++) {
             this.row.insertCell();
         }
-        this.row.cells[0].innerHTML = this.name + ", "
-                                    + carList[this.make][0] + " "
-                                    + carList[this.make][this.model].name
-                                    + " ("
-                                    + carList[this.make][this.model].year
-                                    + ")";
+        this.row.cells[0].innerHTML = this.name + ", ";
+        if (this.rust) {
+            this.row.cells[0].innerHTML += "<span style=color:brown>Rusty</span> ";
+        }
+        this.row.cells[0].innerHTML += carList[this.make][0] + " "
+                                     + carList[this.make][this.model].name
+                                     + " ("
+                                     + carList[this.make][this.model].year
+                                     + ")";
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
         this.row.cells[2].innerHTML = moneyToString(this.value);
 
@@ -140,7 +146,8 @@ class Car {
             n: this.name,
             m: this.getModel(),
             pi: this.pi,
-            v: this.value
+            v: this.value,
+            r: this.rust ? 1 : 0
         }
     }
 
@@ -207,6 +214,9 @@ class Car {
         // Hide the car state and show upgrade inputs
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
         this.row.cells[2].innerHTML = "Cost: " + moneyToString(5000);
+        if (this.rust) {
+            this.row.cells[2].innerHTML += "<span style=color:brown>\nRemoves rust!</span> ";
+        }
 
         // Hide all buttons
         garageOptions();
@@ -353,6 +363,20 @@ class Car {
         // Update state variables
         this.value += 2500;
         state.money -= 5000;
+
+        // Remove rust
+        if (this.rust) {
+            this.value += Math.floor(0.2 * carList[this.make][this.model].cost);
+            this.rust = false;
+        }
+
+        // Update name to remove rust
+        this.row.cells[0].innerHTML = this.name + ", "
+                                    + carList[this.make][0] + " "
+                                    + carList[this.make][this.model].name
+                                    + " ("
+                                    + carList[this.make][this.model].year
+                                    + ")";
 
         state.actions.push(["p",
                             this.iCar]);

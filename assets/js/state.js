@@ -537,6 +537,7 @@ function setStateFromString(inputString) {
             "load",
             carArgs[iCar].pi,
             carArgs[iCar].v,
+            carArgs[iCar].r === 1,
             "none"));
     }
 
@@ -571,7 +572,8 @@ function setStateFromString(inputString) {
                                  make: iMake,
                                  model: iModel,
                                  pi: carList[iMake][iModel].rollcage,
-                                 value: rustCarValue});
+                                 value: rustCarValue,
+                                 rust: true});
             break;
           case "c":
             let cName = thisAction[1];
@@ -585,7 +587,8 @@ function setStateFromString(inputString) {
                                  make: cMake,
                                  model: cModel,
                                  pi: carList[cMake][cModel].pi,
-                                 value: Math.floor(0.9 * carList[cMake][cModel].cost)});
+                                 value: Math.floor(0.9 * carList[cMake][cModel].cost),
+                                 rust: false});
             break;
           case "u":
             let uCar = thisAction[1];
@@ -601,6 +604,10 @@ function setStateFromString(inputString) {
 
             fakeState.cars[pCar].value += 2500;
             fakeState.money -= 5000;
+            if (fakeState.cars[pCar].rust) {
+                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
+                fakeState.cars[pCar].rust = false;
+            }
             break;
           case "s":
             let sCar = thisAction[1];
