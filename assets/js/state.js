@@ -300,6 +300,232 @@ function getAchievements() {
     }
 }
 
+function fakeStateTest() {
+    // Use fakeState to test out things
+    fakeState = JSON.parse(JSON.stringify(defaultState));
+    for (let iAction = 0; iAction < state.actions.length; iAction++) {
+        let thisAction = state.actions[iAction];
+        switch(thisAction[0]) {
+          case "i":
+            let iPlayerName = thisAction[1];
+            let iName = thisAction[2];
+            let iMake = thisAction[3];
+            let iModel = thisAction[4];
+
+            fakeState.lvl = 2;
+            fakeState.xp = classXP[fakeState.lvl] / 10;
+            fakeState.name = iPlayerName;
+            fakeState.cars.push({iCar: fakeState.cars.length,
+                                 name: iName,
+                                 make: iMake,
+                                 model: iModel,
+                                 pi: carList[iMake][iModel].rollcage,
+                                 value: rustCarValue,
+                                 rust: true});
+            break;
+          case "c":
+            let cName = thisAction[1];
+            let cMake = thisAction[2];
+            let cModel = thisAction[3];
+            let cUsedB = thisAction[4];
+            let cUsedA = thisAction[5];
+
+            let cCost = carList[cMake][cModel].cost;
+            if (cUsedB) {
+                cCost -= 20000;
+                fakeState.discountB = false;
+            }
+            if (cUsedA) {
+                cCost -= 40000;
+                fakeState.discountA = false;
+            }
+            if (cCost < 0) {
+                cCost = 0;
+            }
+
+            fakeState.money -= cCost;
+            fakeState.cars.push({iCar: fakeState.cars.length,
+                                 name: cName,
+                                 make: cMake,
+                                 model: cModel,
+                                 pi: carList[cMake][cModel].pi,
+                                 value: Math.floor(0.9 * carList[cMake][cModel].cost),
+                                 rust: false});
+            break;
+          case "u":
+            let uCar = thisAction[1];
+            let uPI = thisAction[2];
+            let uCost = thisAction[3];
+
+            fakeState.cars[uCar].pi = uPI;
+            fakeState.cars[uCar].value += Math.floor(0.5 * uCost);
+            fakeState.money -= uCost;
+            break;
+          case "p":
+            let pCar = thisAction[1];
+
+            fakeState.cars[pCar].value += 2500;
+            fakeState.money -= 5000;
+            if (fakeState.cars[pCar].rust) {
+//                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
+                fakeState.cars[pCar].rust = false;
+            }
+            break;
+          case "s":
+            let sCar = thisAction[1];
+            let sValue = thisAction[2];
+
+            fakeState.money += sValue;
+            for (let jCar = (sCar + 1); jCar < fakeState.cars.length; jCar++) {
+                fakeState.cars[jCar].iCar--;
+            }
+            fakeState.cars.splice(sCar, 1);
+            break;
+          case "r":
+            let rEvent = thisAction[1];
+            let rCar = thisAction[2];
+            let rXP = thisAction[3];
+            let rPrize = thisAction[4];
+            let rPosition = thisAction[5];
+            let rDamage = thisAction[6];
+
+            fakeState.xp += rXP;
+            if (fakeState.xp < classXP[0]) {
+                fakeState.xp = classXP[0];
+            }
+
+            fakeState.wins = Math.floor(fakeState.wins / 10);
+            if (rPosition === 1) {
+                fakeState.wins += 100;
+            }
+
+            fakeState.money += rPrize;
+
+            // depreciate
+            if (rEvent < 19 || rEvent > 23) {
+                let max = 0.1 * fakeState.cars[rCar].value;
+                fakeState.cars[rCar].value -= Math.floor(max
+                                       * rDamage / (rDamage + 50));
+                fakeState.cars[rCar].value -= Math.floor(0.005 * fakeState.cars[rCar].value);
+            }
+
+            if (rEvent < 6 && rPosition !== 0) {
+                fakeState.lvl++;
+                if (rPosition >= 1 && rPosition <= 3 && fakeState.lvl === 3) {
+                    fakeState.discountB = true;
+                }
+                if (rPosition >= 1 && rPosition <= 3 && fakeState.lvl === 4) {
+                    fakeState.discountA = true;
+                }
+            }
+
+            if (!events[rEvent].repeatable) {
+                fakeState.completed.push(rEvent);
+            }
+
+            break;
+          case "h":
+            let hWin = thisAction[1];
+            fakeState.money += hWin * 200;
+            break;
+          default:
+        }
+    }
+
+    let allOK = true;
+    if (state.name !== fakeState.name) {
+        console.log("Name mismatch!");
+        console.log("State: " + state.name);
+        console.log("Fake: " + fakeState.name);
+        allOK = false;
+    }
+    if (state.xp !== fakeState.xp) {
+        console.log("XP mismatch!");
+        console.log("State: " + state.xp);
+        console.log("Fake: " + fakeState.xp);
+        allOK = false;
+    }
+    if (state.lvl !== fakeState.lvl) {
+        console.log("Level mismatch!");
+        console.log("State: " + state.lvl);
+        console.log("Fake: " + fakeState.lvl);
+        allOK = false;
+    }
+    if (state.discountB !== fakeState.discountB) {
+        console.log("Discount B mismatch!");
+        console.log("State: " + state.discountB);
+        console.log("Fake: " + fakeState.discountB);
+        allOK = false;
+    }
+    if (state.discountA !== fakeState.discountA) {
+        console.log("Discount A mismatch!");
+        console.log("State: " + state.discountA);
+        console.log("Fake: " + fakeState.discountA);
+        allOK = false;
+    }
+    if (state.wins !== fakeState.wins) {
+        console.log("Wins mismatch!");
+        console.log("State: " + state.wins);
+        console.log("Fake: " + fakeState.wins);
+        allOK = false;
+    }
+    for (let iComp = 0; iComp < state.completed.length; iComp++) {
+        if (state.completed[iComp] !== fakeState.completed[iComp]) {
+            console.log("Completed " + iComp + " mismatch!");
+            console.log("State: " + state.completed);
+            console.log("Fake: " + fakeState.completed);
+            allOK = false;
+        }
+    }
+    if (state.money !== fakeState.money) {
+        console.log("Money mismatch!");
+        console.log("State: " + state.money);
+        console.log("Fake: " + fakeState.money);
+        allOK = false;
+    }
+    if (state.cars.length !== fakeState.cars.length) {
+        console.log("Cars mismatch!");
+        console.log("State: " + state.cars.length);
+        console.log("Fake: " + fakeState.cars.length);
+        allOK = false;
+    }
+    for (let iCar = 0; iCar < state.cars.length; iCar++) {
+        if (state.cars[iCar].name !== fakeState.cars[iCar].name) {
+            console.log("Cars name mismatch!");
+            console.log("State: " + state.cars[iCar].name);
+            console.log("Fake: " + fakeState.cars[iCar].name);
+            allOK = false;
+        }
+        if (state.cars[iCar].make !== fakeState.cars[iCar].make) {
+            console.log("Cars make mismatch!");
+            console.log("State: " + state.cars[iCar].make);
+            console.log("Fake: " + fakeState.cars[iCar].make);
+            allOK = false;
+        }
+        if (state.cars[iCar].model !== fakeState.cars[iCar].model) {
+            console.log("Cars model mismatch!");
+            console.log("State: " + state.cars[iCar].model);
+            console.log("Fake: " + fakeState.cars[iCar].model);
+            allOK = false;
+        }
+        if (state.cars[iCar].pi !== fakeState.cars[iCar].pi) {
+            console.log("Cars pi mismatch!");
+            console.log("State: " + state.cars[iCar].pi);
+            console.log("Fake: " + fakeState.cars[iCar].pi);
+            allOK = false;
+        }
+        if (state.cars[iCar].value !== fakeState.cars[iCar].value) {
+            console.log("Cars value mismatch!");
+            console.log("State: " + state.cars[iCar].value);
+            console.log("Fake: " + fakeState.cars[iCar].value);
+            allOK = false;
+        }
+    }
+    if (allOK) {
+        console.log("Everything seems to be in order!");
+    }
+}
+
 function updateState() {
     // Update player name
     if (state.name === "") {
@@ -418,6 +644,9 @@ function updateState() {
 
     // Store state in localStorage
     localStorage.setItem("state", getStateString());
+
+    // Sanity check
+    fakeStateTest();
 }
 
 function setStateFromString(inputString) {
@@ -553,178 +782,5 @@ function setStateFromString(inputString) {
         events[compact.ce.ie].load();
     }
 
-    // Use fakeState to test out things
-    fakeState = JSON.parse(JSON.stringify(defaultState));
-    for (let iAction = 0; iAction < compact.a.length; iAction++) {
-        let thisAction = compact.a[iAction];
-        switch(thisAction[0]) {
-          case "i":
-            let iPlayerName = thisAction[1];
-            let iName = thisAction[2];
-            let iMake = thisAction[3];
-            let iModel = thisAction[4];
-
-            fakeState.lvl = 2;
-            fakeState.xp = classXP[fakeState.lvl] / 10;
-            fakeState.name = iPlayerName;
-            fakeState.cars.push({iCar: fakeState.cars.length,
-                                 name: iName,
-                                 make: iMake,
-                                 model: iModel,
-                                 pi: carList[iMake][iModel].rollcage,
-                                 value: rustCarValue,
-                                 rust: true});
-            break;
-          case "c":
-            let cName = thisAction[1];
-            let cMake = thisAction[2];
-            let cModel = thisAction[3];
-            let cCost = thisAction[4];
-
-            fakeState.money -= cCost;
-            fakeState.cars.push({iCar: fakeState.cars.length,
-                                 name: cName,
-                                 make: cMake,
-                                 model: cModel,
-                                 pi: carList[cMake][cModel].pi,
-                                 value: Math.floor(0.9 * carList[cMake][cModel].cost),
-                                 rust: false});
-            break;
-          case "u":
-            let uCar = thisAction[1];
-            let uPI = thisAction[2];
-            let uCost = thisAction[3];
-
-            fakeState.cars[uCar].pi = uPI;
-            fakeState.cars[uCar].value += Math.floor(0.5 * uCost);
-            fakeState.money -= uCost;
-            break;
-          case "p":
-            let pCar = thisAction[1];
-
-            fakeState.cars[pCar].value += 2500;
-            fakeState.money -= 5000;
-            if (fakeState.cars[pCar].rust) {
-                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
-                fakeState.cars[pCar].rust = false;
-            }
-            break;
-          case "s":
-            let sCar = thisAction[1];
-            let sValue = thisAction[2];
-
-            fakeState.money += sValue;
-            for (let jCar = (sCar + 1); jCar < fakeState.cars.length; jCar++) {
-                fakeState.cars[jCar].iCar--;
-            }
-            fakeState.cars.splice(sCar, 1);
-            break;
-          case "r":
-            let rEvent = thisAction[1];
-            let rCar = thisAction[2];
-            let rXP = thisAction[3];
-            let rPrize = thisAction[4];
-            let rPosition = thisAction[5];
-            let rDamage = thisAction[6];
-
-            fakeState.xp += rXP;
-            if (fakeState.xp < classXP[0]) {
-                fakeState.xp = classXP[0];
-            }
-
-            fakeState.wins = Math.floor(fakeState.wins / 10);
-            if (rPosition === 1) {
-                fakeState.wins += 100;
-            }
-
-            fakeState.money += rPrize;
-
-            // depreciate
-            if (rEvent < 19 || rEvent > 23) {
-                let max = 0.1 * fakeState.cars[rCar].value;
-                fakeState.cars[rCar].value -= Math.floor(max
-                                       * rDamage / (rDamage + 50));
-                fakeState.cars[rCar].value -= Math.floor(0.005 * fakeState.cars[rCar].value);
-            }
-
-            if (rEvent < 6 && rPosition !== 0) {
-                fakeState.lvl++;
-            }
-
-            break;
-          case "h":
-            let hWin = thisAction[1];
-            fakeState.money += hWin * 200;
-            break;
-          default:
-        }
-    }
-
-    let allOK = true;
-    if (state.name !== fakeState.name) {
-        console.log("Name mismatch!");
-        console.log("State: " + state.name);
-        console.log("Fake: " + fakeState.name);
-        allOK = false;
-    } else if (state.xp !== fakeState.xp) {
-        console.log("XP mismatch!");
-        console.log("State: " + state.xp);
-        console.log("Fake: " + fakeState.xp);
-        allOK = false;
-    } else if (state.lvl !== fakeState.lvl) {
-        console.log("Level mismatch!");
-        console.log("State: " + state.lvl);
-        console.log("Fake: " + fakeState.lvl);
-        allOK = false;
-    } else if (state.wins !== fakeState.wins) {
-        console.log("Wins mismatch!");
-        console.log("State: " + state.wins);
-        console.log("Fake: " + fakeState.wins);
-        allOK = false;
-    } else if (state.money !== fakeState.money) {
-        console.log("Money mismatch!");
-        console.log("State: " + state.money);
-        console.log("Fake: " + fakeState.money);
-        allOK = false;
-    } else if (state.cars.length !== fakeState.cars.length) {
-        console.log("Cars mismatch!");
-        console.log("State: " + state.cars.length);
-        console.log("Fake: " + fakeState.cars.length);
-        allOK = false;
-    }
-    for (let iCar = 0; iCar < state.cars.length; iCar++) {
-        if (state.cars[iCar].name !== fakeState.cars[iCar].name) {
-            console.log("Cars name mismatch!");
-            console.log("State: " + state.cars[iCar].name);
-            console.log("Fake: " + fakeState.cars[iCar].name);
-            allOK = false;
-        } else if (state.cars[iCar].make !== fakeState.cars[iCar].make) {
-            console.log("Cars make mismatch!");
-            console.log("State: " + state.cars[iCar].make);
-            console.log("Fake: " + fakeState.cars[iCar].make);
-            allOK = false;
-        } else if (state.cars[iCar].model !== fakeState.cars[iCar].model) {
-            console.log("Cars model mismatch!");
-            console.log("State: " + state.cars[iCar].model);
-            console.log("Fake: " + fakeState.cars[iCar].model);
-            allOK = false;
-        } else if (state.cars[iCar].pi !== fakeState.cars[iCar].pi) {
-            console.log("Cars pi mismatch!");
-            console.log("State: " + state.cars[iCar].pi);
-            console.log("Fake: " + fakeState.cars[iCar].pi);
-            allOK = false;
-        } else if (state.cars[iCar].value !== fakeState.cars[iCar].value) {
-            console.log("Cars value mismatch!");
-            console.log("State: " + state.cars[iCar].value);
-            console.log("Fake: " + fakeState.cars[iCar].value);
-            allOK = false;
-        }
-    }
-    if (allOK) {
-        console.log("Everything seems to be in order!");
-    }
-
     updateState();
 }
-
-
