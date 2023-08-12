@@ -58,6 +58,14 @@ let eNewCarDiscountBoxB = document.getElementById("newCarDiscountBoxB");
 let eNewCarDiscountA = document.getElementById("newCarDiscountA");
 let eNewCarDiscountBoxA = document.getElementById("newCarDiscountBoxA");
 
+let eNewRustRow = document.getElementById("newRustRow");
+let eNewRustCar = document.getElementById("newRustCar");
+let eNewRustName = document.getElementById("newRustName");
+let eNewRustPI = document.getElementById("newRustPI");
+let eNewRustValue = document.getElementById("newRustValue");
+let eNewRustSale = document.getElementById("newRustSale");
+let eNewRustBuy = document.getElementById("newRustBuy");
+
 let eRoadRadio = document.getElementById("roadRadio");
 let eDirtRadio = document.getElementById("dirtRadio");
 let eShowCompleted = document.getElementById("showCompleted");

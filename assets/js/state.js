@@ -21,6 +21,7 @@ function getStateString(s = state) {
         r: 0,
         d: 0,
         x: s.next,
+        b: s.rust,
         s: 0,
         f: s.completed,
         m: s.money,
@@ -74,6 +75,21 @@ function next3Random() {
         state.next[j] = temp;
     }
     state.next = state.next.slice(0, 3);
+}
+
+function setRustBucket() {
+    let rustRolls = [];
+    for (let iAction = 0; iAction < state.actions.length; iAction++) {
+        if (state.actions[iAction][0] === "r") {
+            rustRolls.push(state.action[iAction][7]);
+        }
+    }
+
+    if (Math.random() > 0.5) {
+        state.rust = 0;
+    } else {
+        state.rust = 1 + Math.floor(Math.random() * (rustBuckets.length - 1));
+    }
 }
 
 function getAchievements() {
@@ -352,6 +368,22 @@ function fakeStateTest() {
                                  value: Math.floor(0.9 * carList[cMake][cModel].cost),
                                  rust: false});
             break;
+          case "b":
+            let bName = thisAction[1];
+            let bMake = thisAction[2];
+            let bModel = thisAction[3];
+
+            let bCost = 10000;
+
+            fakeState.money -= bCost;
+            fakeState.cars.push({iCar: fakeState.cars.length,
+                                 name: bName,
+                                 make: bMake,
+                                 model: bModel,
+                                 pi: carList[bMake][bModel].rollcage,
+                                 value: rustCarValue,
+                                 rust: true});
+            break;
           case "u":
             let uCar = thisAction[1];
             let uPI = thisAction[2];
@@ -388,6 +420,12 @@ function fakeStateTest() {
             let rPrize = thisAction[4];
             let rPosition = thisAction[5];
             let rDamage = thisAction[6];
+            let rRust = 0;
+            if (thisAction.length > 7) { // TODO: REMOVE IF STATEMENT BEFORE RELEASE
+                rRust = thisAction[7];
+            }
+
+            fakeState.rust = rRust;
 
             fakeState.xp += rXP;
             if (fakeState.xp < classXP[0]) {
@@ -642,6 +680,20 @@ function updateState() {
     // Models will be added when manufacturer is chosen
     clearNewCarModel();
 
+    if (state.rust === 0) {
+        eNewRustRow.style.display = "none";
+    } else {
+        eNewRustRow.style.display = "table-row";
+        let iMake = rustBuckets[state.rust][0];
+        let iModel = rustBuckets[state.rust][1];
+        eNewRustCar.innerHTML = "<span style=color:brown>Rusty</span> "
+                              + carList[iMake][0] + " "
+                              + carList[iMake][iModel].name + " ("
+                              + carList[iMake][iModel].year + ")";
+
+        eNewRustSale.innerHTML = "<span style=color:red>Rust bucket for sale!</span>";
+    }
+
     // Store state in localStorage
     localStorage.setItem("state", getStateString());
 
@@ -748,6 +800,7 @@ function setStateFromString(inputString) {
     state.road = (compact.r === 1);
     state.dirt = (compact.d === 1);
     state.next = compact.x;
+    state.rust = compact.b;
     state.show = (compact.s === 1);
     state.completed = compact.f;
     state.money = compact.m;

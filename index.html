@@ -382,6 +382,35 @@ layout: home
           </button>
         </td>
       </tr>
+      <tr id="newRustRow"
+          style="display: table-row">
+        <td>
+          <div id="newRustCar">
+          </div>
+          <input id="newRustName"
+                 type="text"
+                 placeholder="Name"
+                 style="width: 100%; display: none"
+                 onkeyup=newRustInput()>
+        </td>
+        <td>
+          <div id="newRustPI">
+          </div>
+        </td>
+        <td>
+          <div id="newRustValue">
+          </div>
+        </td>
+        <td>
+          <div id="newRustSale">
+          </div>
+          <button id="newRustBuy"
+                  onClick="addRust()"
+                  style="display: none">
+            Buy car
+          </button>
+        </td>
+      </tr>
     </tbody>
   </table>
 

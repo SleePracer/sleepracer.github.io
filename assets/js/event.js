@@ -691,7 +691,6 @@ class Event {
                 state.completed.push(this.iEvent);
                 this.completedRow.cells[1].appendChild(this.infoButton);
             }
-
         }
 
         // Clear progress from state
@@ -753,13 +752,16 @@ class Event {
                        && (this.race.position <= 3));
             let dnf = this.race.position === 0;
 
+            setRustBucket();
+
             state.actions.push(["r",
                                 this.iEvent,
                                 state.cCar,
                                 this.race.deltaXP,
                                 this.race.deltaMoney,
                                 this.race.position,
-                                this.race.damage]);
+                                this.race.damage,
+                                state.rust]);
 
             this.race.finish();
             this.finished = true;

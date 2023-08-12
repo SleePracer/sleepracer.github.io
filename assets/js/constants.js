@@ -18,6 +18,7 @@ const defaultState = {
     road: false, // options
     dirt: false, // options
     next: [], // random
+    rust: 0, // random
     show: false, // options
     completed: [],
     money: 0,
@@ -466,6 +467,21 @@ const carList = [
          rollcage: 555,
          special: 1, // dtm
          buyable: true}]];
+
+const rustBuckets = [null,
+                     [8, 2], // Dodge Charger
+                     [10, 3], // Ford Cobra
+                     [11, 2], // Honda Civic
+                     [15, 2], // Lexus SC300
+                     [17, 2], // Mazda MX-5
+                     [17, 3], // Mazda RX-7
+                     [21, 3], // Mitsubishi Eclipse
+                     [22, 3], // Nissan 240SX
+                     [23, 1], // Pontiac Firebird
+                     [27, 6], // Toyota Sprinter
+                     [28, 1], // Volkswagen Corrado
+                     [28, 2], // Volkswagen Golf
+                     [29, 1]]; // Volvo 242
 
 const roadCircuits = [
     {name: "Bahía de Plano", // 0

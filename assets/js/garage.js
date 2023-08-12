@@ -8,11 +8,31 @@ function garageOptions(show = false) {
     if (eGarageOptions.innerText === "Show options"
      || show) {
         newDisplay = "inline";
-        eNewCarRow.style.display = "table-row";
         eGarageOptions.innerText = "Hide options";
+
+        eNewCarRow.style.display = "table-row";
+
+        if (state.rust !== 0) {
+            eNewRustName.style.display = "block";
+            eNewRustBuy.style.display = "block";
+            eNewRustPI.innerHTML = addClassToPI(carList[rustBuckets[state.rust][0]][rustBuckets[state.rust][1]].rollcage);
+            eNewRustValue.innerHTML = moneyToString(10000);
+            eNewRustValue.style.color = "inherit";
+            if (10000 > state.money) {
+                eNewRustValue.style.color = "red";
+            }
+            eNewRustSale.innerHTML = "";
+        }
     } else {
-        eNewCarRow.style.display = "none";
         eGarageOptions.innerText = "Show options";
+
+        eNewCarRow.style.display = "none";
+
+        eNewRustName.style.display = "none";
+        eNewRustBuy.style.display = "none";
+        eNewRustPI.innerHTML = "";
+        eNewRustValue.innerHTML = "";
+        eNewRustSale.innerHTML = "<span style=color:red>Rust bucket for sale!</span>";
     }
 
     // Change display for all buttons for all cars
@@ -178,5 +198,60 @@ function newCarModelSelect() {
     eNewCarPrice.style.color = "inherit";
     if (cost > state.money) {
         eNewCarPrice.style.color = "red";
+    }
+}
+
+function addRust() {
+    // Check if the input fields are filled out
+    if (eNewRustName.value === "") {
+        return;
+    }
+
+    // Save input values
+    let newName = eNewRustName.value;
+    let newMake = rustBuckets[state.rust][0];
+    let newModel = rustBuckets[state.rust][1];
+    let newPI = carList[newMake][newModel].rollcage;
+    let newCost = 10000;
+
+    // Check if the player can afford the car
+    if (newCost > state.money) {
+        return;
+    }
+
+    // Ask for confirmation if new car PI is too high
+    if (piToClass(newPI) > state.lvl) {
+        if (!window.confirm("Class of new car (" + addClassToPI(newPI) + ") is too high to drive, are you sure you want to purchase?")) {
+            return;
+        }
+    }
+
+    // Save input to state
+    state.cars.push(new Car(newName,
+                            newMake,
+                            newModel,
+                            "rust"));
+    state.money -= newCost;
+
+    state.actions.push(["b",
+                        newName,
+                        newMake,
+                        newModel]);
+
+    state.rust = 0;
+
+    // Try setting to current car
+    state.cars[state.cars.length - 1].getIn();
+
+    // Clear input fields
+    eNewRustName.value = "";
+
+    updateState();
+}
+
+function newRustInput() {
+    // Actually enter input with Enter
+    if (event.key === "Enter") {
+        addRust();
     }
 }
