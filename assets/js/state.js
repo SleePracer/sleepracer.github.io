@@ -79,16 +79,49 @@ function next3Random() {
 
 function setRustBucket() {
     let rustRolls = [];
+    let uniqueRolls = [];
     for (let iAction = 0; iAction < state.actions.length; iAction++) {
         if (state.actions[iAction][0] === "r") {
-            rustRolls.push(state.action[iAction][7]);
+            if (state.actions[iAction].length > 7) { // TODO: REMOVE IF STATEMENT BEFORE RELEASE
+            let rust = state.actions[iAction][7];
+            rustRolls.push(rust);
+            if (rust !== 0 && !uniqueRolls.includes(rust)) {
+                uniqueRolls.push(rust);
+            }
+            }
         }
     }
 
-    if (Math.random() > 0.5) {
+    if (rustRolls.length < 2) {
         state.rust = 0;
-    } else {
-        state.rust = 1 + Math.floor(Math.random() * (rustBuckets.length - 1));
+        return;
+    }
+
+    if (uniqueRolls.length === (rustBuckets.length - 1)) {
+        state.rust = 0;
+        return
+    }
+
+    let lastRoll = rustRolls[rustRolls.length - 1];
+    let duration = 1;
+    for (let iRoll = rustRolls.length - 2; iRoll >= 0; iRoll--) {
+        if (rustRolls[iRoll] !== lastRoll) {
+            break;
+        }
+        duration++;
+    }
+
+    if (lastRoll === 0) {
+        let threshold = 0.2 * duration;
+        if (Math.random() < threshold) {
+            let roll = 1 + Math.floor(Math.random() * (rustBuckets.length - 1));
+            while (uniqueRolls.includes(roll)) {
+                roll = 1 + Math.floor(Math.random() * (rustBuckets.length - 1));
+            }
+            state.rust = roll;
+        }
+    } else if (duration >= 3) {
+        state.rust = 0;
     }
 }
 
@@ -400,6 +433,7 @@ function fakeStateTest() {
             fakeState.money -= 5000;
             if (fakeState.cars[pCar].rust) {
 //                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
+    // TODO: uncomment this!
                 fakeState.cars[pCar].rust = false;
             }
             break;
@@ -422,7 +456,7 @@ function fakeStateTest() {
             let rDamage = thisAction[6];
             let rRust = 0;
             if (thisAction.length > 7) { // TODO: REMOVE IF STATEMENT BEFORE RELEASE
-                rRust = thisAction[7];
+            rRust = thisAction[7];
             }
 
             fakeState.rust = rRust;
