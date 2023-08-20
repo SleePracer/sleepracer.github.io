@@ -39,8 +39,8 @@ function garageOptions(show = false) {
     for (let iCar = 0; iCar < state.cars.length; iCar++) {
         state.cars[iCar].garageOptionsButtons(newDisplay);
     }
-    if (state.cCar !== -1) {
-        state.cars[state.cCar].getInButton.style.display = "none";
+    if (state.driving !== -1) {
+        state.cars[state.driving].getInButton.style.display = "none";
     }
 }
 

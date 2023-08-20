@@ -3,49 +3,18 @@
 // -----------------------------------------------------------------------
 
 function getStateString(s = state) {
-    // Store cars as constructor argument objects
-    let carArgs = [];
-    for (let iCar = 0; iCar < s.cars.length; iCar++) {
-        carArgs.push(s.cars[iCar].getArgs());
-    }
-
     // Store state as compact as possible
     let compact = {
-        n: s.name,
         t: s.date,
-        xp: s.xp,
-        l: s.lvl,
-        db: 0,
-        da: 0,
-        w: s.wins,
-        r: 0,
-        d: 0,
-        x: s.next,
+        r: s.road ? 1 : 0,
+        d: s.dirt ? 1 : 0,
+        s: s.show ? 1 : 0,
+        n: s.next,
         b: s.rust,
-        s: 0,
-        f: s.completed,
-        m: s.money,
-        ce: s.cEvent,
-        cc: s.cCar,
-        c: carArgs,
+        e: s.progress,
+        c: s.driving,
         a: s.actions
-        };
-
-    if (s.discountB) {
-        compact.db = 1;
-    }
-    if (s.discountA) {
-        compact.da = 1;
-    }
-    if (s.road) {
-        compact.r = 1;
-    }
-    if (s.dirt) {
-        compact.d = 1;
-    }
-    if (s.show) {
-        compact.s = 1;
-    }
+    };
 
     // Always return an array,
     // where array[0] is the version
@@ -432,8 +401,7 @@ function fakeStateTest() {
             fakeState.cars[pCar].value += 2500;
             fakeState.money -= 5000;
             if (fakeState.cars[pCar].rust) {
-//                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
-    // TODO: uncomment this!
+                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
                 fakeState.cars[pCar].rust = false;
             }
             break;
@@ -608,9 +576,9 @@ function updateState() {
 
     // Update car name
     if (state.cars.length > 0) {
-        if (state.cCar !== -1) {
-            eStateCar.innerText = state.cars[state.cCar].name + " "
-                                + addClassToPI(state.cars[state.cCar].pi);
+        if (state.driving !== -1) {
+            eStateCar.innerText = state.cars[state.driving].name + " "
+                                + addClassToPI(state.cars[state.driving].pi);
             eEvents.style.display = "block";
         } else {
             eStateCar.innerText = "Not in a car!";
@@ -762,111 +730,197 @@ function setStateFromString(inputString) {
     // inputString and version is valid, set state
     let compact = parsed[1];
 
-    // 0.2.0 -> 0.2.1
-    if (!Object.hasOwn(compact, 't')) {
-        compact.t = 0;
-    }
+    // Start with default state
+    state = JSON.parse(JSON.stringify(defaultState));
 
-    // 0.2.2 -> 0.2.3
-    if (!Object.hasOwn(compact, 'db')) {
-        compact.db = 0;
-        if (compact.l >= 3) {
-            compact.db = 1;
-        }
-    }
-    if (!Object.hasOwn(compact, 'da')) {
-        compact.da = 0;
-        if (compact.l >= 4) {
-            compact.da = 1;
-        }
-    }
+    // Do all the actions
+    for (let iAction = 0; iAction < compact.a.length; iAction++) {
+        let thisAction = compact.a[iAction];
+        switch(thisAction[0]) {
+          case "i":
+            let iPlayerName = thisAction[1];
+            let iName = thisAction[2];
+            let iMake = thisAction[3];
+            let iModel = thisAction[4];
 
-    // earlier -> 0.2.5
-    if (version === "0.2.0" || version === "0.2.1"
-     || version === "0.2.2" || version === "0.2.3"
-     || version === "0.2.4") {
-        for (let i = 0; i < compact.x.length; i++) {
-            compact.x[i] = compact.x[i] + 4;
-        }
-        for (let i = 0; i < compact.f.length; i++) {
-            compact.f[i] = compact.f[i] + 4;
-        }
-    }
+            state.name = iPlayerName;
+            state.lvl = 2;
+            state.xp = classXP[state.lvl] / 10;
+            state.cars.push(new Car(iName, iMake, iModel, "rust"));
+            state.driving = 0;
 
-    // earlier -> 0.2.6
-    if (version === "0.2.0" || version === "0.2.1"
-     || version === "0.2.2" || version === "0.2.3"
-     || version === "0.2.4" || version === "0.2.5") {
-        for (let i = 0; i < compact.x.length; i++) {
-            compact.x[i]++;
-        }
-        for (let i = 0; i < compact.f.length; i++) {
-            compact.f[i]++;
-        }
-    }
+// TODO: this shouldnt be needed but it is, fix it:
+garageOptions();
+garageOptions();
 
-    // earlier -> 0.3.1
-    if (version === "0.2.0" || version === "0.2.1"
-     || version === "0.2.2" || version === "0.2.3"
-     || version === "0.2.4" || version === "0.2.5"
-     || version === "0.2.6" || version === "0.3.0") {
-        for (let i = 0; i < compact.x.length; i++) {
-            compact.x[i] = compact.x[i] + 10;
-        }
-        for (let i = 0; i < compact.f.length; i++) {
-            if (compact.f[i] >= 8) {
-                compact.f[i]++;
+            break;
+          case "c":
+            let cName = thisAction[1];
+            let cMake = thisAction[2];
+            let cModel = thisAction[3];
+            let cUsedB = thisAction[4];
+            let cUsedA = thisAction[5];
+
+            let cCost = carList[cMake][cModel].cost;
+            if (cUsedB) {
+                cCost -= 20000;
+                state.discountB = false;
             }
-            if (compact.f[i] >= 10) {
-                compact.f[i] = compact.f[i] + 9;
+            if (cUsedA) {
+                cCost -= 40000;
+                state.discountA = false;
             }
+            if (cCost < 0) {
+                cCost = 0;
+            }
+
+            state.money -= cCost;
+            state.cars.push(new Car(cName, cMake, cModel));
+
+// TODO: this shouldnt be needed but it is, fix it:
+garageOptions();
+garageOptions();
+
+            break;
+          case "b":
+            let bName = thisAction[1];
+            let bMake = thisAction[2];
+            let bModel = thisAction[3];
+
+            let bCost = 10000;
+
+            state.money -= bCost;
+            state.cars.push(new Car(bName, bMake, bModel, "rust"));
+            state.rust = 0;
+
+// TODO: this shouldnt be needed but it is, fix it:
+garageOptions();
+garageOptions();
+
+            break;
+          case "u":
+            let uCar = thisAction[1];
+            let uPI = thisAction[2];
+            let uCost = thisAction[3];
+
+            state.cars[uCar].pi = uPI;
+            state.cars[uCar].value += Math.floor(0.5 * uCost);
+            state.money -= uCost;
+
+// Re-add the state information to the table
+state.cars[uCar].row.cells[1].innerHTML = addClassToPI(state.cars[uCar].pi);
+state.cars[uCar].row.cells[2].innerHTML = moneyToString(state.cars[uCar].value);
+
+            break;
+          case "p":
+            let pCar = thisAction[1];
+
+            state.cars[pCar].value += 2500;
+            state.money -= 5000;
+            if (state.cars[pCar].rust) {
+                state.cars[pCar].value += Math.floor(0.2 * carList[state.cars[pCar].make][state.cars[pCar].model].cost);
+                state.cars[pCar].rust = false;
+            }
+
+// Update name to remove rust
+state.cars[pCar].row.cells[0].innerHTML = state.cars[pCar].name + ", "
+    + carList[state.cars[pCar].make][0] + " "
+    + carList[state.cars[pCar].make][state.cars[pCar].model].name
+    + " ("
+    + carList[state.cars[pCar].make][state.cars[pCar].model].year
+    + ")";
+
+// Re-add the state information to the table
+state.cars[pCar].row.cells[1].innerHTML = addClassToPI(state.cars[pCar].pi);
+state.cars[pCar].row.cells[2].innerHTML = moneyToString(state.cars[pCar].value);
+
+            break;
+          case "s":
+            let sCar = thisAction[1];
+            let sValue = thisAction[2];
+
+            state.money += sValue;
+            for (let jCar = (sCar + 1); jCar < state.cars.length; jCar++) {
+                state.cars[jCar].iCar--;
+            }
+
+// Delete car from table and state
+eGarageTB.deleteRow(state.cars[sCar].iCar);
+
+            state.cars.splice(sCar, 1);
+            break;
+          case "r":
+            let rEvent = thisAction[1];
+            let rCar = thisAction[2];
+            let rXP = thisAction[3];
+            let rPrize = thisAction[4];
+            let rPosition = thisAction[5];
+            let rDamage = thisAction[6];
+            let rRust = thisAction[7];
+
+            state.rust = rRust;
+
+            state.xp += rXP;
+            if (state.xp < classXP[0]) {
+                state.xp = classXP[0];
+            }
+
+            state.wins = Math.floor(state.wins / 10);
+            if (rPosition === 1) {
+                state.wins += 100;
+            }
+
+            state.money += rPrize;
+
+            // depreciate
+            if (rEvent < 19 || rEvent > 23) {
+                let max = 0.1 * state.cars[rCar].value;
+                state.cars[rCar].value -= Math.floor(max
+                                       * rDamage / (rDamage + 50));
+                state.cars[rCar].value -= Math.floor(0.005 * state.cars[rCar].value);
+
+                // Update table
+                state.cars[rCar].row.cells[2].innerHTML = moneyToString(state.cars[rCar].value);
+            }
+
+            if (rEvent < 6 && rPosition !== 0) {
+                state.lvl++;
+                if (rPosition >= 1 && rPosition <= 3 && state.lvl === 3) {
+                    state.discountB = true;
+                }
+                if (rPosition >= 1 && rPosition <= 3 && state.lvl === 4) {
+                    state.discountA = true;
+                }
+            }
+
+            if (!events[rEvent].repeatable) {
+                state.completed.push(rEvent);
+            }
+
+            break;
+          case "h":
+            let hWin = thisAction[1];
+            state.money += hWin * 200;
+            break;
+          default:
         }
     }
 
+    // Set state variables
     state.version = thisVersion;
-    state.name = compact.n;
     state.date = compact.t;
-    state.xp = compact.xp;
-    state.lvl = compact.l;
-    state.discountB = (compact.db === 1);
-    state.discountA = (compact.da === 1);
-    state.wins = compact.w;
     state.road = (compact.r === 1);
     state.dirt = (compact.d === 1);
-    state.next = compact.x;
-    state.rust = compact.b;
     state.show = (compact.s === 1);
-    state.completed = compact.f;
-    state.money = compact.m;
-    state.cEvent = compact.ce;
-    state.cCar = compact.cc;
+    state.next = compact.n;
+    state.rust = compact.b;
+    state.progress = compact.e;
+    state.driving = compact.c;
     state.actions = compact.a;
 
-    // Create new cars with args from state
-    state.cars = [];
-    let carArgs = compact.c;
-    for (let iCar = 0; iCar < carArgs.length; iCar++) {
-        state.cars.push(new Car(
-            carArgs[iCar].n,
-            carArgs[iCar].m[0],
-            carArgs[iCar].m[1],
-            "load",
-            carArgs[iCar].pi,
-            carArgs[iCar].v,
-            carArgs[iCar].r === 1,
-            "none"));
-    }
-
-    // Make sure we can't enter too high car class
-    if (state.cCar !== -1) {
-        if (piToClass(state.cars[state.cCar].pi) > state.lvl) {
-            state.cCar = -1;
-        }
-    }
-
     // Enter event if in progress
-    if (compact.ce !== null) {
-        events[compact.ce.ie].load();
+    if (compact.e !== null) {
+        events[compact.e.ie].load();
     }
 
     updateState();

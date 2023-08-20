@@ -57,9 +57,9 @@ class Race {
         if (this.loanCar !== "none") {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
             this.setDeltaXP(loanCars.get(this.loanCar).pi);
-        } else if (state.cCar !== -1) {
-            this.setDeltaMoney(state.cars[state.cCar].pi);
-            this.setDeltaXP(state.cars[state.cCar].pi);
+        } else if (state.driving !== -1) {
+            this.setDeltaMoney(state.cars[state.driving].pi);
+            this.setDeltaXP(state.cars[state.driving].pi);
         } else {
             this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
@@ -101,7 +101,7 @@ class Race {
         if (this.loanCar !== "none") {
             repairCost = Math.floor(this.damage * loanCars.get(this.loanCar).rep);
         } else {
-            repairCost = state.cars[state.cCar].repairCost(this.damage);
+            repairCost = state.cars[state.driving].repairCost(this.damage);
         }
 
         this.deltaMoney = this.getPrize(this.position, pi) - repairCost;
@@ -188,7 +188,7 @@ class Race {
         // These are only used for damageRatio
         let prizeFactor = this.getPrize(2, pi)
                         + this.getPrize(this.position, pi);
-        let repairCost = state.cars[state.cCar].repairCost(this.damage);
+        let repairCost = state.cars[state.driving].repairCost(this.damage);
         if (this.loanCar !== "none") {
             repairCost = Math.floor(this.damage
                                   * loanCars.get(this.loanCar).rep);
@@ -218,9 +218,9 @@ class Race {
         if (this.loanCar !== "none") {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
             this.setDeltaXP(loanCars.get(this.loanCar).pi);
-        } else if (state.cCar !== -1) {
-            this.setDeltaMoney(state.cars[state.cCar].pi);
-            this.setDeltaXP(state.cars[state.cCar].pi);
+        } else if (state.driving !== -1) {
+            this.setDeltaMoney(state.cars[state.driving].pi);
+            this.setDeltaXP(state.cars[state.driving].pi);
         } else {
             this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
@@ -233,9 +233,9 @@ class Race {
         if (this.loanCar !== "none") {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
             this.setDeltaXP(loanCars.get(this.loanCar).pi);
-        } else if (state.cCar !== -1) {
-            this.setDeltaMoney(state.cars[state.cCar].pi);
-            this.setDeltaXP(state.cars[state.cCar].pi);
+        } else if (state.driving !== -1) {
+            this.setDeltaMoney(state.cars[state.driving].pi);
+            this.setDeltaXP(state.cars[state.driving].pi);
         } else {
             this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
@@ -251,7 +251,7 @@ class Race {
         if (this.loanCar !== "none") {
             this.row.cells[2].innerText = moneyToString(Math.floor(this.damage * loanCars.get(this.loanCar).rep));
         } else {
-            this.row.cells[2].innerText = moneyToString(state.cars[state.cCar].repairCost(this.damage));
+            this.row.cells[2].innerText = moneyToString(state.cars[state.driving].repairCost(this.damage));
         }
         this.row.cells[3].removeChild(this.finishButton);
         this.row.cells[3].innerText = moneyToString(this.deltaMoney);
@@ -285,7 +285,7 @@ class Race {
 
         // Depreciate value of car
         if (this.loanCar === "none") {
-            state.cars[state.cCar].depreciate(this.damage);
+            state.cars[state.driving].depreciate(this.damage);
         }
 
         updateState();
@@ -389,7 +389,7 @@ class Event {
 
     showOrHide() {
         // Hide everything if not in a car
-        if (state.cCar === -1) {
+        if (state.driving === -1) {
             this.row.style.display = "none";
             this.enterButton.style.display = "none";
             return;
@@ -409,7 +409,7 @@ class Event {
                     if (iCarModel[0] === this.cars[iModel][0]
                      && iCarModel[1] === this.cars[iModel][1]) {
                         garageOk = true;
-                        if (iCar === state.cCar) {
+                        if (iCar === state.driving) {
                             carModelOk = true;
                         }
                     }
@@ -437,7 +437,7 @@ class Event {
             if (state.lvl >= piToClass(this.pi)) {
                 playerClassOk = true;
             }
-            if (state.cars[state.cCar].pi >= this.pi) {
+            if (state.cars[state.driving].pi >= this.pi) {
                 carClassOk = true;
             }
         }
@@ -541,10 +541,10 @@ class Event {
          && xpToClass(state.xp) <= state.lvl) {
             allInfo += "Progress to the top of your class to unlock!";
         } else if (this.eventType === "prog"
-         && state.cCar !== -1
-         && state.cars[state.cCar].pi < this.pi) {
+         && state.driving !== -1
+         && state.cars[state.driving].pi < this.pi) {
             allInfo += "Build your car to the top of your class to unlock!";
-        } else if (state.cCar !== -1) {
+        } else if (state.driving !== -1) {
             allInfo += "Event sharecode: " + this.sharecode;
         }
 
@@ -618,9 +618,9 @@ class Event {
 
     enter() {
         // Add progress to state
-        if (state.cEvent === null) {
+        if (state.progress === null) {
             // If not null, we're just loading progress
-            state.cEvent = {
+            state.progress = {
                 ie: this.iEvent,
                 p: 0,
                 d: 0,
@@ -694,7 +694,7 @@ class Event {
         }
 
         // Clear progress from state
-        state.cEvent = null;
+        state.progress = null;
         updateState();
 
         // Hide event races
@@ -721,7 +721,7 @@ class Event {
         if (this.entered && !this.finished) {
             this.race.setPosition(value);
         }
-        state.cEvent.p = value;
+        state.progress.p = value;
         updateState();
     }
 
@@ -730,21 +730,21 @@ class Event {
         if (this.entered && !this.finished) {
             this.race.setDamage(value);
         }
-        state.cEvent.d = value;
+        state.progress.d = value;
         updateState();
     }
 
     finish() {
         // Sanity check
         if (this.entered && !this.finished) {
-            let repairCost = state.cars[state.cCar].repairCost(this.race.damage);
+            let repairCost = state.cars[state.driving].repairCost(this.race.damage);
             if (this.loanCar !== "none") {
                 repairCost = Math.floor(this.race.damage
                                       * loanCars.get(this.loanCar).rep);
             }
 
             // Add progress to state
-            state.cEvent.f = 1;
+            state.progress.f = 1;
             updateState();
 
             // Check for podium and DNF before finishing
@@ -756,7 +756,7 @@ class Event {
 
             state.actions.push(["r",
                                 this.iEvent,
-                                state.cCar,
+                                state.driving,
                                 this.race.deltaXP,
                                 this.race.deltaMoney,
                                 this.race.position,
@@ -784,15 +784,15 @@ class Event {
     load() {
         this.enter();
 
-        this.setPosition(state.cEvent.p);
+        this.setPosition(state.progress.p);
         this.race.positionSelect.value = this.race.position.toString();
 
-        this.setDamage(state.cEvent.d);
+        this.setDamage(state.progress.d);
         if (this.race.damage !== 0) {
             this.race.damageInput.value = this.race.damage.toString();
         }
 
-        if (state.cEvent.f === 1) {
+        if (state.progress.f === 1) {
             this.race.finalize();
             this.finished = true;
         }

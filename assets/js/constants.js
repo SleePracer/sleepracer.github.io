@@ -7,23 +7,23 @@ const thisVersion = "0.3.1";
 const rustCarValue = 5000;
 
 const defaultState = {
-    version: thisVersion, // meta
-    date: 0, // meta
+    version: thisVersion,
+    date: 0,
+    road: false,
+    dirt: false,
+    show: false,
+    next: [],
+    rust: 0,
+    progress: null,
+    driving: -1,
     name: "",
+    lvl: 2,
     xp: 1,
-    lvl: 1,
+    money: 0,
+    wins: 0,
     discountB: false,
     discountA: false,
-    wins: 0,
-    road: false, // options
-    dirt: false, // options
-    next: [], // random
-    rust: 0, // random
-    show: false, // options
     completed: [],
-    money: 0,
-    cEvent: null, // progress
-    cCar: -1, // options
     cars: [],
     actions: []};
 

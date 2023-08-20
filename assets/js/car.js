@@ -240,10 +240,10 @@ class Car {
         state.money += this.value;
 
         // Change current car index if necessary
-        if (this.iCar === state.cCar) {
-            state.cCar = -1;
-        } else if (this.iCar < state.cCar) {
-            state.cCar--;
+        if (this.iCar === state.driving) {
+            state.driving = -1;
+        } else if (this.iCar < state.driving) {
+            state.driving--;
         }
 
         // Update iCar of all other cars
@@ -265,14 +265,14 @@ class Car {
     getIn() {
         // Only allow getting into car if class <= lvl
         if (piToClass(this.pi) <= state.lvl) {
-            if (state.cCar !== -1) {
+            if (state.driving !== -1) {
                 // Show "Get in" on the car we're switching from
-                state.cars[state.cCar].getInButton.style.display = "inline";
+                state.cars[state.driving].getInButton.style.display = "inline";
             }
             // Change car
-            state.cCar = this.iCar;
+            state.driving = this.iCar;
             // Hide "Get in" on the car we're switching to
-            state.cars[state.cCar].getInButton.style.display = "none";
+            state.cars[state.driving].getInButton.style.display = "none";
         }
 
         updateState();
@@ -333,8 +333,8 @@ class Car {
         if (piToClass(this.upgradePI) > state.lvl) {
             if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, as you are currently limited to " + classLetter[state.lvl] + " class racing. Are you sure you want to upgrade?")) {
                 return;
-            } else if (state.cCar === this.iCar) {
-                state.cCar = -1;
+            } else if (state.driving === this.iCar) {
+                state.driving = -1;
             }
         }
 

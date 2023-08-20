@@ -227,7 +227,7 @@ function startGameButton() {
                             startCarMake,
                             startCarModel,
                             "rust"));
-    state.cCar = 0;
+    state.driving = 0;
 
     state.actions.push(["i",
                         startPlayerName,
