@@ -119,26 +119,34 @@ class Race {
     }
 
     getBaseXP() {
-        // Check for win streak in past 3 races and modify baseXP
         let baseXP = positionXP[this.position];
-        if (Math.floor(state.wins / 100) === 1) {
-            // Previous race win
+
+        // Check for win streak in past 3 races and modify baseXP
+        // Add two dummy non-wins
+        // This lets us do the same calculations for the first races
+        let wins = [false, false];
+        for (let iAction = 0; iAction < state.actions.length; iAction++) {
+            if (state.actions[iAction][0] === "r") {
+                wins.push(state.actions[iAction][5] === 1);
+            }
+        }
+
+        // Check for previous race win
+        if (wins[wins.length - 1]) {
+
+            // Check for podium in this race
             if (this.position === 1
              || this.position === 2
              || this.position === 3) {
-                // This race podium
                 baseXP--;
             }
         }
 
-        if (this.position === 1) {
-            // This race win
-            if (Math.floor((state.wins % 100) / 10) === 1) {
-                // Second previous race win
-                baseXP--;
-            }
-            if ((state.wins % 10) === 1) {
-                // Third previous race win
+        // Check for second previous race win
+        if (wins[wins.length - 2]) {
+
+            // Check for winning this race
+            if (this.position === 1) {
                 baseXP--;
             }
         }
@@ -269,13 +277,6 @@ class Race {
         // Later, when state is a class?
         if (state.xp < classXP[0]) {
             state.xp = classXP[0];
-        }
-
-        // Update win streak history
-        // This should probably also be state.updateWins(position);
-        state.wins = Math.floor(state.wins / 10);
-        if (this.position === 1) {
-            state.wins += 100;
         }
 
         // Update money

@@ -51,12 +51,10 @@ function setRustBucket() {
     let uniqueRolls = [];
     for (let iAction = 0; iAction < state.actions.length; iAction++) {
         if (state.actions[iAction][0] === "r") {
-            if (state.actions[iAction].length > 7) { // TODO: REMOVE IF STATEMENT BEFORE RELEASE
             let rust = state.actions[iAction][7];
             rustRolls.push(rust);
             if (rust !== 0 && !uniqueRolls.includes(rust)) {
                 uniqueRolls.push(rust);
-            }
             }
         }
     }
@@ -434,11 +432,6 @@ function fakeStateTest() {
                 fakeState.xp = classXP[0];
             }
 
-            fakeState.wins = Math.floor(fakeState.wins / 10);
-            if (rPosition === 1) {
-                fakeState.wins += 100;
-            }
-
             fakeState.money += rPrize;
 
             // depreciate
@@ -501,12 +494,6 @@ function fakeStateTest() {
         console.log("Discount A mismatch!");
         console.log("State: " + state.discountA);
         console.log("Fake: " + fakeState.discountA);
-        allOK = false;
-    }
-    if (state.wins !== fakeState.wins) {
-        console.log("Wins mismatch!");
-        console.log("State: " + state.wins);
-        console.log("Fake: " + fakeState.wins);
         allOK = false;
     }
     for (let iComp = 0; iComp < state.completed.length; iComp++) {
@@ -863,11 +850,6 @@ eGarageTB.deleteRow(state.cars[sCar].iCar);
             state.xp += rXP;
             if (state.xp < classXP[0]) {
                 state.xp = classXP[0];
-            }
-
-            state.wins = Math.floor(state.wins / 10);
-            if (rPosition === 1) {
-                state.wins += 100;
             }
 
             state.money += rPrize;

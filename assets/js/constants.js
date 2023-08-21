@@ -20,7 +20,6 @@ const defaultState = {
     lvl: 2,
     xp: 1,
     money: 0,
-    wins: 0,
     discountB: false,
     discountA: false,
     completed: [],
