@@ -109,3 +109,21 @@ function resetGameButton() {
     // Force refresh to clear HTML
     window.location.reload();
 }
+
+function undo() {
+    if (state.actions.length <= 1) {
+        // No actions, reset game
+        resetGameButton();
+        return;
+    } else {
+        // Remove latest action from state
+        state.actions.splice(state.actions.length - 1, 1);
+    }
+
+    // Save
+    setStateFromString(getStateString());
+    updateState();
+
+    // Force refresh to clear HTML
+    window.location.reload();
+}
