@@ -29,6 +29,35 @@ function dirtRadio() {
     updateState();
 }
 
+function newEvents() {
+    let nEvents = roadCircuits.length;
+    let eventStart = iRoadsStart;
+    if (state.dirt === true) {
+        nEvents = dirtScrambles.length;
+        eventStart = iDirtsStart;
+    }
+
+    // Get the current events that we don't want again
+    let current = JSON.parse(JSON.stringify(state.next));
+
+    // Make a next with all tracks
+    state.next = Array.from(Array(nEvents).keys());
+    state.next = state.next.map(a => a + eventStart);
+
+    // Remove the current events
+    for (let i = 0; i < current.length; i++) {
+        for (let j = 0; j < state.next.length; j++) {
+            if (current[i] === state.next[j]) {
+                state.next.splice(j, 1);
+                break;
+            }
+        }
+    }
+
+    next3Random();
+    updateState();
+}
+
 function showCompleted() {
     state.show = eShowCompleted.checked;
     updateState();
