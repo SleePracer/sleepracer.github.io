@@ -6,6 +6,21 @@ permalink: /news/
 
 
 <div style="margin-top: 37px"></div>
+# Release Imminent!
+
+Hello!
+As promised, here's a weeks notice.
+I hope to be releasing this Sunday, but it could potentially take more time.
+Most of the things are in place, but there's a few things to fix before it's ready.
+Until then!
+<div style="text-align: right">
+  <em>
+    Anaerobisk / SleePracer, 2023-09-04
+  </em>
+</div>
+
+
+<div style="margin-top: 37px"></div>
 # Stellantis and Release
 
 The Career Mode final release is taking form!
