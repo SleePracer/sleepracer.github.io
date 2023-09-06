@@ -37,16 +37,20 @@ class HeadToHead {
         this.row.cells[1].appendChild(this.lostButton);
     }
 
-    won() {
+    won(loading = false) {
         state.money += this.wager;
-        state.actions.push(["h", 1]);
-        updateState();
+        if (!loading) {
+            state.actions.push(["h", 1]);
+            updateState();
+        }
     }
 
-    lost() {
+    lost(loading = false) {
         state.money -= this.wager;
-        state.actions.push(["h", -1]);
-        updateState();
+        if (!loading) {
+            state.actions.push(["h", 0]);
+            updateState();
+        }
     }
 
 }

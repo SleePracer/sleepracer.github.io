@@ -97,11 +97,9 @@ class Race {
     }
 
     setDeltaMoney(pi) {
-        let repairCost = 0;
+        let repairCost = state.cars[state.driving].repairCost(this.damage);
         if (this.loanCar !== "none") {
             repairCost = Math.floor(this.damage * loanCars.get(this.loanCar).rep);
-        } else {
-            repairCost = state.cars[state.driving].repairCost(this.damage);
         }
 
         this.deltaMoney = this.getPrize(this.position, pi) - repairCost;
@@ -269,9 +267,20 @@ class Race {
         }
     }
 
-    finish() {
+    finish(action) {
+        let driving = state.driving;
+        let dxp = this.deltaXP;
+        let dmoney = this.deltaMoney;
+        let damage = this.damage;
+        if (action.length !== 0) {
+            driving = action[2];
+            dxp = action[3];
+            dmoney = action[4];
+            damage = action[6];
+        }
+
         // Update XP
-        state.xp += this.deltaXP;
+        state.xp += dxp;
 
         // This check should probably be done in a setter
         // Later, when state is a class?
@@ -280,16 +289,20 @@ class Race {
         }
 
         // Update money
-        state.money += this.deltaMoney;
+        state.money += dmoney;
 
-        this.finalize();
+        if (action.length === 0) {
+            this.finalize();
+        }
 
         // Depreciate value of car
         if (this.loanCar === "none") {
-            state.cars[state.driving].depreciate(this.damage);
+            state.cars[driving].depreciate(damage);
         }
 
-        updateState();
+        if (action.length === 0) {
+            updateState();
+        }
     }
 }
 
@@ -617,9 +630,9 @@ class Event {
         }
     }
 
-    enter() {
+    enter(loading = false) {
         // Add progress to state
-        if (state.progress === null) {
+        if (state.progress === null && !loading) {
             // If not null, we're just loading progress
             state.progress = {
                 ie: this.iEvent,
@@ -657,7 +670,7 @@ class Event {
         this.race.row.style.display = "table-row";
     }
 
-    returnToEvents() {
+    returnToEvents(loading = false) {
 
         // Do some things only if finished
         if (this.finished) {
@@ -695,8 +708,10 @@ class Event {
         }
 
         // Clear progress from state
-        state.progress = null;
-        updateState();
+        if (!loading) {
+            state.progress = null;
+            updateState();
+        }
 
         // Hide event races
         this.entered = false;
@@ -735,26 +750,30 @@ class Event {
         updateState();
     }
 
-    finish() {
+    finish(action = []) {
         // Sanity check
-        if (this.entered && !this.finished) {
-            let repairCost = state.cars[state.driving].repairCost(this.race.damage);
-            if (this.loanCar !== "none") {
-                repairCost = Math.floor(this.race.damage
-                                      * loanCars.get(this.loanCar).rep);
-            }
+        if (!this.entered || this.finished) {
+            return;
+        }
 
+        if (action.length === 0) {
             // Add progress to state
             state.progress.f = 1;
             updateState();
+        }
 
-            // Check for podium and DNF before finishing
-            let podium = ((this.race.position >= 1)
-                       && (this.race.position <= 3));
-            let dnf = this.race.position === 0;
+        let pos = this.race.position;
+        if (action.length !== 0) {
+            pos = action[5];
+        }
 
+        // Check for podium and DNF before finishing
+        let podium = ((pos >= 1)
+                   && (pos <= 3));
+        let dnf = pos === 0;
+
+        if (action.length === 0) {
             setRustBucket();
-
             state.actions.push(["r",
                                 this.iEvent,
                                 state.driving,
@@ -763,22 +782,25 @@ class Event {
                                 this.race.position,
                                 this.race.damage,
                                 state.rust]);
+        } else {
+            state.rust = action[7];
+        }
 
-            this.race.finish();
-            this.finished = true;
+        this.race.finish(action);
+        this.finished = true;
 
-            // Only level up if not DNF
-            if (this.eventType === "prog" && !dnf) {
-                state.lvl++;
-                if (podium && state.lvl === 3) {
-                    state.discountB = true;
-                }
-                if (podium && state.lvl === 4) {
-                    state.discountA = true;
-                }
+        // Only level up if not DNF
+        if (this.eventType === "prog" && !dnf) {
+            state.lvl++;
+            if (podium && state.lvl === 3) {
+                state.discountB = true;
+            }
+            if (podium && state.lvl === 4) {
+                state.discountA = true;
+            }
+            if (action.length === 0) {
                 updateState();
             }
-
         }
     }
 

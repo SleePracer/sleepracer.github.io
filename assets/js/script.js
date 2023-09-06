@@ -4,7 +4,7 @@
 
 // Create head to head first
 // This will put it on top of events table
-new HeadToHead("Head-to-Head", 200);
+let headToHead = new HeadToHead("Head-to-Head", 200);
 
 // Create all events
 events = [];

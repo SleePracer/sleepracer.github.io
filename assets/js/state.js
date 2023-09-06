@@ -420,10 +420,7 @@ function fakeStateTest() {
             let rPrize = thisAction[4];
             let rPosition = thisAction[5];
             let rDamage = thisAction[6];
-            let rRust = 0;
-            if (thisAction.length > 7) { // TODO: REMOVE IF STATEMENT BEFORE RELEASE
-            rRust = thisAction[7];
-            }
+            let rRust = thisAction[7];
 
             fakeState.rust = rRust;
 
@@ -459,7 +456,7 @@ function fakeStateTest() {
             break;
           case "h":
             let hWin = thisAction[1];
-            fakeState.money += hWin * 200;
+            fakeState.money += (2 * hWin - 1) * 200;
             break;
           default:
         }
@@ -725,164 +722,34 @@ function setStateFromString(inputString) {
         let thisAction = compact.a[iAction];
         switch(thisAction[0]) {
           case "i":
-            let iPlayerName = thisAction[1];
-            let iName = thisAction[2];
-            let iMake = thisAction[3];
-            let iModel = thisAction[4];
-
-            state.name = iPlayerName;
-            state.lvl = 2;
-            state.xp = classXP[state.lvl] / 10;
-            state.cars.push(new Car(iName, iMake, iModel, "rust"));
-            state.driving = 0;
-
-// TODO: this shouldnt be needed but it is, fix it:
-garageOptions();
-garageOptions();
-
+            startGameButton(thisAction);
             break;
           case "c":
-            let cName = thisAction[1];
-            let cMake = thisAction[2];
-            let cModel = thisAction[3];
-            let cUsedB = thisAction[4];
-            let cUsedA = thisAction[5];
-
-            let cCost = carList[cMake][cModel].cost;
-            if (cUsedB) {
-                cCost -= 20000;
-                state.discountB = false;
-            }
-            if (cUsedA) {
-                cCost -= 40000;
-                state.discountA = false;
-            }
-            if (cCost < 0) {
-                cCost = 0;
-            }
-
-            state.money -= cCost;
-            state.cars.push(new Car(cName, cMake, cModel));
-
-// TODO: this shouldnt be needed but it is, fix it:
-garageOptions();
-garageOptions();
-
+            addCar(thisAction);
             break;
           case "b":
-            let bName = thisAction[1];
-            let bMake = thisAction[2];
-            let bModel = thisAction[3];
-
-            let bCost = 10000;
-
-            state.money -= bCost;
-            state.cars.push(new Car(bName, bMake, bModel, "rust"));
-            state.rust = 0;
-
-// TODO: this shouldnt be needed but it is, fix it:
-garageOptions();
-garageOptions();
-
+            addRust(thisAction);
             break;
           case "u":
-            let uCar = thisAction[1];
-            let uPI = thisAction[2];
-            let uCost = thisAction[3];
-
-            state.cars[uCar].pi = uPI;
-            state.cars[uCar].value += Math.floor(0.5 * uCost);
-            state.money -= uCost;
-
-// Re-add the state information to the table
-state.cars[uCar].row.cells[1].innerHTML = addClassToPI(state.cars[uCar].pi);
-state.cars[uCar].row.cells[2].innerHTML = moneyToString(state.cars[uCar].value);
-
+            state.cars[thisAction[1]].doUpgrade(thisAction);
             break;
           case "p":
-            let pCar = thisAction[1];
-
-            state.cars[pCar].value += 2500;
-            state.money -= 5000;
-            if (state.cars[pCar].rust) {
-                state.cars[pCar].value += Math.floor(0.2 * carList[state.cars[pCar].make][state.cars[pCar].model].cost);
-                state.cars[pCar].rust = false;
-            }
-
-// Update name to remove rust
-state.cars[pCar].row.cells[0].innerHTML = state.cars[pCar].name + ", "
-    + carList[state.cars[pCar].make][0] + " "
-    + carList[state.cars[pCar].make][state.cars[pCar].model].name
-    + " ("
-    + carList[state.cars[pCar].make][state.cars[pCar].model].year
-    + ")";
-
-// Re-add the state information to the table
-state.cars[pCar].row.cells[1].innerHTML = addClassToPI(state.cars[pCar].pi);
-state.cars[pCar].row.cells[2].innerHTML = moneyToString(state.cars[pCar].value);
-
+            state.cars[thisAction[1]].doPaint(true);
             break;
           case "s":
-            let sCar = thisAction[1];
-            let sValue = thisAction[2];
-
-            state.money += sValue;
-            for (let jCar = (sCar + 1); jCar < state.cars.length; jCar++) {
-                state.cars[jCar].iCar--;
-            }
-
-// Delete car from table and state
-eGarageTB.deleteRow(state.cars[sCar].iCar);
-
-            state.cars.splice(sCar, 1);
+            state.cars[thisAction[1]].sell(thisAction);
             break;
           case "r":
-            let rEvent = thisAction[1];
-            let rCar = thisAction[2];
-            let rXP = thisAction[3];
-            let rPrize = thisAction[4];
-            let rPosition = thisAction[5];
-            let rDamage = thisAction[6];
-            let rRust = thisAction[7];
-
-            state.rust = rRust;
-
-            state.xp += rXP;
-            if (state.xp < classXP[0]) {
-                state.xp = classXP[0];
-            }
-
-            state.money += rPrize;
-
-            // depreciate
-            if (rEvent < 19 || rEvent > 23) {
-                let max = 0.1 * state.cars[rCar].value;
-                state.cars[rCar].value -= Math.floor(max
-                                       * rDamage / (rDamage + 50));
-                state.cars[rCar].value -= Math.floor(0.005 * state.cars[rCar].value);
-
-                // Update table
-                state.cars[rCar].row.cells[2].innerHTML = moneyToString(state.cars[rCar].value);
-            }
-
-            if (rEvent < 6 && rPosition !== 0) {
-                state.lvl++;
-                if (rPosition >= 1 && rPosition <= 3 && state.lvl === 3) {
-                    state.discountB = true;
-                }
-                if (rPosition >= 1 && rPosition <= 3 && state.lvl === 4) {
-                    state.discountA = true;
-                }
-            }
-
-            if (!events[rEvent].repeatable) {
-                state.completed.push(rEvent);
-            }
-
+            events[thisAction[1]].enter(true);
+            events[thisAction[1]].finish(thisAction);
+            events[thisAction[1]].returnToEvents(true);
             break;
           case "h":
-            let hWin = thisAction[1];
-            state.money += hWin * 200;
+            if (thisAction[1] === 1) {
+                headToHead.won(true);
+            } else {
+                headToHead.lost(true);
+            }
             break;
           default:
         }
@@ -905,5 +772,13 @@ eGarageTB.deleteRow(state.cars[sCar].iCar);
         events[compact.e.ie].load();
     }
 
+// TODO: this shouldnt be needed but it is, fix it:
+garageOptions();
+garageOptions();
+
     updateState();
+
+    // Force refresh to clear HTML
+//    window.location.reload();
+    // TODO: This is a forever loop, why?
 }

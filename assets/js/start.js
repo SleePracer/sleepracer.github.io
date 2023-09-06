@@ -206,43 +206,61 @@ function startCarNameInput() {
     }
 }
 
-function startGameButton() {
+function startGameButton(action = []) {
+    let playerName = startPlayerName;
+    let carName = startCarName;
+    let carMake = startCarMake;
+    let carModel = startCarModel;
+
+    if (action.length !== 0) {
+        playerName = action[1];
+        carName = action[2];
+        carMake = action[3];
+        carModel = action[4];
+    }
+
     // Check if the input fields are filled out
-    if (startPlayerName === ""
-     || startCarName === ""
-     || startCarMake === 0
-     || startCarModel === 0) {
+    if (playerName === ""
+     || carName === ""
+     || carMake === 0
+     || carModel === 0) {
         return;
     }
 
-    // Start with default state
-    setStateFromString(getStateString(defaultState));
+    if (action.length === 0) {
+        // Start with default state
+        state = JSON.parse(JSON.stringify(defaultState));
+    }
 
     // Set the start game inputs
-    state.date = dateInt();
-    state.name = startPlayerName;
+    if (action.length === 0) {
+        state.date = dateInt();
+    }
+    state.name = playerName;
     state.lvl = 2; // C
     state.xp = classXP[state.lvl] / 10;
-    state.cars.push(new Car(startCarName,
-                            startCarMake,
-                            startCarModel,
+    state.cars.push(new Car(carName,
+                            carMake,
+                            carModel,
                             "rust"));
     state.driving = 0;
 
-    state.actions.push(["i",
-                        startPlayerName,
-                        startCarName,
-                        startCarMake,
-                        startCarModel]);
+    if (action.length === 0) {
+        state.actions.push(["i",
+                            playerName,
+                            carName,
+                            carMake,
+                            carModel]);
 
-    // Since defaultState has no cars in garage,
-    // options will always be shown, so hide them
-    // Do this after pushing the first car! Or it's options will show!
-    garageOptions();
+        // Since defaultState has no cars in garage,
+        // options will always be shown, so hide them
+        // Do this after pushing the first car! Or it's options will show!
+        garageOptions();
 
-    // Show the actual game
-    eStart.style.display = "none";
-    eGame.style.display = "block";
+        // Show the actual game
+        eStart.style.display = "none";
+        eGame.style.display = "block";
 
-    updateState();
+        updateState();
+    }
 }

@@ -58,18 +58,26 @@ function calculateCost(make, model) {
     return cost;
 }
 
-function addCar() {
-    // Check if the input fields are filled out
-    if (eNewCarName.value === ""
-     || toPositiveInt(eNewCarMake.value) === 0
-     || toPositiveInt(eNewCarModel.value) === 0) {
-        return;
-    }
-
-    // Save input values
+function addCar(action = []) {
     let newName = eNewCarName.value;
     let newMake = toPositiveInt(eNewCarMake.value);
     let newModel = toPositiveInt(eNewCarModel.value);
+
+    if (action.length !== 0) {
+        newName = action[1];
+        newMake = action[2];
+        newModel = action[3];
+        eNewCarDiscountBoxB.checked = action[4] === 1;
+        eNewCarDiscountBoxA.checked = action[5] === 1;
+    }
+
+    // Check if the input fields are filled out
+    if (newName === ""
+     || newMake === 0
+     || newModel === 0) {
+        return;
+    }
+
     let newPI = carList[newMake][newModel].pi;
     let newCost = calculateCost(newMake, newModel);
 
@@ -92,8 +100,8 @@ function addCar() {
     state.money -= newCost;
 
     // Use the discounts
-    usedA = 0;
     usedB = 0;
+    usedA = 0;
     if (eNewCarDiscountBoxB.checked) {
         usedB = 1;
         state.discountB = false;
@@ -105,15 +113,17 @@ function addCar() {
         eNewCarDiscountBoxA.checked = false;
     }
 
-    state.actions.push(["c",
-                        newName,
-                        newMake,
-                        newModel,
-                        usedB,
-                        usedA]);
+    if (action.length === 0) {
+        state.actions.push(["c",
+                            newName,
+                            newMake,
+                            newModel,
+                            usedB,
+                            usedA]);
+    }
 
     // Try setting to current car
-    state.cars[state.cars.length - 1].getIn();
+    state.cars[state.cars.length - 1].getIn(action.length !== 0);
 
     // Clear input fields
     // Car selectors will be reset in updateState
@@ -123,7 +133,9 @@ function addCar() {
     eNewCarDiscountB.style.display = "none";
     eNewCarDiscountA.style.display = "none";
 
-    updateState();
+    if (action.length === 0) {
+        updateState();
+    }
 }
 
 function newCarInput() {
@@ -201,16 +213,22 @@ function newCarModelSelect() {
     }
 }
 
-function addRust() {
-    // Check if the input fields are filled out
-    if (eNewRustName.value === "") {
-        return;
-    }
-
-    // Save input values
+function addRust(action = []) {
     let newName = eNewRustName.value;
     let newMake = rustBuckets[state.rust][0];
     let newModel = rustBuckets[state.rust][1];
+
+    if (action.length !== 0) {
+        newName = action[1];
+        newMake = action[2];
+        newModel = action[3];
+    }
+
+    // Check if the input fields are filled out
+    if (newName === "") {
+        return;
+    }
+
     let newPI = carList[newMake][newModel].rollcage;
     let newCost = 10000;
 
@@ -233,20 +251,24 @@ function addRust() {
                             "rust"));
     state.money -= newCost;
 
-    state.actions.push(["b",
-                        newName,
-                        newMake,
-                        newModel]);
+    if (action.length === 0) {
+        state.actions.push(["b",
+                            newName,
+                            newMake,
+                            newModel]);
+    }
 
     state.rust = 0;
 
     // Try setting to current car
-    state.cars[state.cars.length - 1].getIn();
+    state.cars[state.cars.length - 1].getIn(action.length !== 0);
 
     // Clear input fields
     eNewRustName.value = "";
 
-    updateState();
+    if (action.length === 0) {
+        updateState();
+    }
 }
 
 function newRustInput() {

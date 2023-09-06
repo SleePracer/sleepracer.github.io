@@ -226,8 +226,8 @@ class Car {
         this.togglePaintButtons("inline");
     }
 
-    sell(force = false) {
-        if (!force) {
+    sell(action = []) {
+        if (action.length === 0) {
             // Ask for confirmation before selling
             if (!window.confirm("Sale price is: " +
                                 moneyToString(this.value) +
@@ -255,14 +255,16 @@ class Car {
         eGarageTB.deleteRow(this.iCar);
         state.cars.splice(this.iCar, 1);
 
-        state.actions.push(["s",
-                            this.iCar,
-                            this.value]);
+        if (action.length === 0) {
+            state.actions.push(["s",
+                                this.iCar,
+                                this.value]);
 
-        updateState();
+            updateState();
+        }
     }
 
-    getIn() {
+    getIn(loading = false) {
         // Only allow getting into car if class <= lvl
         if (piToClass(this.pi) <= state.lvl) {
             if (state.driving !== -1) {
@@ -275,7 +277,9 @@ class Car {
             state.cars[state.driving].getInButton.style.display = "none";
         }
 
-        updateState();
+        if (!loading) {
+            updateState();
+        }
     }
 
     setUpgradePI(value) {
@@ -286,52 +290,63 @@ class Car {
         this.upgradeCost = toPositiveInt(value);
     }
 
-    exitUpgrade() {
-        // Reset the upgrade variables
-        this.upgradePI = toIntPI(0);
-        this.upgradeCost = 0;
+    exitUpgrade(loading = false) {
+        if (!loading) {
+            // Reset the upgrade variables
+            this.upgradePI = toIntPI(0);
+            this.upgradeCost = 0;
 
-        // Remove and reset the input fields
-        this.row.cells[1].removeChild(this.piInput);
-        this.row.cells[2].removeChild(this.costInput);
-        this.piInput.value = "";
-        this.costInput.value = "";
+            // Remove and reset the input fields
+            this.row.cells[1].removeChild(this.piInput);
+            this.row.cells[2].removeChild(this.costInput);
+            this.piInput.value = "";
+            this.costInput.value = "";
+
+            // Hide the upgrade buttons
+            this.toggleUpgradeButtons("none");
+
+            // Show all other buttons and rows again
+            eGarageOptions.style.display = "block";
+            garageOptions();
+        }
 
         // Re-add the state information to the table
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
         this.row.cells[2].innerHTML = moneyToString(this.value);
-
-        // Hide the upgrade buttons
-        this.toggleUpgradeButtons("none");
-
-        // Show all other buttons and rows again
-        eGarageOptions.style.display = "block";
-        garageOptions();
     }
 
-    exitPaint() {
+    exitPaint(loading = false) {
         // Re-add the state information to the table
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
         this.row.cells[2].innerHTML = moneyToString(this.value);
 
-        // Hide the upgrade buttons
-        this.togglePaintButtons("none");
+        if (!loading) {
+            // Hide the upgrade buttons
+            this.togglePaintButtons("none");
 
-        // Show all other buttons and rows again
-        eGarageOptions.style.display = "block";
-        garageOptions();
+            // Show all other buttons and rows again
+            eGarageOptions.style.display = "block";
+            garageOptions();
+        }
     }
 
-    doUpgrade() {
+    doUpgrade(action = []) {
+        let upi = this.upgradePI;
+        let ucost = this.upgradeCost;
+        if (action.length !== 0) {
+            upi = action[2];
+            ucost = action[3];
+        }
+
         // Return if entering higher cost than money available
-        if (this.upgradeCost > state.money) {
-            window.confirm("You can't afford this " + moneyToString(this.upgradeCost) + " upgrade! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
+        if (ucost > state.money) {
+            window.confirm("You can't afford this " + moneyToString(ucost) + " upgrade! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
             return;
         }
 
         // Ask for confirmation if car PI is too high after upgrade
-        if (piToClass(this.upgradePI) > state.lvl) {
-            if (!window.confirm("Class of car after upgrade (" + addClassToPI(this.upgradePI) + ") will be too high to drive, as you are currently limited to " + classLetter[state.lvl] + " class racing. Are you sure you want to upgrade?")) {
+        if (piToClass(upi) > state.lvl) {
+            if (!window.confirm("Class of car after upgrade (" + addClassToPI(upi) + ") will be too high to drive, as you are currently limited to " + classLetter[state.lvl] + " class racing. Are you sure you want to upgrade?")) {
                 return;
             } else if (state.driving === this.iCar) {
                 state.driving = -1;
@@ -339,21 +354,25 @@ class Car {
         }
 
         // Update state variables
-        this.pi = this.upgradePI;
-        this.value += Math.floor(0.5 * this.upgradeCost);
-        state.money -= this.upgradeCost;
+        this.pi = upi;
+        this.value += Math.floor(0.5 * ucost);
+        state.money -= ucost;
 
-        state.actions.push(["u",
-                            this.iCar,
-                            this.upgradePI,
-                            this.upgradeCost]);
+        if (action.length === 0) {
+            state.actions.push(["u",
+                                this.iCar,
+                                this.upgradePI,
+                                this.upgradeCost]);
+        }
 
-        this.exitUpgrade();
+        this.exitUpgrade(action.length !== 0);
 
-        updateState();
+        if (action.length === 0) {
+            updateState();
+        }
     }
 
-    doPaint() {
+    doPaint(loading = false) {
         // Return if player can't afford painting their car
         if (state.money < 5000) {
             window.confirm("You can't afford to paint this car! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
@@ -378,12 +397,16 @@ class Car {
                                     + carList[this.make][this.model].year
                                     + ")";
 
-        state.actions.push(["p",
-                            this.iCar]);
+        if (!loading) {
+            state.actions.push(["p",
+                                this.iCar]);
+        }
 
-        this.exitPaint();
+        this.exitPaint(loading);
 
-        updateState();
+        if (!loading) {
+            updateState();
+        }
     }
 
     abortUpgrade() {
