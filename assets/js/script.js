@@ -90,9 +90,7 @@ events.push(new Event("Classic Muscle: Gran Pantano Sprint",
     "Gran Pantano Sprint",
     "935 382 632",
     "both", "spec", "normal", 600,
-    [cars.camaro,
-     cars.charger,
-     cars.boss]
+    classicMuscle
 ));
 
 roadSpecials.push(events.length);
@@ -103,11 +101,7 @@ events.push(new Event("Group A Touring: Sierra Verde Sprint",
     "Sierra Verde Sprint",
     "306 811 911",
     "road", "spec", "normal", 650,
-    [cars.m3,
-     cars.cobra,
-     cars.sierra,
-     cars.e190,
-     cars.v242]
+    dtm
 ));
 
 events.push(new Event("Fast and Furious: Tunnel Run",
@@ -118,15 +112,7 @@ events.push(new Event("Fast and Furious: Tunnel Run",
     "Tunnel Run",
     "167 123 448",
     "both", "spec", "normal", 660,
-    [cars.integra,
-     cars.regal,
-     cars.camaro,
-     cars.charger,
-     cars.boss,
-     cars.fd,
-     cars.eclipse,
-     cars.r34,
-     cars.a80]
+    fnf
 ));
 
 dirtSpecials.push(events.length);
@@ -137,9 +123,7 @@ events.push(new Event("Group A Rally: Bajío Trail",
     "Bajío Trail",
     "494 070 628",
     "dirt", "spec", "normal", 670,
-    [cars.evo,
-     cars.b22,
-     cars.celica]
+    wrc
 ));
 
 events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
@@ -151,28 +135,7 @@ events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
     "Copper Canyon Sprint",
     "155 764 596",
     "both", "spec", "normal", 770,
-    [cars.tt,
-     cars.m3,
-     cars.camaro,
-     cars.charger,
-     cars.sierra,
-     cars.xkr,
-     cars.exige,
-     cars.fd,
-     cars.miata,
-     cars.e190,
-     cars.evo,
-     cars.z370,
-     cars.r34,
-     cars.sx240,
-     cars.firebird,
-     cars.p911,
-     cars.b22,
-     cars.gt86,
-     cars.a80,
-     cars.ae86,
-     cars.corrado,
-     cars.golf]
+    hc
 ));
 
 roadSpecials.push(events.length);
@@ -185,7 +148,8 @@ events.push(new Event("Endurance: " +
     "between 20 and 30 minutes.",
     roadCircuits[7].name + " Circuit",
     "147 109 808",
-    "road", "endu", "double"));
+    "road", "endu", "double"
+));
 
 dirtSpecials.push(events.length);
 events.push(new Event("Endurance: " +
@@ -197,7 +161,8 @@ events.push(new Event("Endurance: " +
     "between 20 and 30 minutes.",
     dirtScrambles[0].name + " Scramble",
     "149 664 189",
-    "dirt", "endu", "double"));
+    "dirt", "endu", "double"
+));
 
 roadSpecials.push(events.length);
 events.push(new Event("American All-Stars: Dunas Blancas Sprint",
@@ -206,18 +171,7 @@ events.push(new Event("American All-Stars: Dunas Blancas Sprint",
     "Dunas Blancas Sprint",
     "719 725 279",
     "road", "spec", "normal", 780,
-    [cars.regal,
-     cars.ats,
-     cars.corvette,
-     cars.camaro,
-     cars.challenger,
-     cars.charger,
-     cars.mustang,
-     cars.focus,
-     cars.cobra,
-     cars.sierra,
-     cars.boss,
-     cars.firebird]
+    american
 ));
 
 dirtSpecials.push(events.length);
@@ -227,18 +181,7 @@ events.push(new Event("American All-Stars: Baja California Trail",
     "Baja California Trail",
     "165 262 645",
     "dirt", "spec", "normal", 780,
-    [cars.regal,
-     cars.ats,
-     cars.corvette,
-     cars.camaro,
-     cars.challenger,
-     cars.charger,
-     cars.mustang,
-     cars.focus,
-     cars.cobra,
-     cars.sierra,
-     cars.boss,
-     cars.firebird]
+    american
 ));
 
 roadSpecials.push(events.length);
@@ -248,22 +191,7 @@ events.push(new Event("European All-Stars: Llanura Sprint",
     "Llanura Sprint",
     "141 574 519",
     "road", "spec", "normal", 780,
-    [cars.tt,
-     cars.m2,
-     cars.m3,
-     cars.f355,
-     cars.xkr,
-     cars.exige,
-     cars.c63,
-     cars.e190,
-     cars.mini,
-     cars.cayman,
-     cars.p944,
-     cars.p911,
-     cars.megane,
-     cars.corrado,
-     cars.golf,
-     cars.v242]
+    european
 ));
 
 dirtSpecials.push(events.length);
@@ -273,22 +201,7 @@ events.push(new Event("European All-Stars: Fuera del Camino Trail",
     "Fuera del Camino Trail",
     "137 089 941",
     "dirt", "spec", "normal", 780,
-    [cars.tt,
-     cars.m2,
-     cars.m3,
-     cars.f355,
-     cars.xkr,
-     cars.exige,
-     cars.c63,
-     cars.e190,
-     cars.mini,
-     cars.cayman,
-     cars.p944,
-     cars.p911,
-     cars.megane,
-     cars.corrado,
-     cars.golf,
-     cars.v242]
+    european
 ));
 
 roadSpecials.push(events.length);
@@ -298,27 +211,7 @@ events.push(new Event("Japanese All-Stars: Riviera Sprint",
     "Riviera Sprint",
     "957 580 514",
     "road", "spec", "normal", 780,
-    [cars.integra,
-     cars.fk8,
-     cars.ek9,
-     cars.nsx,
-     cars.rcf,
-     cars.sc300,
-     cars.fd,
-     cars.miata,
-     cars.fc,
-     cars.evo,
-     cars.gto,
-     cars.eclipse,
-     cars.z370,
-     cars.r34,
-     cars.sx240,
-     cars.b22,
-     cars.a90,
-     cars.gt86,
-     cars.a80,
-     cars.celica,
-     cars.ae86]
+    japanese
 ));
 
 dirtSpecials.push(events.length);
@@ -328,27 +221,7 @@ events.push(new Event("Japanese All-Stars: Tulum Trail",
     "Tulum Trail",
     "118 732 056",
     "dirt", "spec", "normal", 780,
-    [cars.integra,
-     cars.fk8,
-     cars.ek9,
-     cars.nsx,
-     cars.rcf,
-     cars.sc300,
-     cars.fd,
-     cars.miata,
-     cars.fc,
-     cars.evo,
-     cars.gto,
-     cars.eclipse,
-     cars.z370,
-     cars.r34,
-     cars.sx240,
-     cars.b22,
-     cars.a90,
-     cars.gt86,
-     cars.a80,
-     cars.celica,
-     cars.ae86]
+    japanese
 ));
 
 const iSpecialsEnd = events.length;
@@ -367,7 +240,8 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
     "Horizon Baja Scramble 7L",
     "225 814 856",
     "both", "show", "podium", 0, [],
-    "vintageHatches"));
+    "vintageHatches"
+));
 
 events.push(new Event("Showcase: Fairlady vs. 2000GT",
     events.length,
@@ -380,7 +254,8 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
     "Horizon Mexico Circuit 7L",
     "180 247 097",
     "both", "show", "all", 0, [],
-    "vintageSports"));
+    "vintageSports"
+));
 
 events.push(new Event("Showcase: Vintage Explorers",
     events.length,
@@ -390,7 +265,8 @@ events.push(new Event("Showcase: Vintage Explorers",
     "The Titan",
     "169 663 287",
     "both", "show", "double", 0, [],
-    "vintageExplorers"));
+    "vintageExplorers"
+));
 
 events.push(new Event("Showcase: 80s Supercars",
     events.length,
@@ -403,7 +279,8 @@ events.push(new Event("Showcase: 80s Supercars",
     "The Marathon",
     "894 091 504",
     "both", "show", "double", 0, [],
-    "super80s"));
+    "super80s"
+));
 
 events.push(new Event("Showcase: 90s Supercars",
     events.length,
@@ -416,7 +293,8 @@ events.push(new Event("Showcase: 90s Supercars",
     "The Goliath",
     "509 774 586",
     "both", "show", "all", 0, [],
-    "super90s"));
+    "super90s"
+));
 
 const iShowcasesEnd = events.length;
 const iRoadsStart = events.length;
@@ -427,7 +305,8 @@ for (let t = 0; t < roadCircuits.length; t++) {
         "Finish in the top half to get prize money!",
         roadCircuits[t].name + " Circuit",
         roadCircuits[t].sharecode,
-        "road"));
+        "road"
+    ));
 }
 
 const iRoadsEnd = events.length;
@@ -439,7 +318,8 @@ for (let t = 0; t < dirtScrambles.length; t++) {
         "Finish in the top half to get prize money!",
         dirtScrambles[t].name + " Scramble",
         dirtScrambles[t].sharecode,
-        "dirt"));
+        "dirt"
+    ));
 }
 
 const iDirtsEnd = events.length;

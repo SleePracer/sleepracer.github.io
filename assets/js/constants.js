@@ -108,517 +108,665 @@ const cars = {
     v242:       49
 };
 
+const classicMuscle = [
+    cars.camaro,
+    cars.charger,
+    cars.boss
+];
+const dtm = [
+    cars.m3,
+    cars.cobra,
+    cars.sierra,
+    cars.e190,
+    cars.v242
+];
+const fnf = [
+    cars.integra,
+    cars.regal,
+    cars.camaro,
+    cars.charger,
+    cars.boss,
+    cars.fd,
+    cars.eclipse,
+    cars.r34,
+    cars.a80
+];
+const wrc = [
+    cars.delta,
+    cars.evo,
+    cars.b22,
+    cars.celica
+];
+const hc = [
+    cars.tt,
+    cars.m3,
+    cars.camaro,
+    cars.charger,
+    cars.sierra,
+    cars.xkr,
+    cars.delta,
+    cars.exige,
+    cars.fd,
+    cars.miata,
+    cars.e190,
+    cars.evo,
+    cars.z370,
+    cars.r34,
+    cars.sx240,
+    cars.firebird,
+    cars.p911,
+    cars.b22,
+    cars.gt86,
+    cars.a80,
+    cars.ae86,
+    cars.corrado,
+    cars.golf
+];
+const american = [
+    cars.regal,
+    cars.ats,
+    cars.corvette,
+    cars.camaro,
+    cars.challenger,
+    cars.charger,
+    cars.mustang,
+    cars.focus,
+    cars.cobra,
+    cars.sierra,
+    cars.boss,
+    cars.firebird
+];
+const european = [
+    cars.tt,
+    cars.m2,
+    cars.m3,
+    cars.f355,
+    cars.xkr,
+    cars.delta,
+    cars.exige,
+    cars.c63,
+    cars.e190,
+    cars.mini,
+    cars.cayman,
+    cars.p944,
+    cars.p911,
+    cars.megane,
+    cars.corrado,
+    cars.golf,
+    cars.v242
+];
+const japanese = [
+    cars.integra,
+    cars.fk8,
+    cars.ek9,
+    cars.nsx,
+    cars.rcf,
+    cars.sc300,
+    cars.fd,
+    cars.miata,
+    cars.fc,
+    cars.evo,
+    cars.gto,
+    cars.eclipse,
+    cars.z370,
+    cars.r34,
+    cars.sx240,
+    cars.b22,
+    cars.a90,
+    cars.gt86,
+    cars.a80,
+    cars.celica,
+    cars.ae86
+];
+
 const integra = {
     name: "Integra Type R",
+    year: 2001,
     id: cars.integra,
     make: makes.acura,
     model: 1,
     pi: 596,
+    cage: 600,
     cost: 42000, // 25k
-    year: 2001,
     special: 1 // fnf
 };
 const tt = {
     name: "TT RS Coupé",
+    year: 2010,
     id: cars.tt,
     make: makes.audi,
     model: 1,
     pi: 707,
+    cage: 709,
     cost: 84000, // 66k
-    year: 2010,
     special: 1 // hc
 };
 const m2 = {
     name: "M2 Coupé",
+    year: 2016,
     id: cars.m2,
     make: makes.bmw,
     model: 1,
     pi: 718,
+    cage: 720,
     cost: 84000, // 69k
-    year: 2016,
     special: 0
 };
 const m3 = {
     name: "M3",
+    year: 1991,
     id: cars.m3,
     make: makes.bmw,
     model: 2,
     pi: 583,
+    cage: 586,
     cost: 36000, // 70k
-    year: 1991,
     special: 2 // dtm, hc
 };
 const regal = {
     name: "Regal GNX",
+    year: 1987,
     id: cars.regal,
     make: makes.buick,
     model: 1,
     pi: 564,
+    cage: 577,
     cost: 26000, // 130k
-    year: 1987,
     special: 1 // fnf
 };
 const ats = {
     name: "ATS-V",
+    year: 2016,
     id: cars.ats,
     make: makes.cadillac,
     model: 1,
     pi: 716,
+    cage: 718,
     cost: 88000, // 65k
-    year: 2016,
     special: 0
 };
 const corvette = {
     name: "Corvette ZR-1",
+    year: 1995,
     id: cars.corvette,
     make: makes.chevrolet,
     model: 1,
     pi: 693,
+    cage: 698,
     cost: 68000, // 45k
-    year: 1995,
     special: 0
 };
 const camaro = {
     name: "Camaro Super Sport Coupe",
+    year: 1969,
     id: cars.camaro,
     make: makes.chevrolet,
     model: 2,
     pi: 585,
+    cage: 594,
     cost: 32000, // 110k
-    year: 1969,
     special: 3 // cm, fnf, hc
 };
 const challenger = {
     name: "Challenger SRT Hellcat",
+    year: 2015,
     id: cars.challenger,
     make: makes.dodge,
     model: 1,
     pi: 755,
+    cage: 761,
     cost: 94000, // 75k
-    year: 2015,
     special: 0
 };
 const charger = {
     name: "Charger R/T",
+    year: 1969,
     id: cars.charger,
     make: makes.dodge,
     model: 2,
     pi: 548,
-    rollcage: 562,
+    cage: 562,
     cost: 32000, // 103k
-    year: 1969,
     special: 3 // cm, fnf, hc
 };
 const f355 = {
     name: "F355 Berlinetta",
+    year: 1994,
     id: cars.f355,
     make: makes.ferrari,
     model: 1,
     pi: 717,
+    cage: 718,
     cost: 142000, // 190k
-    year: 1994,
     special: 0
 };
 const mustang = {
     name: "Mustang GT",
+    year: 2018,
     id: cars.mustang,
     make: makes.ford,
     model: 1,
     pi: 756,
+    cage: 758,
     cost: 88000, // 40k
-    year: 2018,
     special: 0
 };
 const focus = {
     name: "Focus RS",
+    year: 2009,
     id: cars.focus,
     make: makes.ford,
     model: 2,
     pi: 660,
+    cage: 662,
     cost: 44000, // 25k
-    year: 2009,
     special: 0
 };
 const cobra = {
     name: "SVT Cobra R",
+    year: 1993,
     id: cars.cobra,
     make: makes.ford,
     model: 3,
     pi: 539,
-    rollcage: 545,
+    cage: 545,
     cost: 24000, // 28k
-    year: 1993,
     special: 1 // dtm
 };
 const sierra = {
     name: "Sierra Cosworth RS500",
+    year: 1987,
     id: cars.sierra,
     make: makes.ford,
     model: 4,
     pi: 604,
+    cage: 605,
     cost: 42000, // 66k
-    year: 1987,
     special: 2 // dtm, hc
 };
 const boss = {
     name: "Mustang Boss 302",
+    year: 1969,
     id: cars.boss,
     make: makes.ford,
     model: 5,
     pi: 581,
+    cage: 587,
     cost: 34000, // 230k
-    year: 1969,
     special: 2 // cm, fnf
 };
 const fk8 = {
     name: "Civic Type R",
+    year: 2018,
     id: cars.fk8,
     make: makes.honda,
     model: 1,
     pi: 727,
+    cage: 729,
     cost: 78000, // 59k
-    year: 2018,
     special: 0
 };
 const ek9 = {
     name: "Civic Type R",
+    year: 1997,
     id: cars.ek9,
     make: makes.honda,
     model: 2,
     pi: 553,
-    rollcage: 558,
+    cage: 558,
     cost: 22000, // 25k
-    year: 1997,
     special: 0
 };
 const nsx = {
     name: "NSX-R",
+    year: 1992,
     id: cars.nsx,
     make: makes.honda,
     model: 3,
     pi: 691,
+    cage: 693,
     cost: 72000, // 90k
-    year: 1992,
     special: 0
 };
 const xkr = {
     name: "XKR-S",
+    year: 2012,
     id: cars.xkr,
     make: makes.jaguar,
     model: 1,
     pi: 756,
+    cage: 759,
     cost: 102000, // 100k
-    year: 2012,
     special: 1 // hc
 };
 const delta = {
-    name: "Delta",
+    name: "Delta HF Integrale Evo",
+    year: 1992,
     id: cars.delta,
     make: makes.lancia,
     model: 1,
-    pi: 100,
-    cost: 1,
-    year: 1990,
-    special: 1
+    pi: 602,
+    cage: 604,
+    cost: 52000, // 100k
+    special: 2 // wrc, hc
 };
 const rcf = {
     name: "RC F",
+    year: 2015,
     id: cars.rcf,
     make: makes.lexus,
     model: 1,
     pi: 741,
+    cage: 743,
     cost: 94000, // 75k
-    year: 2015,
     special: 0
 };
 const sc300 = {
     name: "SC300",
+    year: 1997,
     id: cars.sc300,
     make: makes.lexus,
     model: 2,
     pi: 555,
-    rollcage: 558,
+    cage: 558,
     cost: 24000, // 25k
-    year: 1997,
     special: 0
 };
 const exige = {
     name: "Exige S",
+    year: 2012,
     id: cars.exige,
     make: makes.lotus,
     model: 1,
     pi: 754,
+    cage: 756,
     cost: 92000, // 85k
-    year: 2012,
     special: 1 // hc
 };
 const fd = {
     name: "RX-7",
+    year: 1997,
     id: cars.fd,
     make: makes.mazda,
     model: 1,
     pi: 645,
+    cage: 647,
     cost: 54000, // 35k
-    year: 1997,
     special: 2 // fnf, hc
 };
 const miata = {
     name: "MX-5 Miata",
+    year: 1994,
     id: cars.miata,
     make: makes.mazda,
     model: 2,
     pi: 445,
-    rollcage: 446,
+    cage: 446,
     cost: 12000, // 25k
-    year: 1994,
     special: 1 // hc
 };
 const fc = {
     name: "Savanna RX-7",
+    year: 1990,
     id: cars.fc,
     make: makes.mazda,
     model: 3,
     pi: 558,
-    rollcage: 560,
+    cage: 560,
     cost: 26000, // 25k
-    year: 1990,
     special: 0
 };
 const c63 = {
     name: "C 63 AMG Coupé Black Series",
+    year: 2012,
     id: cars.c63,
     make: makes.mercedes,
     model: 1,
     pi: 768,
+    cage: 770,
     cost: 96000, // 150k
-    year: 2012,
     special: 1 // hc
 };
 const e190 = {
     name: "190E 2.5-16 Evolution II",
+    year: 1990,
     id: cars.e190,
     make: makes.mercedes,
     model: 2,
     pi: 579,
+    cage: 583,
     cost: 36000, // 150k
-    year: 1990,
     special: 1 // dtm
 };
 const mini = {
     name: "John Cooper Works GP",
+    year: 2021,
     id: cars.mini,
     make: makes.mini,
     model: 1,
     pi: 719,
+    cage: 721,
     cost: 74000, // 42k
-    year: 2021,
     special: 0
 };
 const evo = {
     name: "Lancer Evolution VI GSR",
+    year: 1999,
     id: cars.evo,
     make: makes.mitsubishi,
     model: 1,
     pi: 659,
+    cage: 662,
     cost: 58000, // 28k
-    year: 1999,
     special: 2 // wrc, hc
 };
 const gto = {
     name: "GTO",
+    year: 1997,
     id: cars.gto,
     make: makes.mitsubishi,
     model: 2,
     pi: 610,
+    cage: 614,
     cost: 56000, // 20k
-    year: 1997,
     special: 0
 };
 const eclipse = {
     name: "Eclipse GSX",
+    year: 1995,
     id: cars.eclipse,
     make: makes.mitsubishi,
     model: 3,
     pi: 543,
-    rollcage: 545,
+    cage: 545,
     cost: 24000, // 25k
-    year: 1995,
     special: 1 // fnf
 };
 const z370 = {
     name: "370Z",
+    year: 2010,
     id: cars.z370,
     make: makes.nissan,
     model: 1,
     pi: 688,
+    cage: 690,
     cost: 52000, // 40k
-    year: 2010,
     special: 1 // hc
 };
 const r34 = {
     name: "Skyline GT-R V-Spec II",
+    year: 2002,
     id: cars.r34,
     make: makes.nissan,
     model: 2,
     pi: 657,
+    cage: 659,
     cost: 58000, // 63k
-    year: 2002,
     special: 2 // fnf, hc
 };
 const sx240 = {
     name: "240SX SE",
+    year: 1993,
     id: cars.sx240,
     make: makes.nissan,
     model: 3,
     pi: 445,
-    rollcage: 451,
+    cage: 451,
     cost: 16000, // 25k
-    year: 1993,
     special: 1 // hc
 };
 const firebird = {
     name: "Firebird Trans AM",
+    year: 1977,
     id: cars.firebird,
     make: makes.pontiac,
     model: 1,
     pi: 418,
-    rollcage: 436,
+    cage: 436,
     cost: 16000, // 45k
-    year: 1977,
     special: 1 // hc
 };
 const cayman = {
     name: "Cayman GTS",
+    year: 2015,
     id: cars.cayman,
     make: makes.porsche,
     model: 1,
     pi: 767,
+    cage: 769,
     cost: 112000, // 80k
-    year: 2015,
     special: 0
 };
 const p944 = {
     name: "944 Turbo",
+    year: 1989,
     id: cars.p944,
     make: makes.porsche,
     model: 2,
     pi: 651,
+    cage: 654,
     cost: 62000, // 35k
-    year: 1989,
     special: 0
 };
 const p911 = {
     name: "911 Turbo 3.3",
+    year: 1982,
     id: cars.p911,
     make: makes.porsche,
     model: 3,
     pi: 666,
+    cage: 668,
     cost: 86000, // 150k
-    year: 1982,
     special: 1 // hc
 };
 const megane = {
     name: "Megane R.S.",
+    year: 2018,
     id: cars.megane,
     make: makes.renault,
     model: 1,
     pi: 670,
+    cage: 670,
     cost: 48000, // 37k
-    year: 2018,
     special: 0
 };
 const b22 = {
     name: "Impreza 22B-STI Version",
+    year: 1998,
     id: cars.b22,
     make: makes.subaru,
     model: 1,
     pi: 640,
+    cage: 641,
     cost: 64000, // 110k
-    year: 1998,
     special: 2 // wrc, hc
 };
 const a90 = {
     name: "GR Supra",
+    year: 2020,
     id: cars.a90,
     make: makes.toyota,
     model: 1,
     pi: 731,
+    cage: 732,
     cost: 82000, // 55k
-    year: 2020,
     special: 0
 };
 const gt86 = {
     name: "86",
+    year: 2013,
     id: cars.gt86,
     make: makes.toyota,
     model: 2,
     pi: 579,
+    cage: 581,
     cost: 38000, // 28.8k
-    year: 2013,
     special: 1 // hc
 };
 const a80 = {
     name: "Supra RZ",
+    year: 1998,
     id: cars.a80,
     make: makes.toyota,
     model: 3,
     pi: 646,
+    cage: 648,
     cost: 54000, // 38k
-    year: 1998,
     special: 2 // fnf, hc
 };
 const celica = {
     name: "Celica GT-Four ST205",
+    year: 1994,
     id: cars.celica,
     make: makes.toyota,
     model: 4,
-    pi: 590,
+    pi: 591,
+    cage: 594,
     cost: 48000, // 20k
-    year: 1994,
     special: 1 // wrc
 };
 const ae86 = {
     name: "Sprinter Trueno GT Apex",
+    year: 1985,
     id: cars.ae86,
     make: makes.toyota,
     model: 5,
     pi: 480,
-    rollcage: 485,
+    cage: 485,
     cost: 14000, // 20k
-    year: 1985,
     special: 1 // hc
 };
 const corrado = {
     name: "Corrado VR6",
+    year: 1995,
     id: cars.corrado,
     make: makes.volkswagen,
     model: 1,
     pi: 533,
-    rollcage: 537,
+    cage: 537,
     cost: 24000, // 20k
-    year: 1995,
     special: 1 // hc
 };
 const golf = {
     name: "Golf GTI 16V MK2",
+    year: 1992,
     id: cars.golf,
     make: makes.volkswagen,
     model: 2,
     pi: 429,
-    rollcage: 435,
+    cage: 435,
     cost: 12000, // 20k
-    year: 1992,
     special: 1 // hc
 };
 const v242 = {
     name: "242 Turbo Evolution",
+    year: 1983,
     id: cars.v242,
     make: makes.volvo,
     model: 1,
     pi: 548,
-    rollcage: 555,
+    cage: 555,
     cost: 22000, // 45k
-    year: 1983,
     special: 1 // dtm
 };
 
@@ -772,20 +920,20 @@ const rustBuckets = [null,
 ];
 
 const fiestaxr2 = {
-    name: "Fiesta XR2",
     make: "Ford",
+    name: "Fiesta XR2",
     year: 1981,
     sharecode: "106 479 211"
 };
 const civicrs = {
-    name: "Civic RS",
     make: "Honda",
+    name: "Civic RS",
     year: 1974,
     sharecode: "226 758 458"
 };
 const golfgti = {
-    name: "Golf GTI",
     make: "Volkswagen",
+    name: "Golf GTI",
     year: 1983,
     sharecode: "110 055 064"
 };
@@ -801,20 +949,20 @@ const vintageHatches = {
 };
 
 const bronco = {
-    name: "Bronco",
     make: "Ford",
+    name: "Bronco",
     year: 1975,
     sharecode: "282 480 610"
 };
 const scout = {
-    name: "Scout 800A",
     make: "International",
+    name: "Scout 800A",
     year: 1970,
     sharecode: "786 531 552"
 };
 const fj40 = {
-    name: "FJ40",
     make: "Toyota",
+    name: "FJ40",
     year: 1979,
     sharecode: "539 560 580"
 };
@@ -830,14 +978,14 @@ const vintageExplorers = {
 };
 
 const fairlady = {
-    name: "Fairlady Z 432",
     make: "Nissan",
+    name: "Fairlady Z 432",
     year: 1969,
     sharecode: "Stock"
 };
 const gt2000 = {
-    name: "2000GT",
     make: "Toyota",
+    name: "2000GT",
     year: 1969,
     sharecode: "Stock"
 };
@@ -852,20 +1000,20 @@ const vintageSports = {
 };
 
 const f40 = {
-    name: "F40",
     make: "Ferrari",
+    name: "F40",
     year: 1987,
     sharecode: "158 350 366"
 };
 const countach = {
-    name: "Countach LP5000 QV",
     make: "Lamborghini",
+    name: "Countach LP5000 QV",
     year: 1988,
     sharecode: "715 133 482"
 };
 const p959 = {
-    name: "959",
     make: "Porsche",
+    name: "959",
     year: 1987,
     sharecode: "138 366 112"
 };
@@ -881,32 +1029,32 @@ const super80s = {
 };
 
 const eb110 = {
-    name: "EB110 Super Sport",
     make: "Bugatti",
+    name: "EB110 Super Sport",
     year: 1992,
     sharecode: "934 682 185"
 };
 const f50 = {
-    name: "F50",
     make: "Ferrari",
+    name: "F50",
     year: 1995,
     sharecode: "139 425 209"
 };
 const xj220 = {
-    name: "XJ220",
     make: "Jaguar",
+    name: "XJ220",
     year: 1993,
     sharecode: "734 670 250"
 };
 const diablo = {
-    name: "Diablo SV",
     make: "Lamborghini",
+    name: "Diablo SV",
     year: 1997,
     sharecode: "676 750 822"
 };
 const f1 = {
-    name: "F1",
     make: "McLaren",
+    name: "F1",
     year: 1993,
     sharecode: "179 587 003"
 };

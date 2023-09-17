@@ -336,7 +336,7 @@ function fakeStateTest() {
                                    name: iName,
                                    make: iMake,
                                    model: iModel,
-                                   pi: carDataM[iMake][iModel].rollcage,
+                                   pi: carDataM[iMake][iModel].cage,
                                    value: rustCarValue,
                                    rust: true});
             break;
@@ -383,7 +383,7 @@ function fakeStateTest() {
                                    name: bName,
                                    make: bMake,
                                    model: bModel,
-                                   pi: carDataM[bMake][bModel].rollcage,
+                                   pi: carDataM[bMake][bModel].cage,
                                    value: rustCarValue,
                                    rust: true});
             break;

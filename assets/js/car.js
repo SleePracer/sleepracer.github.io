@@ -22,7 +22,7 @@ class Car {
         this.value = 0;
         this.rust = rust;
         if (rust) {
-            this.pi = carDataV[id].rollcage;
+            this.pi = carDataV[id].cage;
             this.value = rustCarValue;
         } else {
             this.pi = carDataV[id].pi;

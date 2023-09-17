@@ -15,7 +15,7 @@ function garageOptions(show = false) {
         if (state.rust !== 0) {
             eNewRustName.style.display = "block";
             eNewRustBuy.style.display = "block";
-            eNewRustPI.innerHTML = addClassToPI(carDataV[rustBuckets[state.rust]].rollcage);
+            eNewRustPI.innerHTML = addClassToPI(carDataV[rustBuckets[state.rust]].cage);
             eNewRustValue.innerHTML = moneyToString(10000);
             eNewRustValue.style.color = "inherit";
             if (10000 > state.money) {
@@ -234,7 +234,7 @@ function addRust(action = []) {
         return;
     }
 
-    let newPI = carDataM[newMake][newModel].rollcage;
+    let newPI = carDataM[newMake][newModel].cage;
     let newCost = 10000;
 
     // Check if the player can afford the car
