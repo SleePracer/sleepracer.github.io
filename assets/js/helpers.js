@@ -117,14 +117,13 @@ function moneyToString(money) {
 
 function hasBuyableModel(make) {
     let iMake = toPositiveInt(make);
-    if (iMake === 0 || iMake >= carList.length) {
+    if (iMake === 0 || iMake >= carDataM.length) {
         return;
     }
 
     let foundModel = false;
-    for (let iModel = 1; iModel < carList[iMake].length; iModel++) {
-        if (state.lvl >= piToClass(carList[iMake][iModel].pi)
-         && carList[iMake][iModel].buyable) {
+    for (let iModel = 1; iModel < carDataM[iMake].length; iModel++) {
+        if (state.lvl >= piToClass(carDataM[iMake][iModel].pi)) {
             foundModel = true;
         }
     }

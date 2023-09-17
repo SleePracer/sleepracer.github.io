@@ -31,7 +31,7 @@ function clearNewCarModel() {
     // Add "Choose model"
     let modelOption = document.createElement("option");
     modelOption.value = 0;
-    modelOption.text = carList[0][1];
+    modelOption.text = carDataM[0][1];
     eNewCarModel.appendChild(modelOption);
 }
 
@@ -190,17 +190,17 @@ function getAchievements() {
     // Check cars
     let carsBought = 0;
     let rePaints = 0;
-    let boughtFerrari = false
+    let boughtFerrari = false;
     let sumSpecials = 0;
     for (let iAction = 0; iAction < state.actions.length; iAction++) {
         if(state.actions[iAction][0] === "i") {
-            sumSpecials += carList[state.actions[iAction][3]][state.actions[iAction][4]].special;
+            sumSpecials += carDataV[state.actions[iAction][3]].special;
         } else if(state.actions[iAction][0] === "c") {
             carsBought++;
-            if (state.actions[iAction][2] === 9) {
+            if (state.actions[iAction][2] === cars.f355) {
                 boughtFerrari = true;
             }
-            sumSpecials += carList[state.actions[iAction][2]][state.actions[iAction][3]].special;
+            sumSpecials += carDataV[state.actions[iAction][2]].special;
         }
         if(state.actions[iAction][0] === "p") {
             rePaints++;
@@ -325,28 +325,30 @@ function fakeStateTest() {
           case "i":
             let iPlayerName = thisAction[1];
             let iName = thisAction[2];
-            let iMake = thisAction[3];
-            let iModel = thisAction[4];
+            let iID = thisAction[3];
+            let iMake = carDataV[iID].make;
+            let iModel = carDataV[iID].model;
 
             fakeState.lvl = 2;
             fakeState.xp = classXP[fakeState.lvl] / 10;
             fakeState.name = iPlayerName;
-            fakeState.cars.push({iCar: fakeState.cars.length,
-                                 name: iName,
-                                 make: iMake,
-                                 model: iModel,
-                                 pi: carList[iMake][iModel].rollcage,
-                                 value: rustCarValue,
-                                 rust: true});
+            fakeState.garage.push({iCar: fakeState.garage.length,
+                                   name: iName,
+                                   make: iMake,
+                                   model: iModel,
+                                   pi: carDataM[iMake][iModel].rollcage,
+                                   value: rustCarValue,
+                                   rust: true});
             break;
           case "c":
             let cName = thisAction[1];
-            let cMake = thisAction[2];
-            let cModel = thisAction[3];
-            let cUsedB = thisAction[4];
-            let cUsedA = thisAction[5];
+            let cID = thisAction[2];
+            let cMake = carDataV[cID].make;
+            let cModel = carDataV[cID].model;
+            let cUsedB = thisAction[3];
+            let cUsedA = thisAction[4];
 
-            let cCost = carList[cMake][cModel].cost;
+            let cCost = carDataM[cMake][cModel].cost;
             if (cUsedB) {
                 cCost -= 20000;
                 fakeState.discountB = false;
@@ -360,47 +362,48 @@ function fakeStateTest() {
             }
 
             fakeState.money -= cCost;
-            fakeState.cars.push({iCar: fakeState.cars.length,
-                                 name: cName,
-                                 make: cMake,
-                                 model: cModel,
-                                 pi: carList[cMake][cModel].pi,
-                                 value: Math.floor(0.9 * carList[cMake][cModel].cost),
-                                 rust: false});
+            fakeState.garage.push({iCar: fakeState.garage.length,
+                                   name: cName,
+                                   make: cMake,
+                                   model: cModel,
+                                   pi: carDataM[cMake][cModel].pi,
+                                   value: Math.floor(0.9 * carDataM[cMake][cModel].cost),
+                                   rust: false});
             break;
           case "b":
             let bName = thisAction[1];
-            let bMake = thisAction[2];
-            let bModel = thisAction[3];
+            let bID = thisAction[2];
+            let bMake = carDataV[bID].make;
+            let bModel = carDataV[bID].model;
 
             let bCost = 10000;
 
             fakeState.money -= bCost;
-            fakeState.cars.push({iCar: fakeState.cars.length,
-                                 name: bName,
-                                 make: bMake,
-                                 model: bModel,
-                                 pi: carList[bMake][bModel].rollcage,
-                                 value: rustCarValue,
-                                 rust: true});
+            fakeState.garage.push({iCar: fakeState.garage.length,
+                                   name: bName,
+                                   make: bMake,
+                                   model: bModel,
+                                   pi: carDataM[bMake][bModel].rollcage,
+                                   value: rustCarValue,
+                                   rust: true});
             break;
           case "u":
             let uCar = thisAction[1];
             let uPI = thisAction[2];
             let uCost = thisAction[3];
 
-            fakeState.cars[uCar].pi = uPI;
-            fakeState.cars[uCar].value += Math.floor(0.5 * uCost);
+            fakeState.garage[uCar].pi = uPI;
+            fakeState.garage[uCar].value += Math.floor(0.5 * uCost);
             fakeState.money -= uCost;
             break;
           case "p":
             let pCar = thisAction[1];
 
-            fakeState.cars[pCar].value += 2500;
+            fakeState.garage[pCar].value += 2500;
             fakeState.money -= 5000;
-            if (fakeState.cars[pCar].rust) {
-                fakeState.cars[pCar].value += Math.floor(0.2 * carList[fakeState.cars[pCar].make][fakeState.cars[pCar].model].cost);
-                fakeState.cars[pCar].rust = false;
+            if (fakeState.garage[pCar].rust) {
+                fakeState.garage[pCar].value += Math.floor(0.2 * carDataM[fakeState.garage[pCar].make][fakeState.garage[pCar].model].cost);
+                fakeState.garage[pCar].rust = false;
             }
             break;
           case "s":
@@ -408,10 +411,10 @@ function fakeStateTest() {
             let sValue = thisAction[2];
 
             fakeState.money += sValue;
-            for (let jCar = (sCar + 1); jCar < fakeState.cars.length; jCar++) {
-                fakeState.cars[jCar].iCar--;
+            for (let jCar = (sCar + 1); jCar < fakeState.garage.length; jCar++) {
+                fakeState.garage[jCar].iCar--;
             }
-            fakeState.cars.splice(sCar, 1);
+            fakeState.garage.splice(sCar, 1);
             break;
           case "r":
             let rEvent = thisAction[1];
@@ -433,10 +436,10 @@ function fakeStateTest() {
 
             // depreciate
             if (rEvent < 19 || rEvent > 23) {
-                let max = 0.1 * fakeState.cars[rCar].value;
-                fakeState.cars[rCar].value -= Math.floor(max
-                                       * rDamage / (rDamage + 50));
-                fakeState.cars[rCar].value -= Math.floor(0.005 * fakeState.cars[rCar].value);
+                let max = 0.1 * fakeState.garage[rCar].value;
+                fakeState.garage[rCar].value -= Math.floor(max
+                                              * rDamage / (rDamage + 50));
+                fakeState.garage[rCar].value -= Math.floor(0.005 * fakeState.garage[rCar].value);
             }
 
             if (rEvent < 6 && rPosition !== 0) {
@@ -507,41 +510,41 @@ function fakeStateTest() {
         console.log("Fake: " + fakeState.money);
         allOK = false;
     }
-    if (state.cars.length !== fakeState.cars.length) {
+    if (state.garage.length !== fakeState.garage.length) {
         console.log("Cars mismatch!");
-        console.log("State: " + state.cars.length);
-        console.log("Fake: " + fakeState.cars.length);
+        console.log("State: " + state.garage.length);
+        console.log("Fake: " + fakeState.garage.length);
         allOK = false;
     }
-    for (let iCar = 0; iCar < state.cars.length; iCar++) {
-        if (state.cars[iCar].name !== fakeState.cars[iCar].name) {
+    for (let iCar = 0; iCar < state.garage.length; iCar++) {
+        if (state.garage[iCar].name !== fakeState.garage[iCar].name) {
             console.log("Cars name mismatch!");
-            console.log("State: " + state.cars[iCar].name);
-            console.log("Fake: " + fakeState.cars[iCar].name);
+            console.log("State: " + state.garage[iCar].name);
+            console.log("Fake: " + fakeState.garage[iCar].name);
             allOK = false;
         }
-        if (state.cars[iCar].make !== fakeState.cars[iCar].make) {
+        if (state.garage[iCar].make !== fakeState.garage[iCar].make) {
             console.log("Cars make mismatch!");
-            console.log("State: " + state.cars[iCar].make);
-            console.log("Fake: " + fakeState.cars[iCar].make);
+            console.log("State: " + state.garage[iCar].make);
+            console.log("Fake: " + fakeState.garage[iCar].make);
             allOK = false;
         }
-        if (state.cars[iCar].model !== fakeState.cars[iCar].model) {
+        if (state.garage[iCar].model !== fakeState.garage[iCar].model) {
             console.log("Cars model mismatch!");
-            console.log("State: " + state.cars[iCar].model);
-            console.log("Fake: " + fakeState.cars[iCar].model);
+            console.log("State: " + state.garage[iCar].model);
+            console.log("Fake: " + fakeState.garage[iCar].model);
             allOK = false;
         }
-        if (state.cars[iCar].pi !== fakeState.cars[iCar].pi) {
+        if (state.garage[iCar].pi !== fakeState.garage[iCar].pi) {
             console.log("Cars pi mismatch!");
-            console.log("State: " + state.cars[iCar].pi);
-            console.log("Fake: " + fakeState.cars[iCar].pi);
+            console.log("State: " + state.garage[iCar].pi);
+            console.log("Fake: " + fakeState.garage[iCar].pi);
             allOK = false;
         }
-        if (state.cars[iCar].value !== fakeState.cars[iCar].value) {
+        if (state.garage[iCar].value !== fakeState.garage[iCar].value) {
             console.log("Cars value mismatch!");
-            console.log("State: " + state.cars[iCar].value);
-            console.log("Fake: " + fakeState.cars[iCar].value);
+            console.log("State: " + state.garage[iCar].value);
+            console.log("Fake: " + fakeState.garage[iCar].value);
             allOK = false;
         }
     }
@@ -559,10 +562,10 @@ function updateState() {
     }
 
     // Update car name
-    if (state.cars.length > 0) {
+    if (state.garage.length > 0) {
         if (state.driving !== -1) {
-            eStateCar.innerText = state.cars[state.driving].name + " "
-                                + addClassToPI(state.cars[state.driving].pi);
+            eStateCar.innerText = state.garage[state.driving].name + " "
+                                + addClassToPI(state.garage[state.driving].pi);
             eEvents.style.display = "block";
         } else {
             eStateCar.innerText = "Not in a car!";
@@ -637,7 +640,7 @@ function updateState() {
     }
 
     // Show garage options if no cars
-    if (state.cars.length === 0) {
+    if (state.garage.length === 0) {
         garageOptions(true);
     }
 
@@ -649,15 +652,15 @@ function updateState() {
     // Add "Choose manufacturer"
     let baseMakeOption = document.createElement("option");
     baseMakeOption.value = 0;
-    baseMakeOption.text = carList[0][0];
+    baseMakeOption.text = carDataM[0][0];
     eNewCarMake.appendChild(baseMakeOption);
 
     // Add all buyable makes
-    for (let iMake = 1; iMake < carList.length; iMake++) {
+    for (let iMake = 1; iMake < carDataM.length; iMake++) {
         if (hasBuyableModel(iMake)) {
             let makeOption = document.createElement("option");
             makeOption.value = iMake;
-            makeOption.text = carList[iMake][0];
+            makeOption.text = carDataM[iMake][0];
             eNewCarMake.appendChild(makeOption);
         }
     }
@@ -670,12 +673,11 @@ function updateState() {
         eNewRustRow.style.display = "none";
     } else {
         eNewRustRow.style.display = "table-row";
-        let iMake = rustBuckets[state.rust][0];
-        let iModel = rustBuckets[state.rust][1];
+        let iID = rustBuckets[state.rust];
         eNewRustCar.innerHTML = "<span style=color:brown>Rusty</span> "
-                              + carList[iMake][0] + " "
-                              + carList[iMake][iModel].name + " ("
-                              + carList[iMake][iModel].year + ")";
+                              + carDataM[carDataV[iID].make][0] + " "
+                              + carDataV[iID].name + " ("
+                              + carDataV[iID].year + ")";
 
         eNewRustSale.innerHTML = "<span style=color:red>Rust bucket for sale!</span>";
     }
@@ -731,13 +733,13 @@ function setStateFromString(inputString) {
             addRust(thisAction);
             break;
           case "u":
-            state.cars[thisAction[1]].doUpgrade(thisAction);
+            state.garage[thisAction[1]].doUpgrade(thisAction);
             break;
           case "p":
-            state.cars[thisAction[1]].doPaint(true);
+            state.garage[thisAction[1]].doPaint(true);
             break;
           case "s":
-            state.cars[thisAction[1]].sell(thisAction);
+            state.garage[thisAction[1]].sell(thisAction);
             break;
           case "r":
             events[thisAction[1]].enter(true);

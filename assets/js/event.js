@@ -58,8 +58,8 @@ class Race {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
             this.setDeltaXP(loanCars.get(this.loanCar).pi);
         } else if (state.driving !== -1) {
-            this.setDeltaMoney(state.cars[state.driving].pi);
-            this.setDeltaXP(state.cars[state.driving].pi);
+            this.setDeltaMoney(state.garage[state.driving].pi);
+            this.setDeltaXP(state.garage[state.driving].pi);
         } else {
             this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
@@ -97,7 +97,7 @@ class Race {
     }
 
     setDeltaMoney(pi) {
-        let repairCost = state.cars[state.driving].repairCost(this.damage);
+        let repairCost = state.garage[state.driving].repairCost(this.damage);
         if (this.loanCar !== "none") {
             repairCost = Math.floor(this.damage * loanCars.get(this.loanCar).rep);
         }
@@ -194,7 +194,7 @@ class Race {
         // These are only used for damageRatio
         let prizeFactor = this.getPrize(2, pi)
                         + this.getPrize(this.position, pi);
-        let repairCost = state.cars[state.driving].repairCost(this.damage);
+        let repairCost = state.garage[state.driving].repairCost(this.damage);
         if (this.loanCar !== "none") {
             repairCost = Math.floor(this.damage
                                   * loanCars.get(this.loanCar).rep);
@@ -225,8 +225,8 @@ class Race {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
             this.setDeltaXP(loanCars.get(this.loanCar).pi);
         } else if (state.driving !== -1) {
-            this.setDeltaMoney(state.cars[state.driving].pi);
-            this.setDeltaXP(state.cars[state.driving].pi);
+            this.setDeltaMoney(state.garage[state.driving].pi);
+            this.setDeltaXP(state.garage[state.driving].pi);
         } else {
             this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
@@ -240,8 +240,8 @@ class Race {
             this.setDeltaMoney(loanCars.get(this.loanCar).pi);
             this.setDeltaXP(loanCars.get(this.loanCar).pi);
         } else if (state.driving !== -1) {
-            this.setDeltaMoney(state.cars[state.driving].pi);
-            this.setDeltaXP(state.cars[state.driving].pi);
+            this.setDeltaMoney(state.garage[state.driving].pi);
+            this.setDeltaXP(state.garage[state.driving].pi);
         } else {
             this.setDeltaMoney(classPI[0]);
             this.setDeltaXP(classPI[0]);
@@ -257,7 +257,7 @@ class Race {
         if (this.loanCar !== "none") {
             this.row.cells[2].innerText = moneyToString(Math.floor(this.damage * loanCars.get(this.loanCar).rep));
         } else {
-            this.row.cells[2].innerText = moneyToString(state.cars[state.driving].repairCost(this.damage));
+            this.row.cells[2].innerText = moneyToString(state.garage[state.driving].repairCost(this.damage));
         }
         this.row.cells[3].removeChild(this.finishButton);
         this.row.cells[3].innerText = moneyToString(this.deltaMoney);
@@ -297,11 +297,7 @@ class Race {
 
         // Depreciate value of car
         if (this.loanCar === "none") {
-            state.cars[driving].depreciate(damage);
-        }
-
-        if (action.length === 0) {
-            updateState();
+            state.garage[driving].depreciate(damage);
         }
     }
 }
@@ -417,11 +413,10 @@ class Event {
             garageOk = true;
             carModelOk = true;
         } else {
-            for (let iCar = 0; iCar < state.cars.length; iCar++) {
-                let iCarModel = state.cars[iCar].getModel();
+            for (let iCar = 0; iCar < state.garage.length; iCar++) {
+                let iCarID = state.garage[iCar].id;
                 for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                    if (iCarModel[0] === this.cars[iModel][0]
-                     && iCarModel[1] === this.cars[iModel][1]) {
+                    if (iCarID === this.cars[iModel]) {
                         garageOk = true;
                         if (iCar === state.driving) {
                             carModelOk = true;
@@ -436,8 +431,9 @@ class Event {
             garageOk = true;
         }
 
-        // For showcase events, garage is always true
+        // For showcase events, garage is always true, car is not
         if (this.eventType === "show") {
+            carModelOk = false;
             garageOk = true;
         }
 
@@ -451,7 +447,7 @@ class Event {
             if (state.lvl >= piToClass(this.pi)) {
                 playerClassOk = true;
             }
-            if (state.cars[state.driving].pi >= this.pi) {
+            if (state.garage[state.driving].pi >= this.pi) {
                 carClassOk = true;
             }
         }
@@ -460,16 +456,8 @@ class Event {
             playerClassOk = state.xp > 5000;
         }
 
-        if (this.loanCar === "vintageHatch") {
-            playerClassOk = state.xp > 3000;
-        } else if (this.loanCar === "vintageExplorer") {
-            playerClassOk = state.xp > 7000;
-        } else if (this.loanCar === "vintageSport") {
-            playerClassOk = state.xp > 30000;
-        } else if (this.loanCar === "80Super") {
-            playerClassOk = state.xp > 70000;
-        } else if (this.loanCar === "90Super") {
-            playerClassOk = state.xp > 300000;
+        if (this.eventType === "show") {
+            playerClassOk = state.xp > loanCars.get(this.loanCar).xp;
         }
 
         // Check if one of the next races
@@ -556,7 +544,7 @@ class Event {
             allInfo += "Progress to the top of your class to unlock!";
         } else if (this.eventType === "prog"
          && state.driving !== -1
-         && state.cars[state.driving].pi < this.pi) {
+         && state.garage[state.driving].pi < this.pi) {
             allInfo += "Build your car to the top of your class to unlock!";
         } else if (state.driving !== -1) {
             allInfo += "Event sharecode: " + this.sharecode;
@@ -572,11 +560,10 @@ class Event {
                 // Add eligible car models
                 allInfo += "\n\nEligible cars:\n";
                 for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                    let makeList = carList[this.cars[iModel][0]];
-                    let modelObj = makeList[this.cars[iModel][1]];
-                    allInfo += makeList[0] + " ";
-                    allInfo += modelObj.name + " (";
-                    allInfo += modelObj.year + ")\n";
+                    let iMake = carDataV[this.cars[iModel]].make;
+                    allInfo += carDataM[iMake][0] + " ";
+                    allInfo += carDataV[this.cars[iModel]].name + " (";
+                    allInfo += carDataV[this.cars[iModel]].year + ")\n";
                 }
             }
         }
@@ -585,10 +572,10 @@ class Event {
 
             // Add eligible car models
             allInfo += "\n\nBorrow one of:\n";
-            for (let iModel = 0; iModel < this.cars.length; iModel++) {
-                let makeList = carList[this.cars[iModel][0]];
-                let modelObj = makeList[this.cars[iModel][1]];
-                allInfo += makeList[0] + " ";
+            let nModels = loanCars.get(this.loanCar).cars.length;
+            for (let iModel = 0; iModel < nModels; iModel++) {
+                let modelObj = loanCars.get(this.loanCar).cars[iModel];
+                allInfo += modelObj.make + " ";
                 allInfo += modelObj.name + " ";
                 allInfo += modelObj.year + " (";
                 allInfo += modelObj.sharecode + ")\n";
@@ -798,9 +785,10 @@ class Event {
             if (podium && state.lvl === 4) {
                 state.discountA = true;
             }
-            if (action.length === 0) {
-                updateState();
-            }
+        }
+
+        if (action.length === 0) {
+            updateState();
         }
     }
 

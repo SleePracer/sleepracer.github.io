@@ -15,7 +15,7 @@ function garageOptions(show = false) {
         if (state.rust !== 0) {
             eNewRustName.style.display = "block";
             eNewRustBuy.style.display = "block";
-            eNewRustPI.innerHTML = addClassToPI(carList[rustBuckets[state.rust][0]][rustBuckets[state.rust][1]].rollcage);
+            eNewRustPI.innerHTML = addClassToPI(carDataV[rustBuckets[state.rust]].rollcage);
             eNewRustValue.innerHTML = moneyToString(10000);
             eNewRustValue.style.color = "inherit";
             if (10000 > state.money) {
@@ -36,16 +36,17 @@ function garageOptions(show = false) {
     }
 
     // Change display for all buttons for all cars
-    for (let iCar = 0; iCar < state.cars.length; iCar++) {
-        state.cars[iCar].garageOptionsButtons(newDisplay);
+    for (let iCar = 0; iCar < state.garage.length; iCar++) {
+        state.garage[iCar].garageOptionsButtons(newDisplay);
     }
     if (state.driving !== -1) {
-        state.cars[state.driving].getInButton.style.display = "none";
+        state.garage[state.driving].getInButton.style.display = "none";
     }
 }
 
+
 function calculateCost(make, model) {
-    let cost = carList[make][model].cost;
+    let cost = carDataM[make][model].cost;
     if (eNewCarDiscountBoxB.checked) {
         cost -= 20000;
     }
@@ -62,13 +63,15 @@ function addCar(action = []) {
     let newName = eNewCarName.value;
     let newMake = toPositiveInt(eNewCarMake.value);
     let newModel = toPositiveInt(eNewCarModel.value);
+    let newID = carDataM[newMake][newModel].id;
 
     if (action.length !== 0) {
         newName = action[1];
-        newMake = action[2];
-        newModel = action[3];
-        eNewCarDiscountBoxB.checked = action[4] === 1;
-        eNewCarDiscountBoxA.checked = action[5] === 1;
+        newID = action[2];
+        newMake = carDataV[newID].make;
+        newModel = carDataV[newID].model;
+        eNewCarDiscountBoxB.checked = action[3] === 1;
+        eNewCarDiscountBoxA.checked = action[4] === 1;
     }
 
     // Check if the input fields are filled out
@@ -78,7 +81,7 @@ function addCar(action = []) {
         return;
     }
 
-    let newPI = carList[newMake][newModel].pi;
+    let newPI = carDataM[newMake][newModel].pi;
     let newCost = calculateCost(newMake, newModel);
 
     // Check if the player can afford the car
@@ -94,9 +97,10 @@ function addCar(action = []) {
     }
 
     // Save input to state
-    state.cars.push(new Car(newName,
-                            newMake,
-                            newModel));
+    state.garage.push(new Car(
+        newName,
+        newID
+    ));
     state.money -= newCost;
 
     // Use the discounts
@@ -114,16 +118,17 @@ function addCar(action = []) {
     }
 
     if (action.length === 0) {
-        state.actions.push(["c",
-                            newName,
-                            newMake,
-                            newModel,
-                            usedB,
-                            usedA]);
+        state.actions.push([
+            "c",
+            newName,
+            newID,
+            usedB,
+            usedA
+        ]);
     }
 
     // Try setting to current car
-    state.cars[state.cars.length - 1].getIn(action.length !== 0);
+    state.garage[state.garage.length - 1].getIn(action.length !== 0);
 
     // Clear input fields
     // Car selectors will be reset in updateState
@@ -161,13 +166,12 @@ function newCarMakeSelect() {
     }
 
     // Add all car models of current class or lower
-    for (let iModel = 1; iModel < carList[make].length; iModel++) {
-        if (state.lvl >= piToClass(carList[make][iModel].pi)
-         && carList[make][iModel].buyable) {
+    for (let iModel = 1; iModel < carDataM[make].length; iModel++) {
+        if (state.lvl >= piToClass(carDataM[make][iModel].pi)) {
             let option = document.createElement("option");
             option.value = iModel;
-            option.text = carList[make][iModel].name + " ("
-                        + carList[make][iModel].year + ")";
+            option.text = carDataM[make][iModel].name + " ("
+                        + carDataM[make][iModel].year + ")";
             eNewCarModel.appendChild(option);
         }
     }
@@ -196,7 +200,7 @@ function newCarModelSelect() {
     let cost = calculateCost(make, model);
 
     // Show PI and cost
-    eNewCarRow.cells[1].innerHTML = addClassToPI(carList[make][model].pi);
+    eNewCarRow.cells[1].innerHTML = addClassToPI(carDataM[make][model].pi);
     eNewCarPrice.innerHTML = moneyToString(cost);
 
     // Show discounts
@@ -215,21 +219,22 @@ function newCarModelSelect() {
 
 function addRust(action = []) {
     let newName = eNewRustName.value;
-    let newMake = rustBuckets[state.rust][0];
-    let newModel = rustBuckets[state.rust][1];
+    let newID = rustBuckets[state.rust];
 
     if (action.length !== 0) {
         newName = action[1];
-        newMake = action[2];
-        newModel = action[3];
+        newID = action[2];
     }
+
+    let newMake = carDataV[newID].make;
+    let newModel = carDataV[newID].model;
 
     // Check if the input fields are filled out
     if (newName === "") {
         return;
     }
 
-    let newPI = carList[newMake][newModel].rollcage;
+    let newPI = carDataM[newMake][newModel].rollcage;
     let newCost = 10000;
 
     // Check if the player can afford the car
@@ -245,23 +250,25 @@ function addRust(action = []) {
     }
 
     // Save input to state
-    state.cars.push(new Car(newName,
-                            newMake,
-                            newModel,
-                            "rust"));
+    state.garage.push(new Car(
+        newName,
+        newID,
+        true
+    ));
     state.money -= newCost;
 
     if (action.length === 0) {
-        state.actions.push(["b",
-                            newName,
-                            newMake,
-                            newModel]);
+        state.actions.push([
+            "b",
+            newName,
+            newID
+        ]);
     }
 
     state.rust = 0;
 
     // Try setting to current car
-    state.cars[state.cars.length - 1].getIn(action.length !== 0);
+    state.garage[state.garage.length - 1].getIn(action.length !== 0);
 
     // Clear input fields
     eNewRustName.value = "";

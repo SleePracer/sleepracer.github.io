@@ -24,17 +24,15 @@ function startNameInput() {
 function setBaseInfo(sharecode) {
     eStartCarInfoDiv.style.display = "block";
     eStartCarInfo.innerHTML = "Buy a "
-                            + carList[startCarMake][0] + " "
-                            + carList[startCarMake][startCarModel].name
+                            + carDataM[carDataV[startCarID].make][0] + " "
+                            + carDataV[startCarID].name
                             + ", add the livery "
                             + sharecode
                             + " and install a roll cage!";
 }
 
 function mustangBaseRadio() {
-    startCarMake = 10;
-    startCarModel = 3;
-
+    startCarID = cars.cobra;
     setBaseInfo("180 091 208");
 }
 
@@ -44,9 +42,7 @@ function mustangBaseImg() {
 }
 
 function eclipseBaseRadio() {
-    startCarMake = 21;
-    startCarModel = 3;
-
+    startCarID = cars.eclipse;
     setBaseInfo("125 302 643");
 }
 
@@ -56,9 +52,7 @@ function eclipseBaseImg() {
 }
 
 function corradoBaseRadio() {
-    startCarMake = 28;
-    startCarModel = 1;
-
+    startCarID = cars.corrado;
     setBaseInfo("167 278 252");
 }
 
@@ -70,100 +64,74 @@ function corradoBaseImg() {
 function setAltInfo() {
     eStartCarInfoDiv.style.display = "block";
     eStartCarInfo.innerHTML = "Buy a "
-                            + carList[startCarMake][0] + " "
-                            + carList[startCarMake][startCarModel].name
+                            + carDataM[carDataV[startCarID].make][0] + " "
+                            + carDataV[startCarID].name
                             + ", add a rust bucket livery of your choice "
                             + "and install a roll cage!";
 }
 
 function chargerAltRadio() {
-    startCarMake = 8;
-    startCarModel = 2;
-
+    startCarID = cars.charger;
     setAltInfo();
 }
 
 function mustangAltRadio() {
-    startCarMake = 10;
-    startCarModel = 3;
-
+    startCarID = cars.cobra;
     setAltInfo();
 }
 
 function civicAltRadio() {
-    startCarMake = 11;
-    startCarModel = 2;
-
+    startCarID = cars.ek9;
     setAltInfo();
 }
 
 function soarerAltRadio() {
-    startCarMake = 15;
-    startCarModel = 2;
-
+    startCarID = cars.sc300;
     setAltInfo();
 }
 
 function miataAltRadio() {
-    startCarMake = 17;
-    startCarModel = 2;
-
+    startCarID = cars.miata;
     setAltInfo();
 }
 
 function savannaAltRadio() {
-    startCarMake = 17;
-    startCarModel = 3;
-
+    startCarID = cars.fc;
     setAltInfo();
 }
 
 function eclipseAltRadio() {
-    startCarMake = 21;
-    startCarModel = 3;
-
+    startCarID = cars.eclipse;
     setAltInfo();
 }
 
 function nissanAltRadio() {
-    startCarMake = 22;
-    startCarModel = 3;
-
+    startCarID = cars.sx240;
     setAltInfo();
 }
 
 function firebirdAltRadio() {
-    startCarMake = 23;
-    startCarModel = 1;
-
+    startCarID = cars.firebird;
     setAltInfo();
 }
 
 function truenoAltRadio() {
-    startCarMake = 27;
-    startCarModel = 6;
-
+    startCarID = cars.ae86;
     setAltInfo();
 }
 
 function corradoAltRadio() {
-    startCarMake = 28;
-    startCarModel = 1;
-
+    startCarID = cars.corrado;
     setAltInfo();
 }
 
 function golfAltRadio() {
-    startCarMake = 28;
-    startCarModel = 2;
-
+    startCarID = cars.golf;
     setAltInfo();
 }
 
 function volvoAltRadio() {
-    startCarMake = 29;
-    startCarModel = 1;
-
+    startCarID = cars.v242;
     setAltInfo();
 }
 
@@ -209,15 +177,16 @@ function startCarNameInput() {
 function startGameButton(action = []) {
     let playerName = startPlayerName;
     let carName = startCarName;
-    let carMake = startCarMake;
-    let carModel = startCarModel;
+    let carID = startCarID;
 
     if (action.length !== 0) {
         playerName = action[1];
         carName = action[2];
-        carMake = action[3];
-        carModel = action[4];
+        carID = action[3];
     }
+
+    let carMake = carDataV[carID].make;
+    let carModel = carDataV[carID].model;
 
     // Check if the input fields are filled out
     if (playerName === ""
@@ -239,18 +208,20 @@ function startGameButton(action = []) {
     state.name = playerName;
     state.lvl = 2; // C
     state.xp = classXP[state.lvl] / 10;
-    state.cars.push(new Car(carName,
-                            carMake,
-                            carModel,
-                            "rust"));
+    state.garage.push(new Car(
+        carName,
+        carID,
+        true
+    ));
     state.driving = 0;
 
     if (action.length === 0) {
-        state.actions.push(["i",
-                            playerName,
-                            carName,
-                            carMake,
-                            carModel]);
+        state.actions.push([
+            "i",
+            playerName,
+            carName,
+            carID
+        ]);
 
         // Since defaultState has no cars in garage,
         // options will always be shown, so hide them

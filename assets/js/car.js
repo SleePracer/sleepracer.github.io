@@ -3,36 +3,30 @@
 // -----------------------------------------------------------------------
 
 class Car {
-    constructor(name,
-                make,
-                model,
-                special = "no",
-                pi = 0,
-                value = 0,
-                rust = false,
-                buttonDisplay = "inline") {
+    constructor(
+        name,
+        id,
+        rust = false
+    ) {
 
         // Add car to map
         carMap.set(name, this);
 
         // Car state variables
-        this.iCar = state.cars.length;
+        this.iCar = state.garage.length;
         this.name = name;
-        this.make = make;
-        this.model = model;
+        this.id = id;
+        this.make = carDataV[id].make;
+        this.model = carDataV[id].model;
         this.pi = 0;
         this.value = 0;
         this.rust = rust;
-        if (special === "rust") {
-            this.pi = carList[make][model].rollcage;
+        if (rust) {
+            this.pi = carDataV[id].rollcage;
             this.value = rustCarValue;
-            this.rust = true;
-        } else if (special === "load") {
-            this.pi = pi;
-            this.value = value;
         } else {
-            this.pi = carList[make][model].pi;
-            this.value = Math.floor(0.9 * carList[make][model].cost);
+            this.pi = carDataV[id].pi;
+            this.value = Math.floor(0.9 * carDataV[id].cost);
         }
 
         // Car upgrade variables
@@ -48,10 +42,10 @@ class Car {
         if (this.rust) {
             this.row.cells[0].innerHTML += "<span style=color:brown>Rusty</span> ";
         }
-        this.row.cells[0].innerHTML += carList[this.make][0] + " "
-                                     + carList[this.make][this.model].name
+        this.row.cells[0].innerHTML += carDataM[this.make][0] + " "
+                                     + carDataM[this.make][this.model].name
                                      + " ("
-                                     + carList[this.make][this.model].year
+                                     + carDataM[this.make][this.model].year
                                      + ")";
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
         this.row.cells[2].innerHTML = moneyToString(this.value);
@@ -62,14 +56,14 @@ class Car {
         this.showUpgradeButton.id = this.name;
         this.showUpgradeButton.innerText = "Upgrade";
         this.showUpgradeButton.onclick = showUpgradeButtonClick;
-        this.showUpgradeButton.style.display = buttonDisplay;
+        this.showUpgradeButton.style.display = "inline";
         this.row.cells[3].appendChild(this.showUpgradeButton);
 
         this.showPaintButton = document.createElement("button");
         this.showPaintButton.id = this.name;
         this.showPaintButton.innerText = "Paint";
         this.showPaintButton.onclick = showPaintButtonClick;
-        this.showPaintButton.style.display = buttonDisplay;
+        this.showPaintButton.style.display = "inline";
         this.showPaintButton.className = "margin";
         this.row.cells[3].appendChild(this.showPaintButton);
 
@@ -77,14 +71,14 @@ class Car {
         this.sellButton.id = this.name;
         this.sellButton.innerText = "Sell";
         this.sellButton.onclick = sellButtonClick;
-        this.sellButton.style.display = buttonDisplay;
+        this.sellButton.style.display = "inline";
         this.row.cells[3].appendChild(this.sellButton);
 
         this.getInButton = document.createElement("button");
         this.getInButton.id = this.name;
         this.getInButton.innerText = "Get in";
         this.getInButton.onclick = getInButtonClick;
-        this.getInButton.style.display = buttonDisplay;
+        this.getInButton.style.display = "inline";
         this.getInButton.className = "marginTop";
         this.row.cells[3].appendChild(this.getInButton);
 
@@ -137,20 +131,6 @@ class Car {
         this.row.cells[3].appendChild(this.abortPaintButton);
     }
 
-    getModel() {
-        return [this.make, this.model];
-    }
-
-    getArgs() {
-        return {
-            n: this.name,
-            m: this.getModel(),
-            pi: this.pi,
-            v: this.value,
-            r: this.rust ? 1 : 0
-        }
-    }
-
     garageOptionsButtons(buttonDisplay) {
         this.showUpgradeButton.style.display = buttonDisplay;
         this.showPaintButton.style.display = buttonDisplay;
@@ -172,7 +152,7 @@ class Car {
         // Damage is [0, 100]%
         // At 50% damage, repair costs should be
         // 25% of mean of value and cost
-        let mean = (this.value + carList[this.make][this.model].cost) / 2;
+        let mean = (this.value + carDataM[this.make][this.model].cost) / 2;
         let repair = mean * damage / 200;
         return Math.floor(repair);
     }
@@ -247,13 +227,13 @@ class Car {
         }
 
         // Update iCar of all other cars
-        for (let jCar = (this.iCar + 1); jCar < state.cars.length; jCar++) {
-            state.cars[jCar].iCar--;
+        for (let jCar = (this.iCar + 1); jCar < state.garage.length; jCar++) {
+            state.garage[jCar].iCar--;
         }
 
         // Delete car from table and state
         eGarageTB.deleteRow(this.iCar);
-        state.cars.splice(this.iCar, 1);
+        state.garage.splice(this.iCar, 1);
 
         if (action.length === 0) {
             state.actions.push(["s",
@@ -269,12 +249,12 @@ class Car {
         if (piToClass(this.pi) <= state.lvl) {
             if (state.driving !== -1) {
                 // Show "Get in" on the car we're switching from
-                state.cars[state.driving].getInButton.style.display = "inline";
+                state.garage[state.driving].getInButton.style.display = "inline";
             }
             // Change car
             state.driving = this.iCar;
             // Hide "Get in" on the car we're switching to
-            state.cars[state.driving].getInButton.style.display = "none";
+            state.garage[state.driving].getInButton.style.display = "none";
         }
 
         if (!loading) {
@@ -385,16 +365,16 @@ class Car {
 
         // Remove rust
         if (this.rust) {
-            this.value += Math.floor(0.2 * carList[this.make][this.model].cost);
+            this.value += Math.floor(0.2 * carDataM[this.make][this.model].cost);
             this.rust = false;
         }
 
         // Update name to remove rust
         this.row.cells[0].innerHTML = this.name + ", "
-                                    + carList[this.make][0] + " "
-                                    + carList[this.make][this.model].name
+                                    + carDataM[this.make][0] + " "
+                                    + carDataM[this.make][this.model].name
                                     + " ("
-                                    + carList[this.make][this.model].year
+                                    + carDataM[this.make][this.model].year
                                     + ")";
 
         if (!loading) {
