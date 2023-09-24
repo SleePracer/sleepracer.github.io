@@ -4,8 +4,6 @@
 
 const thisVersion = "0.3.1";
 
-const rustCarValue = 5000;
-
 const defaultState = {
     version: thisVersion,
     date: 0,
@@ -903,20 +901,66 @@ const carDataV = [
     v242
 ];
 
-const rustBuckets = [null,
+const rustBucketsD = [
+    cars.miata,
+    cars.sx240,
+    cars.firebird,
+    cars.ae86,
+    cars.golf
+];
+
+const rustBucketsC = [
+    cars.regal,
     cars.charger,
     cars.cobra,
     cars.ek9,
     cars.sc300,
-    cars.miata,
     cars.fc,
     cars.eclipse,
-    cars.sx240,
-    cars.firebird,
-    cars.ae86,
     cars.corrado,
-    cars.golf,
     cars.v242
+];
+const allRustBucketsC = rustBucketsC.concat(rustBucketsD);
+
+const rustBucketsB = [
+    cars.integra,
+    cars.m3,
+    cars.camaro,
+    cars.sierra,
+    cars.boss,
+    cars.delta,
+    cars.e190,
+    cars.celica
+];
+const allRustBucketsB = rustBucketsB.concat(allRustBucketsC);
+
+const rustBucketsA = [
+    cars.corvette,
+    cars.nsx,
+    cars.fd,
+    cars.evo,
+    cars.gto,
+    cars.r34,
+    cars.p944,
+    cars.p911,
+    cars.b22,
+    cars.a80
+];
+const allRustBucketsA = rustBucketsA.concat(allRustBucketsB);
+
+const rustBuckets = [null,
+    rustBucketsD,
+    allRustBucketsC,
+    allRustBucketsB,
+    allRustBucketsA
+];
+
+const paintCost = 5000;
+const rustBucketValue = [0,
+    5000,
+    10000,
+    15000,
+    20000,
 ];
 
 const fiestaxr2 = {

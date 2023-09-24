@@ -129,3 +129,18 @@ function hasBuyableModel(make) {
     }
     return foundModel;
 }
+
+function getRustBucketClass(id) {
+    let ID = toPositiveInt(id);
+    if (rustBucketsD.includes(ID)) {
+        return 1;
+    } else if (rustBucketsC.includes(ID)) {
+        return 2;
+    } else if (rustBucketsB.includes(ID)) {
+        return 3;
+    } else if (rustBucketsA.includes(ID)) {
+        return 4;
+    } else {
+        return 0;
+    }
+}

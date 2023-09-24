@@ -64,7 +64,7 @@ function setRustBucket() {
         return;
     }
 
-    if (uniqueRolls.length === (rustBuckets.length - 1)) {
+    if (uniqueRolls.length === (rustBuckets[state.lvl].length - 1)) {
         state.rust = 0;
         return
     }
@@ -81,11 +81,11 @@ function setRustBucket() {
     if (lastRoll === 0) {
         let threshold = 0.2 * duration;
         if (Math.random() < threshold) {
-            let roll = 1 + Math.floor(Math.random() * (rustBuckets.length - 1));
-            while (uniqueRolls.includes(roll)) {
-                roll = 1 + Math.floor(Math.random() * (rustBuckets.length - 1));
+            let roll = 1 + Math.floor(Math.random() * (rustBuckets[state.lvl].length - 1));
+            while (uniqueRolls.includes(rustBuckets[state.lvl][roll])) {
+                roll = 1 + Math.floor(Math.random() * (rustBuckets[state.lvl].length - 1));
             }
-            state.rust = roll;
+            state.rust = rustBuckets[state.lvl][roll];
         }
     } else if (duration >= 3) {
         state.rust = 0;
@@ -436,11 +436,10 @@ function updateState() {
         eNewRustRow.style.display = "none";
     } else {
         eNewRustRow.style.display = "table-row";
-        let iID = rustBuckets[state.rust];
         eNewRustCar.innerHTML = "<span style=color:brown>Rusty</span> "
-                              + carDataM[carDataV[iID].make][0] + " "
-                              + carDataV[iID].name + " ("
-                              + carDataV[iID].year + ")";
+                              + carDataM[carDataV[state.rust].make][0] + " "
+                              + carDataV[state.rust].name + " ("
+                              + carDataV[state.rust].year + ")";
 
         eNewRustSale.innerHTML = "<span style=color:red>Rust bucket for sale!</span>";
     }

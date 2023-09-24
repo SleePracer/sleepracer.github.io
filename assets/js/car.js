@@ -23,7 +23,7 @@ class Car {
         this.rust = rust;
         if (rust) {
             this.pi = carDataV[id].cage;
-            this.value = rustCarValue;
+            this.value = rustBucketValue[getRustBucketClass(id)];
         } else {
             this.pi = carDataV[id].pi;
             this.value = Math.floor(0.9 * carDataV[id].cost);
@@ -193,7 +193,7 @@ class Car {
     showPaint() {
         // Hide the car state and show upgrade inputs
         this.row.cells[1].innerHTML = addClassToPI(this.pi);
-        this.row.cells[2].innerHTML = "Cost: " + moneyToString(5000);
+        this.row.cells[2].innerHTML = "Cost: " + moneyToString(paintCost);
         if (this.rust) {
             this.row.cells[2].innerHTML += "<span style=color:brown>\nRemoves rust!</span> ";
         }
@@ -354,14 +354,14 @@ class Car {
 
     doPaint(loading = false) {
         // Return if player can't afford painting their car
-        if (state.money < 5000) {
+        if (state.money < paintCost) {
             window.confirm("You can't afford to paint this car! You only have " + moneyToString(state.money) + " available. Earn more money by racing!");
             return;
         }
 
         // Update state variables
-        this.value += 2500;
-        state.money -= 5000;
+        this.value += paintCost / 2;
+        state.money -= paintCost;
 
         // Remove rust
         if (this.rust) {
