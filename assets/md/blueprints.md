@@ -38,6 +38,7 @@ When increasing the difficulty, the drivatars will be even faster than normal un
 
 Another aspect of the difficulty is the fact that drivatars are better at some tracks and worse at others.
 Generally, the more handling focused a track is (the tracks in the city for example), the worse the drivatars will drive.
+They also have a hard time with high speed sweeping corners and esses (like the desert part of The Colossus), and with high commitment corners (like the final corner on the Horizon Mexico Circuit).
 The base difficulty is therefore different for each event, to help balance this aspect.
 
 
@@ -46,7 +47,7 @@ The base difficulty is therefore different for each event, to help balance this 
 
 It's my personal opinion that the punishment for missing a checkpoint in Forza Horizon 5 is too big, especially with rewinds being disabled for the Career Mode events.
 The Rules of Play therefore detect whenever the players car is reset, and gives a temporary boost to torque and grip, letting the player catch back up.
-This boost is not big enough to get you back to the place you were, as it also needs to be small enough to not be abuseable, but it's better than nothing.
+This boost is not big enough to get you back to the place you were, as it also needs to be small enough to not be abuseable, but it's better than nothing!
 
 
 <div style="margin-top: 37px"></div>
