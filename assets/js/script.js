@@ -7,12 +7,38 @@
 let headToHead = new HeadToHead("Head-to-Head", 200);
 
 // Create all events
-events = [];
-
-const iEventsStart = events.length;
-const iFinalesStart = events.length;
+let events = [];
 let roadSpecials = [];
 let dirtSpecials = [];
+
+const iEventsStart = events.length;
+const iRoadsStart = events.length;
+
+for (let t = 0; t < roadCircuits.length; t++) {
+    events.push(new Event(roadCircuits[t].name + " Circuit",
+        events.length,
+        "Finish in the top half to get prize money!",
+        roadCircuits[t].name + " Circuit",
+        roadCircuits[t].sharecode,
+        "road"
+    ));
+}
+
+const iRoadsEnd = events.length;
+const iDirtsStart = events.length;
+
+for (let t = 0; t < dirtScrambles.length; t++) {
+    events.push(new Event(dirtScrambles[t].name + " Scramble",
+        events.length,
+        "Finish in the top half to get prize money!",
+        dirtScrambles[t].name + " Scramble",
+        dirtScrambles[t].sharecode,
+        "dirt"
+    ));
+}
+
+const iDirtsEnd = events.length;
+const iFinalesStart = events.length;
 
 roadSpecials.push(events.length);
 events.push(new Event("C Class Finale: " +
@@ -81,62 +107,76 @@ events.push(new Event("Grand Finale: The Gauntlet",
 ));
 
 const iFinalesEnd = events.length;
+const iShowcasesStart = events.length;
+
+events.push(new Event("Showcase: Vintage Hatchbacks",
+    events.length,
+    "A folkrace event on the Horizon Baja Scramble! " +
+    "The Horizon Festival will lend you one of these " +
+    "old beat up, race prepped cars for the event. " +
+    "Prize money will only be given out for podium " +
+    "placements, so don't hesitate to get dirty!",
+    "Horizon Baja Scramble 7L",
+    "225 814 856",
+    "both", "show", "podium", 0, [],
+    "vintageHatches"
+));
+
+events.push(new Event("Showcase: Vintage Explorers",
+    events.length,
+    "Explore the Mexican countryside in your choice " +
+    "of race prepped old 4x4 offroaders, " +
+    "courtesy of the Horizon Festival!",
+    "The Titan",
+    "169 663 287",
+    "both", "show", "double", 0, [],
+    "vintageExplorers"
+));
+
+events.push(new Event("Showcase: Fairlady vs. 2000GT",
+    events.length,
+    "A showcase race on the Horizon Mexico Circuit! " +
+    "The Horizon Festival will lend you one of these " +
+    "pristine stock cars for the event, " +
+    "try not to damage it too much! " +
+    "Prize money will be given out to all placements " +
+    "for this event.",
+    "Horizon Mexico Circuit 7L",
+    "180 247 097",
+    "both", "show", "all", 0, [],
+    "vintageSports"
+));
+
+events.push(new Event("Showcase: 80s Supercars",
+    events.length,
+    "A top secret invitation to test drive these " +
+    "80s dream supercars! " +
+    "Take them out in the middle of the night to " +
+    "avoid any attention. " +
+    "Also, try to avoid damaging these " +
+    "expensive poster cars!",
+    "The Marathon",
+    "894 091 504",
+    "both", "show", "double", 0, [],
+    "super80s"
+));
+
+events.push(new Event("Showcase: 90s Supercars",
+    events.length,
+    "Take a lap around the Goliath " +
+    "in your favourite 90s supercar, " +
+    "courtesy of the Horizon Festival! " +
+    "Prize money will be given out to all placements " +
+    "for this event, so be extra careful " +
+    "with these priceless supercars.",
+    "The Goliath",
+    "509 774 586",
+    "both", "show", "all", 0, [],
+    "super90s"
+));
+
+const iShowcasesEnd = events.length;
 const iSpecialsStart = events.length;
-
-events.push(new Event("Classic Muscle: Gran Pantano Sprint",
-    events.length,
-    "Bring your Classic Muscle car " +
-    "to this power showdown!",
-    "Gran Pantano Sprint",
-    "935 382 632",
-    "both", "spec", "normal", 600,
-    classicMuscle
-));
-
-roadSpecials.push(events.length);
-events.push(new Event("Group A Touring: Sierra Verde Sprint",
-    events.length,
-    "Bring your DTM legend " +
-    "to this road racing showdown!",
-    "Sierra Verde Sprint",
-    "306 811 911",
-    "road", "spec", "normal", 650,
-    dtm
-));
-
-events.push(new Event("Fast and Furious: Tunnel Run",
-    events.length,
-    "Join the Fast and Furious Fan Club " +
-    "for this event! Hero car required, " +
-    "cosplay livery optional.",
-    "Tunnel Run",
-    "167 123 448",
-    "both", "spec", "normal", 660,
-    fnf
-));
-
-dirtSpecials.push(events.length);
-events.push(new Event("Group A Rally: Bajío Trail",
-    events.length,
-    "Bring your WRC legend " +
-    "to this dirt racing showdown!",
-    "Bajío Trail",
-    "494 070 628",
-    "dirt", "spec", "normal", 670,
-    wrc
-));
-
-events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
-    events.length,
-    "Let this event take you back to your first " +
-    "Horizon Festival in Colorado! " +
-    "Featuring (almost) only cars that appeared " +
-    "in the first game in the series.",
-    "Copper Canyon Sprint",
-    "155 764 596",
-    "both", "spec", "normal", 770,
-    hc
-));
 
 roadSpecials.push(events.length);
 events.push(new Event("Endurance: " +
@@ -224,110 +264,67 @@ events.push(new Event("Japanese All-Stars: Tulum Trail",
     japanese
 ));
 
+roadSpecials.push(events.length);
+events.push(new Event("Group A Touring: Sierra Verde Sprint",
+    events.length,
+    "Bring your DTM legend " +
+    "to this road racing showdown!",
+    "Sierra Verde Sprint",
+    "306 811 911",
+    "road", "spec", "normal", 650,
+    dtm
+));
+
+dirtSpecials.push(events.length);
+events.push(new Event("Group A Rally: Bajío Trail",
+    events.length,
+    "Bring your WRC legend " +
+    "to this dirt racing showdown!",
+    "Bajío Trail",
+    "494 070 628",
+    "dirt", "spec", "normal", 670,
+    wrc
+));
+
+events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
+    events.length,
+    "Let this event take you back to your first " +
+    "Horizon Festival in Colorado! " +
+    "Featuring (almost) only cars that appeared " +
+    "in the first game in the series.",
+    "Copper Canyon Sprint",
+    "155 764 596",
+    "both", "spec", "normal", 770,
+    hc
+));
+
+events.push(new Event("Fast and Furious: Tunnel Run",
+    events.length,
+    "Join the Fast and Furious Fan Club " +
+    "for this event! Hero car required, " +
+    "cosplay livery optional.",
+    "Tunnel Run",
+    "167 123 448",
+    "both", "spec", "normal", 660,
+    fnf
+));
+
+events.push(new Event("Classic Muscle: Gran Pantano Sprint",
+    events.length,
+    "Bring your Classic Muscle car " +
+    "to this power showdown!",
+    "Gran Pantano Sprint",
+    "935 382 632",
+    "both", "spec", "normal", 600,
+    classicMuscle
+));
+
 const iSpecialsEnd = events.length;
-const iShowcasesStart = events.length;
-
-events.push(new Event("Showcase: Vintage Hatchbacks",
-    events.length,
-    "A folkrace event on the Horizon Baja Scramble! " +
-    "The Horizon Festival will lend you one of these " +
-    "old beat up, race prepped cars for the event. " +
-    "Prize money will only be given out for podium " +
-    "placements, so don't hesitate to get dirty! " +
-    "\n\nNote that the difficulty starts at 60% " +
-    "to offset the difference in launch between " +
-    "you and the drivatars!",
-    "Horizon Baja Scramble 7L",
-    "225 814 856",
-    "both", "show", "podium", 0, [],
-    "vintageHatches"
-));
-
-events.push(new Event("Showcase: Fairlady vs. 2000GT",
-    events.length,
-    "A showcase race on the Horizon Mexico Circuit! " +
-    "The Horizon Festival will lend you one of these " +
-    "pristine stock cars for the event, " +
-    "try not to damage it too much! " +
-    "Prize money will be given out to all placements " +
-    "for this event.",
-    "Horizon Mexico Circuit 7L",
-    "180 247 097",
-    "both", "show", "all", 0, [],
-    "vintageSports"
-));
-
-events.push(new Event("Showcase: Vintage Explorers",
-    events.length,
-    "Explore the Mexican countryside in your choice " +
-    "of old 4x4 offroaders, " +
-    "courtesy of the Horizon Festival!",
-    "The Titan",
-    "169 663 287",
-    "both", "show", "double", 0, [],
-    "vintageExplorers"
-));
-
-events.push(new Event("Showcase: 80s Supercars",
-    events.length,
-    "A top secret invitation to test drive these " +
-    "80s dream supercars! " +
-    "Take them out in the middle of the night to " +
-    "avoid any attention. " +
-    "Also, try to avoid damaging these " +
-    "expensive poster cars!",
-    "The Marathon",
-    "894 091 504",
-    "both", "show", "double", 0, [],
-    "super80s"
-));
-
-events.push(new Event("Showcase: 90s Supercars",
-    events.length,
-    "Take a lap around the Goliath " +
-    "in your favourite 90s supercar, " +
-    "courtesy of the Horizon Festival! " +
-    "Prize money will be given out to all placements " +
-    "for this event, so be extra careful " +
-    "with these priceless supercars.",
-    "The Goliath",
-    "509 774 586",
-    "both", "show", "all", 0, [],
-    "super90s"
-));
-
-const iShowcasesEnd = events.length;
-const iRoadsStart = events.length;
-
-for (let t = 0; t < roadCircuits.length; t++) {
-    events.push(new Event(roadCircuits[t].name + " Circuit",
-        events.length,
-        "Finish in the top half to get prize money!",
-        roadCircuits[t].name + " Circuit",
-        roadCircuits[t].sharecode,
-        "road"
-    ));
-}
-
-const iRoadsEnd = events.length;
-const iDirtsStart = events.length;
-
-for (let t = 0; t < dirtScrambles.length; t++) {
-    events.push(new Event(dirtScrambles[t].name + " Scramble",
-        events.length,
-        "Finish in the top half to get prize money!",
-        dirtScrambles[t].name + " Scramble",
-        dirtScrambles[t].sharecode,
-        "dirt"
-    ));
-}
-
-const iDirtsEnd = events.length;
 const iEventsEnd = events.length;
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230904;
+let news = 230925;
 
 // Initialize state
 let state = {};

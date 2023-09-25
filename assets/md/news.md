@@ -32,7 +32,7 @@ If there are any bugs or other mistakes I'll be fixing them of course, and [I st
 For now though, happy racing!
 <div style="text-align: right">
   <em>
-    Anaerobisk / SleePracer, 2023-09-24
+    Anaerobisk / SleePracer, 2023-09-25
   </em>
 </div>
 
