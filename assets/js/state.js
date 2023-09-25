@@ -10,7 +10,6 @@ function getStateString(s = state) {
         d: s.dirt ? 1 : 0,
         s: s.show ? 1 : 0,
         n: s.next,
-        b: s.rust,
         e: s.progress,
         c: s.driving,
         a: s.actions
@@ -501,6 +500,7 @@ function setStateFromString(inputString) {
             state.garage[thisAction[1]].sell(thisAction);
             break;
           case "r":
+            state.garage[thisAction[2]].getIn(true);
             events[thisAction[1]].enter(true);
             events[thisAction[1]].finish(thisAction);
             events[thisAction[1]].returnToEvents(true);
@@ -523,10 +523,13 @@ function setStateFromString(inputString) {
     state.dirt = (compact.d === 1);
     state.show = (compact.s === 1);
     state.next = compact.n;
-    state.rust = compact.b;
     state.progress = compact.e;
-    state.driving = compact.c;
     state.actions = compact.a;
+
+    // Ignore driving if nonsensical
+    if (compact.c >= 0 && compact.c < state.garage.length) {
+        state.driving = compact.c;
+    }
 
     // Enter event if in progress
     if (compact.e !== null) {
