@@ -18,7 +18,7 @@ class Race {
         for (let cell = 0; cell < eRacesTH.rows[0].cells.length; cell++) {
             this.row.insertCell();
         }
-        this.row.cells[0].innerText = this.name;
+        this.row.cells[0].innerHTML = this.name;
 
         // Create and add the position selector
         this.positionSelect = document.createElement("select");
@@ -362,7 +362,7 @@ class Event {
                 this.row.insertCell();
             }
         }
-        this.row.cells[0].innerText = this.name;
+        this.row.cells[0].innerHTML = this.name;
 
         // Create and add the info button
         this.infoButton = document.createElement("button");
@@ -392,7 +392,7 @@ class Event {
             for (let cell = 0; cell < nCells; cell++) {
                 this.completedRow.insertCell();
             }
-            this.completedRow.cells[0].innerText = this.name;
+            this.completedRow.cells[0].innerHTML = this.name;
             this.completedRow.style.display = "none";
         }
     }
@@ -534,9 +534,9 @@ class Event {
     getInfo(eligible = true) {
         let allInfo = this.infoString;
 
-        allInfo += "\n\n";
+        allInfo += "<br><br>";
         if (this.eventType === "show") {
-            allInfo += "Event track: " + this.raceName + "\n";
+            allInfo += "Event track: " + this.raceName + "<br>";
         }
 
         if (this.eventType === "prog"
@@ -552,18 +552,18 @@ class Event {
 
         if (this.eventType === "spec") {
             // Add PI restriction
-            allInfo += "\n";
+            allInfo += "<br>";
             allInfo += "Minimum PI: ";
             allInfo += classLetter[piToClass(this.pi)] + this.pi;
 
             if (eligible) {
                 // Add eligible car models
-                allInfo += "\n\nEligible cars:\n";
+                allInfo += "<br><br>Eligible cars:<br>";
                 for (let iModel = 0; iModel < this.cars.length; iModel++) {
                     let iMake = carDataV[this.cars[iModel]].make;
                     allInfo += carDataM[iMake][0] + " ";
                     allInfo += carDataV[this.cars[iModel]].name + " (";
-                    allInfo += carDataV[this.cars[iModel]].year + ")\n";
+                    allInfo += carDataV[this.cars[iModel]].year + ")<br>";
                 }
             }
         }
@@ -571,14 +571,14 @@ class Event {
         if (this.eventType === "show") {
 
             // Add eligible car models
-            allInfo += "\n\nBorrow one of:\n";
+            allInfo += "<br><br>Borrow one of:<br>";
             let nModels = loanCars.get(this.loanCar).cars.length;
             for (let iModel = 0; iModel < nModels; iModel++) {
                 let modelObj = loanCars.get(this.loanCar).cars[iModel];
                 allInfo += modelObj.make + " ";
                 allInfo += modelObj.name + " ";
                 allInfo += modelObj.year + " (";
-                allInfo += modelObj.sharecode + ")\n";
+                allInfo += modelObj.sharecode + ")<br>";
             }
         }
         return allInfo;
@@ -587,14 +587,14 @@ class Event {
     showInfo() {
         if (this.infoButton.innerText === "Info") {
             // Keep event name
-            let allInfo = this.name + "\n\n";
+            let allInfo = this.name + "<br><br>";
             allInfo += this.getInfo();
 
             // Replace name with info
             if (state.completed.includes(this.iEvent)) {
-                this.completedRow.cells[0].innerText = allInfo;
+                this.completedRow.cells[0].innerHTML = allInfo;
             } else {
-                this.row.cells[0].innerText = allInfo;
+                this.row.cells[0].innerHTML = allInfo;
             }
 
             // Repurpose info button to close info
@@ -605,9 +605,9 @@ class Event {
         } else {
             // Switch back to name
             if (state.completed.includes(this.iEvent)) {
-                this.completedRow.cells[0].innerText = this.name;
+                this.completedRow.cells[0].innerHTML = this.name;
             } else {
-                this.row.cells[0].innerText = this.name;
+                this.row.cells[0].innerHTML = this.name;
             }
 
             // Return info button back to it's original state
@@ -674,7 +674,8 @@ class Event {
                 // Stolen from stackoverflow
                 state.next = state.next.map(a => a + iRoadsStart);
                 next3Random();
-            } else if (this.iEvent >= iDirtsStart) {
+            } else if (this.iEvent >= iDirtsStart
+                    && this.iEvent < iDirtsEnd) {
 
                 // Dirt
                 state.next = JSON.parse(JSON.stringify(

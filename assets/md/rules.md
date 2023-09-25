@@ -52,4 +52,5 @@ This will help you get invested in your playthrough!
 
   * [Future plans](/future)
   * [Car roster](/roster)
+  * [Showcases](/showcases)
 

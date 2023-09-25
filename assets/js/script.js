@@ -109,7 +109,7 @@ events.push(new Event("Grand Finale: The Gauntlet",
 const iFinalesEnd = events.length;
 const iShowcasesStart = events.length;
 
-events.push(new Event("Showcase: Vintage Hatchbacks",
+events.push(new Event("<a href=/showcases>Showcase</a>: Vintage Hatchbacks",
     events.length,
     "A folkrace event on the Horizon Baja Scramble! " +
     "The Horizon Festival will lend you one of these " +
@@ -122,7 +122,7 @@ events.push(new Event("Showcase: Vintage Hatchbacks",
     "vintageHatches"
 ));
 
-events.push(new Event("Showcase: Vintage Explorers",
+events.push(new Event("<a href=/showcases>Showcase</a>: Vintage Explorers",
     events.length,
     "Explore the Mexican countryside in your choice " +
     "of race prepped old 4x4 offroaders, " +
@@ -133,7 +133,7 @@ events.push(new Event("Showcase: Vintage Explorers",
     "vintageExplorers"
 ));
 
-events.push(new Event("Showcase: Fairlady vs. 2000GT",
+events.push(new Event("<a href=/showcases>Showcase</a>: Fairlady vs. 2000GT",
     events.length,
     "A showcase race on the Horizon Mexico Circuit! " +
     "The Horizon Festival will lend you one of these " +
@@ -147,7 +147,7 @@ events.push(new Event("Showcase: Fairlady vs. 2000GT",
     "vintageSports"
 ));
 
-events.push(new Event("Showcase: 80s Supercars",
+events.push(new Event("<a href=/showcases>Showcase</a>: 80s Supercars",
     events.length,
     "A top secret invitation to test drive these " +
     "80s dream supercars! " +
@@ -161,7 +161,7 @@ events.push(new Event("Showcase: 80s Supercars",
     "super80s"
 ));
 
-events.push(new Event("Showcase: 90s Supercars",
+events.push(new Event("<a href=/showcases>Showcase</a>: 90s Supercars",
     events.length,
     "Take a lap around the Goliath " +
     "in your favourite 90s supercar, " +
