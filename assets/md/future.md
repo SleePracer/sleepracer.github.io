@@ -35,7 +35,7 @@ Some planning is needed though, so this will not happen in the nearest future.
 # Custom drivatars
 
 Imagine if, when playing Career Mode, every event would feature the same drivatars, driving the same car.
-Rivals with cool names also driving rust buckets.
+Rivals with cool names also driving [rust buckets](/rustbuckets).
 Maybe they'll even evolve alongside you, upgrading their rust buckets to racecars as you do.
 
 In Forza Horizon 5, the only way I can see this working is to follow exactly 11 Xbox accounts like this on your Xbox account, and not be part of a club.

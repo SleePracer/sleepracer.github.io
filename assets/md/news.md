@@ -19,7 +19,7 @@ Here are all the changes:
   * There is now an Undo button that will undo the last thing you did in Career Mode!
       * Be careful though, as there's no Redo button!
   * The paint button has been reworked to actually display what it does, similarly to the car upgrades!
-  * Being a rust bucket is now a property of the cars and is displayed in the garage!
+  * Being a [rust bucket](/rustbuckets) is now a property of the cars and is displayed in the garage!
       * It is removed by painting your car, and removing rust restores some of the cars original value!
   * The player will now be offered to buy additional rust buckets throughout their career!
   * There's now a button to re-roll the three normal events!
