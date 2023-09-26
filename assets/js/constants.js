@@ -1124,70 +1124,70 @@ loanCars.set("super90s", super90s);
 
 const roadCircuits = [
     {name: "Bahía de Plano", // 0
-     sharecode: "130 995 031",
+     sharecode: "653 539 515",
      next: [7, 8, 11]},
     {name: "Arch of Mulegé", // 1
-     sharecode: "459 057 512",
+     sharecode: "152 446 280",
      next: [7, 8, 9]},
     {name: "Los Jardines", // 2
-     sharecode: "623 871 886",
+     sharecode: "473 538 167",
      next: [3, 4, 5]},
     {name: "Chihuahua", // 3
-     sharecode: "908 751 913",
+     sharecode: "102 967 069",
      next: [2, 4, 6, 10, 12]},
     {name: "Tierra Próspera", // 4
-     sharecode: "236 936 786",
+     sharecode: "695 732 951",
      next: [2, 3, 5, 9, 12]},
     {name: "Playa Azul", // 5
-     sharecode: "289 169 770",
+     sharecode: "114 700 695",
      next: [2, 4, 9]},
     {name: "Lookout", // 6
-     sharecode: "725 302 909",
+     sharecode: "163 058 380",
      next: [3, 10, 11, 12]},
     {name: "Horizon Mexico", // 7
-     sharecode: "275 594 929",
+     sharecode: "173 848 010",
      next: [0, 1, 8, 9]},
     {name: "Emerald", // 8
-     sharecode: "172 890 487",
+     sharecode: "161 568 134",
      next: [0, 1, 7]},
     {name: "Estadio", // 9
-     sharecode: "134 730 395",
+     sharecode: "159 359 782",
      next: [1, 4, 5, 7, 10, 11, 12]},
     {name: "Cathedral", // 10
-     sharecode: "526 809 505",
+     sharecode: "177 865 463",
      next: [3, 6, 9, 11, 12]},
     {name: "Plaza", // 11
-     sharecode: "140 331 213",
+     sharecode: "137 109 974",
      next: [0, 6, 9, 10, 12]},
     {name: "Bola Ocho", // 12
-     sharecode: "714 847 969",
+     sharecode: "166 055 771",
      next: [3, 4, 6, 9, 10, 11]}];
 
 const dirtScrambles = [
     {name: "River", // 0
-     sharecode: "173 128 172",
+     sharecode: "100 389 830",
      next: [2, 3, 6]},
     {name: "Mangrove", // 1
-     sharecode: "432 344 336",
+     sharecode: "609 078 986",
      next: [4, 6, 7]},
     {name: "Mulegé Town", // 2
-     sharecode: "801 687 765",
+     sharecode: "183 475 616",
      next: [0, 3, 5]},
     {name: "San Juan", // 3
-     sharecode: "116 904 965",
+     sharecode: "638 173 323",
      next: [0, 2, 4, 5, 7]},
 //    "Horizon Baja",
     {name: "Teotihuacán", // 4
-     sharecode: "129 877 344",
+     sharecode: "165 731 896",
      next: [1, 3, 6, 7]},
     {name: "Caldera", // 5
-     sharecode: "476 382 721",
+     sharecode: "172 175 331",
      next: [2, 3, 7]},
     {name: "La Selva", // 6
-     sharecode: "796 910 033",
+     sharecode: "156 040 998",
      next: [0, 1, 4]},
     {name: "El Pípila", // 7
-     sharecode: "140 003 168",
+     sharecode: "154 105 714",
      next: [1, 3, 4, 5]}];
 
 const classPI = [

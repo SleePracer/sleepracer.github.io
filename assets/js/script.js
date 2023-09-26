@@ -48,7 +48,7 @@ events.push(new Event("C Class Finale: " +
     "Podium placements are rewarded with a " +
     "discount on a new car purchase!",
     roadCircuits[1].name + " Circuit",
-    "168 353 490",
+    "740 564 348",
     "road", "prog", "double", 600
 ));
 
@@ -60,7 +60,7 @@ events.push(new Event("C Class Finale: " +
     "Podium placements are rewarded with a " +
     "discount on a new car purchase!",
     dirtScrambles[2].name + " Scramble",
-    "138 618 342",
+    "157 775 653",
     "dirt", "prog", "double", 600
 ));
 
@@ -72,7 +72,7 @@ events.push(new Event("B Class Finale: " +
     "Podium placements are rewarded with a " +
     "discount on a new car purchase!",
     roadCircuits[11].name + " Circuit",
-    "628 612 139",
+    "153 714 647",
     "road", "prog", "double", 700
 ));
 
@@ -84,7 +84,7 @@ events.push(new Event("B Class Finale: " +
     "Podium placements are rewarded with a " +
     "discount on a new car purchase!",
     dirtScrambles[7].name + " Scramble",
-    "462 558 415",
+    "655 476 110",
     "dirt", "prog", "double", 700
 ));
 
@@ -93,7 +93,7 @@ events.push(new Event("Grand Finale: The Colossus",
     events.length,
     "This is the final event, prepare accordingly!",
     "The Colossus",
-    "120 289 492",
+    "920 574 421",
     "road", "prog", "double", 800
 ));
 
@@ -102,7 +102,7 @@ events.push(new Event("Grand Finale: The Gauntlet",
     events.length,
     "This is the final event, prepare accordingly!",
     "The Gauntlet",
-    "757 020 992",
+    "833 594 546",
     "dirt", "prog", "double", 800
 ));
 
@@ -117,7 +117,7 @@ events.push(new Event("<a href=/showcases>Showcase</a>: Vintage Hatchbacks",
     "Prize money will only be given out for podium " +
     "placements, so don't hesitate to get dirty!",
     "Horizon Baja Scramble 7L",
-    "225 814 856",
+    "160 653 933",
     "both", "show", "podium", 0, [],
     "vintageHatches"
 ));
@@ -128,7 +128,7 @@ events.push(new Event("<a href=/showcases>Showcase</a>: Vintage Explorers",
     "of race prepped old 4x4 offroaders, " +
     "courtesy of the Horizon Festival!",
     "The Titan",
-    "169 663 287",
+    "122 617 132",
     "both", "show", "double", 0, [],
     "vintageExplorers"
 ));
@@ -142,7 +142,7 @@ events.push(new Event("<a href=/showcases>Showcase</a>: Fairlady vs. 2000GT",
     "Prize money will be given out to all placements " +
     "for this event.",
     "Horizon Mexico Circuit 7L",
-    "180 247 097",
+    "909 049 296",
     "both", "show", "all", 0, [],
     "vintageSports"
 ));
@@ -156,7 +156,7 @@ events.push(new Event("<a href=/showcases>Showcase</a>: 80s Supercars",
     "Also, try to avoid damaging these " +
     "expensive poster cars!",
     "The Marathon",
-    "894 091 504",
+    "134 356 221",
     "both", "show", "double", 0, [],
     "super80s"
 ));
@@ -170,7 +170,7 @@ events.push(new Event("<a href=/showcases>Showcase</a>: 90s Supercars",
     "for this event, so be extra careful " +
     "with these priceless supercars.",
     "The Goliath",
-    "509 774 586",
+    "134 244 466",
     "both", "show", "all", 0, [],
     "super90s"
 ));
@@ -187,7 +187,7 @@ events.push(new Event("Endurance: " +
     "Expect this race to take " +
     "between 20 and 30 minutes.",
     roadCircuits[7].name + " Circuit",
-    "147 109 808",
+    "573 804 064",
     "road", "endu", "double"
 ));
 
@@ -200,7 +200,7 @@ events.push(new Event("Endurance: " +
     "Expect this race to take " +
     "between 20 and 30 minutes.",
     dirtScrambles[0].name + " Scramble",
-    "149 664 189",
+    "127 674 272",
     "dirt", "endu", "double"
 ));
 
@@ -209,7 +209,7 @@ events.push(new Event("American All-Stars: Dunas Blancas Sprint",
     events.length,
     "An all American road racing showdown!",
     "Dunas Blancas Sprint",
-    "719 725 279",
+    "119 459 409",
     "road", "spec", "normal", 780,
     american
 ));
@@ -219,7 +219,7 @@ events.push(new Event("American All-Stars: Baja California Trail",
     events.length,
     "An all American dirt racing showdown!",
     "Baja California Trail",
-    "165 262 645",
+    "248 931 210",
     "dirt", "spec", "normal", 780,
     american
 ));
@@ -229,7 +229,7 @@ events.push(new Event("European All-Stars: Llanura Sprint",
     events.length,
     "An all European road racing showdown!",
     "Llanura Sprint",
-    "141 574 519",
+    "159 807 312",
     "road", "spec", "normal", 780,
     european
 ));
@@ -239,7 +239,7 @@ events.push(new Event("European All-Stars: Fuera del Camino Trail",
     events.length,
     "An all European dirt racing showdown!",
     "Fuera del Camino Trail",
-    "137 089 941",
+    "848 026 897",
     "dirt", "spec", "normal", 780,
     european
 ));
@@ -249,7 +249,7 @@ events.push(new Event("Japanese All-Stars: Riviera Sprint",
     events.length,
     "An all Japanese road racing showdown!",
     "Riviera Sprint",
-    "957 580 514",
+    "178 514 573",
     "road", "spec", "normal", 780,
     japanese
 ));
@@ -259,7 +259,7 @@ events.push(new Event("Japanese All-Stars: Tulum Trail",
     events.length,
     "An all Japanese dirt racing showdown!",
     "Tulum Trail",
-    "118 732 056",
+    "115 320 454",
     "dirt", "spec", "normal", 780,
     japanese
 ));
@@ -270,7 +270,7 @@ events.push(new Event("Group A Touring: Sierra Verde Sprint",
     "Bring your DTM legend " +
     "to this road racing showdown!",
     "Sierra Verde Sprint",
-    "306 811 911",
+    "215 696 071",
     "road", "spec", "normal", 650,
     dtm
 ));
@@ -281,7 +281,7 @@ events.push(new Event("Group A Rally: Bajío Trail",
     "Bring your WRC legend " +
     "to this dirt racing showdown!",
     "Bajío Trail",
-    "494 070 628",
+    "285 004 086",
     "dirt", "spec", "normal", 670,
     wrc
 ));
@@ -293,7 +293,7 @@ events.push(new Event("Horizon Colorado: Copper Canyon Sprint",
     "Featuring (almost) only cars that appeared " +
     "in the first game in the series.",
     "Copper Canyon Sprint",
-    "155 764 596",
+    "277 643 292",
     "both", "spec", "normal", 770,
     hc
 ));
@@ -304,7 +304,7 @@ events.push(new Event("Fast and Furious: Tunnel Run",
     "for this event! Hero car required, " +
     "cosplay livery optional.",
     "Tunnel Run",
-    "167 123 448",
+    "146 901 475",
     "both", "spec", "normal", 660,
     fnf
 ));
@@ -314,7 +314,7 @@ events.push(new Event("Classic Muscle: Gran Pantano Sprint",
     "Bring your Classic Muscle car " +
     "to this power showdown!",
     "Gran Pantano Sprint",
-    "935 382 632",
+    "130 722 040",
     "both", "spec", "normal", 600,
     classicMuscle
 ));
