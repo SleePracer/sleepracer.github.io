@@ -329,118 +329,124 @@ layout: home
   </div>
 
   <!-- Garage -->
-  <h1>Garage</h1>
-  <table class="garage">
-    <thead id="garageTableHead">
-      <td>Name</td>
-      <td>PI</td>
-      <td>Value</td>
-      <td>
-        <button id="garageOptionsButton"
-                onClick="garageOptions()">
-          Show options
-        </button>
-      </td>
-    </thead>
-    <tbody id="garageTableBody">
-      <tr id="newCarRow"
-          style="display: none">
+  <div id="garageDiv"
+       style="display: block">
+    <h1>Garage</h1>
+    <table class="garage">
+      <thead id="garageTableHead">
+        <td>Name</td>
+        <td>PI</td>
+        <td>Value</td>
         <td>
-          <input id="newCarName"
-                 type="text"
-                 placeholder="Name"
-                 style="width: 100%"
-                 onkeyup=newCarInput()>
-          <select id="newCarMake"
-                  onchange="newCarMakeSelect()">
-          </select>
-          <select id="newCarModel"
-                  onchange="newCarModelSelect()">
-          </select>
-        </td>
-        <td></td>
-        <td>
-          <div id="newCarPrice"></div>
-          <div id="newCarDiscountB"
-               style="display: none">
-            <input id="newCarDiscountBoxB"
-                   type="checkbox"
-                   onClick="newCarModelSelect()">
-            <label for="newCarDiscountBoxB">-20k</label>
-          </div>
-          <div id="newCarDiscountA"
-               style="display: none">
-            <input id="newCarDiscountBoxA"
-                   type="checkbox"
-                   onClick="newCarModelSelect()">
-            <label for="newCarDiscountBoxA">-40k</label>
-          </div>
-        </td>
-        <td>
-          <button onClick="addCar()">
-            Buy car
+          <button id="garageOptionsButton"
+                  onClick="garageOptions()">
+            Show options
           </button>
         </td>
-      </tr>
-      <tr id="newRustRow"
-          style="display: table-row">
-        <td>
-          <div id="newRustCar">
-          </div>
-          <input id="newRustName"
-                 type="text"
-                 placeholder="Name"
-                 style="width: 100%; display: none"
-                 onkeyup=newRustInput()>
-        </td>
-        <td>
-          <div id="newRustPI">
-          </div>
-        </td>
-        <td>
-          <div id="newRustValue">
-          </div>
-        </td>
-        <td>
-          <div id="newRustSale">
-          </div>
-          <button id="newRustBuy"
-                  onClick="addRust()"
-                  style="display: none">
-            Buy car
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody id="garageTableBody">
+        <tr id="newCarRow"
+            style="display: none">
+          <td>
+            <input id="newCarName"
+                   type="text"
+                   placeholder="Name"
+                   style="width: 100%"
+                   onkeyup=newCarInput()>
+            <select id="newCarMake"
+                    onchange="newCarMakeSelect()">
+            </select>
+            <select id="newCarModel"
+                    onchange="newCarModelSelect()">
+            </select>
+          </td>
+          <td></td>
+          <td>
+            <div id="newCarPrice"></div>
+            <div id="newCarDiscountB"
+                 style="display: none">
+              <input id="newCarDiscountBoxB"
+                     type="checkbox"
+                     onClick="newCarModelSelect()">
+              <label for="newCarDiscountBoxB">-20k</label>
+            </div>
+            <div id="newCarDiscountA"
+                 style="display: none">
+              <input id="newCarDiscountBoxA"
+                     type="checkbox"
+                     onClick="newCarModelSelect()">
+              <label for="newCarDiscountBoxA">-40k</label>
+            </div>
+          </td>
+          <td>
+            <button onClick="addCar()">
+              Buy car
+            </button>
+          </td>
+        </tr>
+        <tr id="newRustRow"
+            style="display: table-row">
+          <td>
+            <div id="newRustCar">
+            </div>
+            <input id="newRustName"
+                   type="text"
+                   placeholder="Name"
+                   style="width: 100%; display: none"
+                   onkeyup=newRustInput()>
+          </td>
+          <td>
+            <div id="newRustPI">
+            </div>
+          </td>
+          <td>
+            <div id="newRustValue">
+            </div>
+          </td>
+          <td>
+            <div id="newRustSale">
+            </div>
+            <button id="newRustBuy"
+                    onClick="addRust()"
+                    style="display: none">
+              Buy car
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Settings -->
   <h1>Settings</h1>
-  <h2>Game settings</h2>
-  Racing category:
-  <div>
-    <input id="roadRadio"
-           type="radio"
-           name="category"
-           onClick="roadRadio()">
-    <label for="roadRadio">Road Circuits</label><br>
-    <input id="dirtRadio"
-           type="radio"
-           name="category"
-           onClick="dirtRadio()">
-    <label for="dirtRadio">Dirt Scrambles</label><br>
-    <button onClick="newEvents()">
-      New Events
-    </button>
+  <div id="gameSettingsDiv"
+       style="display: block">
+    <h2>Game settings</h2>
+    Racing category:
+    <div>
+      <input id="roadRadio"
+             type="radio"
+             name="category"
+             onClick="roadRadio()">
+      <label for="roadRadio">Road Circuits</label><br>
+      <input id="dirtRadio"
+             type="radio"
+             name="category"
+             onClick="dirtRadio()">
+      <label for="dirtRadio">Dirt Scrambles</label><br>
+      <button onClick="newEvents()">
+        New Events
+      </button>
+    </div>
+    <br>
+    <div>
+      <input id="showCompleted"
+             type="checkbox"
+             onClick="showCompleted()">
+      <label for="showCompleted">Show completed events</label>
+    </div>
+    <br>
   </div>
-  <br>
-  <div>
-    <input id="showCompleted"
-           type="checkbox"
-           onClick="showCompleted()">
-    <label for="showCompleted">Show completed events</label>
-  </div>
-  <br>
   <h2>Save settings</h2>
   Save game:
   <div>

@@ -44,6 +44,7 @@ let eRacesT = document.getElementById("racesTable");
 let eRacesTH = document.getElementById("racesTableHead");
 let eRacesTB = document.getElementById("racesTableBody");
 
+let eGarage = document.getElementById("garageDiv");
 let eGarageTH = document.getElementById("garageTableHead");
 let eGarageOptions = document.getElementById("garageOptionsButton");
 let eGarageTB = document.getElementById("garageTableBody");
@@ -66,6 +67,7 @@ let eNewRustValue = document.getElementById("newRustValue");
 let eNewRustSale = document.getElementById("newRustSale");
 let eNewRustBuy = document.getElementById("newRustBuy");
 
+let eGameSettings = document.getElementById("gameSettingsDiv");
 let eRoadRadio = document.getElementById("roadRadio");
 let eDirtRadio = document.getElementById("dirtRadio");
 let eShowCompleted = document.getElementById("showCompleted");

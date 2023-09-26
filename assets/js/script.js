@@ -324,7 +324,7 @@ const iEventsEnd = events.length;
 
 // Initialize page
 // yymmdd of latest news post
-let news = 230925;
+let news = 230926;
 
 // Initialize state
 let state = {};

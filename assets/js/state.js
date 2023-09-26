@@ -449,8 +449,7 @@ function updateState() {
 
 function setStateFromString(inputString) {
     let parsed = JSON.parse(inputString);
-    let validVersions = ["0.2.0", "0.2.1", "0.2.2", "0.2.3", "0.2.4",
-                         "0.2.5", "0.2.6", "0.3.0", "0.3.1"];
+    let validVersions = ["1.0.0"];
     eGameLoadError.innerHTML = ""
 
     // Make sure parsed string is an array,
@@ -468,6 +467,10 @@ function setStateFromString(inputString) {
         let errorString = "Game version " + version + " is not valid!";
         console.log(errorString);
         eGameLoadError.innerHTML = errorString;
+        eAchievements.style.display = "none";
+        eEvents.style.display = "none";
+        eGarage.style.display = "none";
+        eGameSettings.style.display = "none";
         return;
     }
 

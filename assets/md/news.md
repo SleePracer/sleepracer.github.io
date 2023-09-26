@@ -11,7 +11,7 @@ permalink: /news/
 Hi, it took a little longer than expected, but Career Mode is now released!
 Here are all the changes:
   * [The car roster is finalized](/roster), with the Lancia Delta HF Integrale Evo replacing the Toyota Celica '03!
-  * Completing the game now gives the player achievements: nothing extreme, but a little something to commemorate the end of the career!
+  * Completing the game now gives the player achievements: nothing fancy, but a little something to commemorate the end of the career!
   * [Races have been further rebalanced](/blueprints):
       * The torque and grip of the top 3 drivatars have been further reduced!
       * Some races give drivatars extra grip across the board!
@@ -32,7 +32,7 @@ If there are any bugs or other mistakes I'll be fixing them of course, and [I st
 For now though, happy racing!
 <div style="text-align: right">
   <em>
-    Anaerobisk / SleePracer, 2023-09-25
+    Anaerobisk / SleePracer, 2023-09-26
   </em>
 </div>
 
