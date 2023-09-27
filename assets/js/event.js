@@ -648,7 +648,7 @@ class Event {
         this.returnRow = eRacesTB.insertRow(1);
         this.returnRow.insertCell();
         this.returnRow.cells[0].colSpan = 3;
-        this.returnRow.cells[0].innerText = this.getInfo(false);
+        this.returnRow.cells[0].innerHTML = this.getInfo(false);
         this.returnRow.insertCell();
         this.returnRow.cells[1].appendChild(this.returnButton);
 
