@@ -58,6 +58,12 @@ function setRustBucket() {
         }
     }
 
+    for (let iCar = 0; iCar < state.garage.length; iCar++) {
+        if (!uniqueRolls.includes(state.garage[iCar].id)) {
+            uniqueRolls.push(state.garage[iCar].id);
+        }
+    }
+
     if (rustRolls.length < 2) {
         state.rust = 0;
         return;
